@@ -7,7 +7,8 @@
     "nodemon": "^2.0.7"
   },
   "scripts": {
-    "dev": "nodemon src/index.ts -e js,ts,graphql,gql"
+    "dev": "nodemon src/index.ts -e js,ts,graphql,gql",
+    "docker": "yarn dev"
   },
   "dependencies": {
     "express": "^4.17.1",
