@@ -1,19 +1,45 @@
-frontend:
-  image: node
-  command: yarn docker
-  volumes:
-    - ./client:/usr/src/app
-  working_dir: /usr/src/app
-  ports:
-    - "3000:3000"
-  environment:
-    HOST: 0.0.0.0
 
-server:
-  image: node
-  command: yarn docker
-  volumes:
-    - ./server:/usr/src/app
-  working_dir: /usr/src/app
-  ports:
-    - "4000:4000"
+version: '3'
+services:
+  frontend:
+    image: node
+    command: yarn docker
+    volumes:
+      - ./client:/usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - "3000:3000"
+    environment:
+      HOST: 0.0.0.0
+  server:
+    image: node
+    command: yarn docker
+    volumes:
+      - ./server:/usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - "4000:4000"
+  postgres: # https://medium.com/analytics-vidhya/getting-started-with-postgresql-using-docker-compose-34d6b808c47c
+    image: postgres
+    env_file:
+      - ./postgres/database.env
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    ports:
+      - "5000:5432"
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/root/.pgadmin
+    ports:
+      - "5050:80"
+    links:
+      - "postgres:pgsql-server"
+
+volumes:
+  database:
+  pgadmin:
