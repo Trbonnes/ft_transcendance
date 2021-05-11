@@ -1,8 +1,22 @@
 <template>
-  <div>
-    <Nuxt />
+  <div class="full-height">
+    <Nuxt class="full-height" :nuxtChildKey="routerViewKey" />
   </div>
 </template>
+
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
+  computed: {
+    routerViewKey () {
+      // If current route has no children, set view key, otherwise pass.
+      // if (this.$route.matched.length <= 1 && this.$route.meta.isGameView) {
+      //   return 'index'
+      // }
+    }
+  }
+})
+</script>
 
 <style>
 html {
@@ -15,6 +29,10 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+}
+
+html, body, .full-height, #__layout, #__nuxt {
+  height: 100%;
 }
 
 *,
@@ -53,3 +71,4 @@ html {
   background-color: #35495e;
 }
 </style>
+
