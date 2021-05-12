@@ -20,7 +20,7 @@ export function setActiveScene(scene: string) {
 }
 
 export function sceneLoader(Scene: Phaser.Scene) {
-    //GAME SCENES LOADER in alphabetical order
+    //GAME SCENES LOADER
     Scene.scene.add(scenesList.MenuScene, MenuScene, false)
     Scene.scene.add(scenesList.GameScene, GameScene, false)
     Scene.scene.add(scenesList.SearchingOpponentScene, SearchingOpponentScene, false)
