@@ -134,12 +134,12 @@ export function setup(_options: {}, router_: VueRouter): Phaser.Game {
 		async create() {
 			// const me = userStore.user;
 
-            this.add
-            	.image(config.width / 2, config.height / 2, 'backgroundTest')
-				.setDisplaySize(config.width, config.height)
-			
+			this.add
+					.image(config.width / 2, config.height / 2, 'backgroundTest')
+					.setDisplaySize(config.width, config.height)
+
 			this.scene.run(scenesList.MenuScene)
-        }
+    }
 
 		update(/*time, delta*/) {}
 	}

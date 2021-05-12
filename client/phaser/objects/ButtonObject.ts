@@ -24,31 +24,31 @@ export default class Button extends Phaser.GameObjects.GameObject {
 
 		this.btn = scene.add.image(x, y, 'btn')
 			.setInteractive({ useHandCursor: true })
-		this.text = scene.add
-			.text(x, y - 60, text)
+		this.text = scene.add.text(x, y - 60, text)
 			.setFontSize(50)
 			.setTint(0x000000)
-            .setOrigin(0.5, 0.5)
+			.setOrigin(0.5, 0.5)
             
-        this.btn.on('pointerover', () => {
-            this.btn.setTint(0xe0e0e0)
-            this.btn.setScale(1.2, 1.2)
-            if (this.disabled) {
-            }
-            else {
-            }
-        })
+		this.btn.on('pointerover', () => {
+			console.log('ptdr')
+			this.btn.setTint(0xe0e0e0)
+			this.btn.setScale(1.2, 1.2)
+			if (this.disabled) {
+			}
+			else {
+			}
+		})
 
-        this.btn.on('pointerout', () => {
-            this.btn.clearTint()
-            this.btn.setScale(1, 1)
-        })
+		this.btn.on('pointerout', () => {
+			this.btn.clearTint()
+			this.btn.setScale(1, 1)
+		})
 
-        this.btn.on('pointerdown', () => {
-            if (!this.disabled) {
-                //Insert effect
-            }
-        })
+		this.btn.on('pointerdown', () => {
+			if (!this.disabled) {
+					//Insert effect
+			}
+		})
 	}
 
 	destroy() {
