@@ -1,0 +1,5 @@
+@font-face {
+    font-family: 'vocaloid';
+    src:    local('vocaloid'),
+            url(~assets/fonts/vocaloid/VOC-RE.ttf);
+}
