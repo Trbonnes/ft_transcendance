@@ -24,24 +24,30 @@ export default class Button extends Phaser.GameObjects.GameObject {
 
 		this.btn = scene.add.image(x, y, 'btn')
 			.setInteractive({ useHandCursor: true })
-		this.text = scene.add.text(x, y - 60, text)
+		this.text = scene.add.text(x, y, text)
 			.setFontSize(50)
+			.setStroke('black', 3)
 			.setTint(0x000000)
 			.setOrigin(0.5, 0.5)
             
 		this.btn.on('pointerover', () => {
-			console.log('ptdr')
-			this.btn.setTint(0xe0e0e0)
-			this.btn.setScale(1.2, 1.2)
-			if (this.disabled) {
+			if (!this.disabled) {
+				this.btn.setTint(0x00ff00)
+				this.btn.setScale(1.2, 1.2)
+				this.shadow?.setScale(1.2, 1.2)
+				this.text.setScale(1.2, 1.2)
 			}
 			else {
 			}
 		})
 
 		this.btn.on('pointerout', () => {
-			this.btn.clearTint()
-			this.btn.setScale(1, 1)
+			if (!this.disabled) {
+				this.btn.clearTint()
+				this.btn.setScale(1, 1)
+				this.shadow?.setScale(1, 1)
+				this.text.setScale(1, 1)
+			}
 		})
 
 		this.btn.on('pointerdown', () => {
@@ -54,12 +60,12 @@ export default class Button extends Phaser.GameObjects.GameObject {
 	destroy() {
 		this.btn.destroy()
 		this.text.destroy()
-		if (this.shadow) this.shadow.destroy()
+		this.shadow?.destroy()
 	}
 
 	setDisplaySize(x: number, y: number): this {
 		this.btn.setDisplaySize(x, y)
-		if (this.shadow) this.shadow.setDisplaySize(x, y)
+		this.shadow?.setDisplaySize(x, y)
 		return this
 	}
 

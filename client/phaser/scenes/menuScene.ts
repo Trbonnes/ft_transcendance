@@ -20,7 +20,11 @@ export default class MenuScene extends Phaser.Scene {
     create() {
         setActiveScene(scenesList.MenuScene);
 
-        this.menu.push(new Button(this, 500, 500, "Matchmaking"))
+        this.menu.push(new Button(this, 300, 400, "Matchmaking"))
+        this.menu.push(new Button(this, config.width / 2, 400, "Tournament"))
+        this.menu.push(new Button(this, config.width - 300, 400, "War").setDisabled(true))
+        this.menu.push(new Button(this, config.width / 2 - 300, 800, "Spectate"))
+        this.menu.push(new Button(this, config.width / 2 + 300, 800, "Play with\na friend"))
     }
 
     update(/*time, delta*/) {}

@@ -114,8 +114,7 @@ export const config: Phaser.Types.Core.GameConfig & {
 	},
 }
 
-export function setup(_options: {}, router_: VueRouter): Phaser.Game {
-	router = router_
+export function setup(_options: {}): Phaser.Game {
 
 	class HomeScene extends Phaser.Scene {
 		constructor(Config: Phaser.Types.Scenes.SettingsConfig) {
