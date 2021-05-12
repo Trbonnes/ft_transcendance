@@ -87,7 +87,7 @@ export const config: Phaser.Types.Core.GameConfig & {
     */
 
 	dom: {
-		createContainer: true, // Should the game create a div element to act as a DOM Container? Only enable if you're using DOM Element objects. You must provide a parent object if you use this feature.
+		createContainer: false, // Should the game create a div element to act as a DOM Container? Only enable if you're using DOM Element objects. You must provide a parent object if you use this feature.
 		// behindCanvas: false,
 	},
 
