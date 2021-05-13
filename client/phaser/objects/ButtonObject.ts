@@ -5,15 +5,19 @@ export default class Button extends Phaser.GameObjects.GameObject {
 	private shadow?: Phaser.GameObjects.Image
 	private text: Phaser.GameObjects.Text
 	private disabled = false
+	private effect: Function
 
 	constructor(
 		scene: Phaser.Scene,
 		x: number,
 		y: number,
 		text: string,
+		effect: Function,
 		shadow = true
 	) {
 		super(scene, 'button')
+
+		this.effect = effect
 
 		if (shadow) {
 			this.shadow = scene.add
@@ -52,7 +56,7 @@ export default class Button extends Phaser.GameObjects.GameObject {
 
 		this.btn.on('pointerdown', () => {
 			if (!this.disabled) {
-					//Insert effect
+					this.effect(scene)
 			}
 		})
 	}
