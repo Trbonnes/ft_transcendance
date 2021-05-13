@@ -1,9 +1,9 @@
 import Phaser from 'phaser'
 import MenuScene from './scenes/menuScene'
-import GameScene from './scenes/GameScene'
-import SearchingOpponentScene from './scenes/SearchingOpponentScene'
-import TournamentChoiceScene from './scenes/TournamentChoiceScene'
-import TournamentScene from './scenes/TournamentScene'
+import GameScene from './scenes/gameScene'
+import SearchingOpponentScene from './scenes/searchingOpponentScene'
+import TournamentChoiceScene from './scenes/tournamentChoiceScene'
+import TournamentScene from './scenes/tournamentScene'
 
 export const scenesList = {
     HomeScene: 'HomeScene',
