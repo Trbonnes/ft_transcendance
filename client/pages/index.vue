@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
 		<div>
-			<img src='favicon.ico' width='50%' height='50%'>
+			<img src='favicon.ico'>
 			<h1 class="title">transcendence</h1>
 			<div class="links">
 				<NuxtLink	to="/game"
@@ -21,7 +21,7 @@ export default Vue.extend({})
 
 <style>
 .container {
-  margin: 0 auto;
+  margin: auto;
   min-height: 100vh;
   display: flex;
   justify-content: center;
