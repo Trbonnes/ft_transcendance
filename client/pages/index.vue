@@ -1,28 +1,16 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">client</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
-  </div>
+	<div class="container">
+		<div>
+			<img src='favicon.ico' width='50%' height='50%'>
+			<h1 class="title">transcendence</h1>
+			<div class="links">
+				<NuxtLink	to="/game"
+							class="button--grey"
+				>
+				Game</NuxtLink>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script lang="ts">
@@ -42,13 +30,12 @@ export default Vue.extend({})
 }
 
 .title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'vocaloid';
   display: block;
   font-weight: 300;
-  font-size: 100px;
+  font-size: 50px;
   color: #35495e;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
 }
 
 .subtitle {
