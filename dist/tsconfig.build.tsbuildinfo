@@ -1376,6 +1376,11 @@
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
         "affectsGlobalScope": false
       },
+      "../src/ormconfig.ts": {
+        "version": "f3291f0a8248de924c60fd22e40b0c1d8ba25016dbed1a39b05be6d0e347edbe",
+        "signature": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "affectsGlobalScope": false
+      },
       "../node_modules/@babel/types/lib/index.d.ts": {
         "version": "04aa4b737624d30147c0a78e643957206ce6cf8bbb18988e5f05669f0ce9fa84",
         "signature": "04aa4b737624d30147c0a78e643957206ce6cf8bbb18988e5f05669f0ce9fa84",
@@ -4579,7 +4584,8 @@
       "../src/app.controller.ts",
       "../src/app.module.ts",
       "../src/app.service.ts",
-      "../src/main.ts"
+      "../src/main.ts",
+      "../src/ormconfig.ts"
     ]
   },
   "version": "4.2.4"
