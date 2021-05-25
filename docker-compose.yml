@@ -1,45 +1,39 @@
+version: '3.7'
 
-version: '3'
 services:
-  frontend:
-    image: node
-    command: yarn docker
+  backend:
+    container_name: backend
+    build:
+      context: .
+      target: development
     volumes:
-      - ./client:/usr/src/app
-    working_dir: /usr/src/app
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
-      - "3000:3000"
-    environment:
-      HOST: 0.0.0.0
-  server:
-    image: node
-    command: yarn docker
-    volumes:
-      - ./server:/usr/src/app
-    working_dir: /usr/src/app
-    ports:
-      - "4000:4000"
-  postgres: # https://medium.com/analytics-vidhya/getting-started-with-postgresql-using-docker-compose-34d6b808c47c
-    image: postgres
+      - ${SERVER_PORT}:${SERVER_PORT}
+      - 9229:9229
+    command: npm run start:dev
     env_file:
-      - ./postgres/database.env
-    volumes:
-      - ./database:/var/lib/postgresql/data
-    ports:
-      - "5000:5432"
-  pgadmin:
-    image: dpage/pgadmin4
+      - .env
+    networks:
+      - webnet
+    depends_on:
+      - postgres
+  postgres:
+    container_name: postgres
+    image: postgres:12
+    networks:
+      - webnet
     environment:
-      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
-      PGADMIN_DEFAULT_PASSWORD: admin
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    volumes:
-      - pgadmin:/root/.pgadmin
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_DATABASE_NAME}
+      PG_DATA: /var/lib/postgresql/data
     ports:
-      - "5050:80"
-    links:
-      - "postgres:pgsql-server"
-
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+networks:
+  webnet:
 volumes:
-  database:
-  pgadmin:
+  pgdata:
