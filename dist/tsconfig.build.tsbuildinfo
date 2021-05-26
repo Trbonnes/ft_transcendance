@@ -2946,8 +2946,18 @@
         "signature": "8f1241f5d9f0d3d72117768b3c974e462840fbd85026fb66685078945404cf2f",
         "affectsGlobalScope": false
       },
+      "../node_modules/@types/hapi__joi/index.d.ts": {
+        "version": "91a2fdd0c0d1fb495958b2d476785b000d8d337caba9078c14f48c65e324b17a",
+        "signature": "91a2fdd0c0d1fb495958b2d476785b000d8d337caba9078c14f48c65e324b17a",
+        "affectsGlobalScope": false
+      },
+      "../src/database/database.module.ts": {
+        "version": "654aa6386fb035ce908df8b90db70ad99fa970e7015e4c25809e208e896e49b0",
+        "signature": "a7ad670f373dd5665c73c7dc09a8e28b976a63bd7ed08def7c1c13456e87d3dc",
+        "affectsGlobalScope": false
+      },
       "../src/app.module.ts": {
-        "version": "cc6a39e4d78211874b28543970c1df7d6f604ef1b436b3b56433996c1d39f69b",
+        "version": "6a30044f090be1e2e990dd62745d84fcdf297e84df533eb74c89d6561acb10a5",
         "signature": "b82491e2990291580288c5602d4c017238977749d52b17391f0e45d9a29be644",
         "affectsGlobalScope": false
       },
@@ -3134,6 +3144,16 @@
       "../src/main.ts": {
         "version": "e25d9bd8f80b6ffbcc8826ed1b407e747e4fbe346c5bab62cbe5837da4eeb189",
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
+        "affectsGlobalScope": false
+      },
+      "../src/entitites/post.entity.ts": {
+        "version": "e45750dc012731e6bacef9c0fd5ba8dd11ffb826cbfa9b6881f413d187e0cb89",
+        "signature": "1884b7bba29402cde2a46decbb58e405d4e35c133b5aabd4100788af2b6c7746",
+        "affectsGlobalScope": false
+      },
+      "../src/posts/posts.module.ts": {
+        "version": "3af2fd842bfc08cc2220fac9e1871bf3f2431c0a6ea311afb3a6ab6b9f416ca2",
+        "signature": "d73d1be1edc2a3da3bf5a4272781d7c793d79993a6f261bb91fa64bb4ad5b57b",
         "affectsGlobalScope": false
       },
       "../node_modules/@babel/types/lib/index.d.ts": {
@@ -6100,15 +6120,28 @@
         "../node_modules/@nestjs/common/index.d.ts",
         "../node_modules/@nestjs/config/index.d.ts",
         "../node_modules/@nestjs/typeorm/index.d.ts",
+        "../node_modules/@types/hapi__joi/index.d.ts",
         "../src/app.controller.ts",
-        "../src/app.service.ts"
+        "../src/app.service.ts",
+        "../src/database/database.module.ts"
       ],
       "../src/app.service.ts": [
         "../node_modules/@nestjs/common/index.d.ts"
       ],
+      "../src/database/database.module.ts": [
+        "../node_modules/@nestjs/common/index.d.ts",
+        "../node_modules/@nestjs/config/index.d.ts",
+        "../node_modules/@nestjs/typeorm/index.d.ts"
+      ],
+      "../src/entitites/post.entity.ts": [
+        "../node_modules/typeorm/index.d.ts"
+      ],
       "../src/main.ts": [
         "../node_modules/@nestjs/core/index.d.ts",
         "../src/app.module.ts"
+      ],
+      "../src/posts/posts.module.ts": [
+        "../node_modules/@nestjs/common/index.d.ts"
       ]
     },
     "exportedModulesMap": {
@@ -8824,6 +8857,7 @@
       "../node_modules/@types/express-serve-static-core/index.d.ts",
       "../node_modules/@types/express/index.d.ts",
       "../node_modules/@types/graceful-fs/index.d.ts",
+      "../node_modules/@types/hapi__joi/index.d.ts",
       "../node_modules/@types/istanbul-lib-coverage/index.d.ts",
       "../node_modules/@types/istanbul-lib-report/index.d.ts",
       "../node_modules/@types/istanbul-reports/index.d.ts",
@@ -9325,21 +9359,12 @@
       "../node_modules/typescript/lib/lib.scripthost.d.ts",
       "../node_modules/typescript/lib/lib.webworker.importscripts.d.ts",
       "../src/app.controller.ts",
-      [
-        "../src/app.module.ts",
-        [
-          {
-            "file": "../src/app.module.ts",
-            "start": 251,
-            "length": 11,
-            "messageText": "Cannot find module '@hapi/joi' or its corresponding type declarations.",
-            "category": 1,
-            "code": 2307
-          }
-        ]
-      ],
+      "../src/app.module.ts",
       "../src/app.service.ts",
-      "../src/main.ts"
+      "../src/database/database.module.ts",
+      "../src/entitites/post.entity.ts",
+      "../src/main.ts",
+      "../src/posts/posts.module.ts"
     ]
   },
   "version": "4.2.4"

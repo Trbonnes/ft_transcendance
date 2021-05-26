@@ -1,24 +1,6 @@
 version: '3.7'
 
 services:
-  backend:
-    container_name: backend
-    build:
-      context: .
-      target: development
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    env_file:
-      - .env
-    ports:
-      - ${PORT}:${PORT}
-      - 9229:9229
-    command: npm run start:dev
-    networks:
-      - webnet
-    depends_on:
-      - postgres
   postgres:
     container_name: postgres
     image: postgres:12
@@ -44,6 +26,24 @@ services:
     - .env
     networks:
     - postgres
+  backend:
+    container_name: backend
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file:
+      - .env
+    ports:
+      - ${PORT}:${PORT}
+      - 9229:9229
+    command: npm run start:dev
+    networks:
+      - webnet
+    depends_on:
+      - postgres
  
 networks:
   postgres:
