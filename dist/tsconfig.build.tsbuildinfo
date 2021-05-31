@@ -2951,13 +2951,78 @@
         "signature": "91a2fdd0c0d1fb495958b2d476785b000d8d337caba9078c14f48c65e324b17a",
         "affectsGlobalScope": false
       },
-      "../src/database/database.module.ts": {
-        "version": "654aa6386fb035ce908df8b90db70ad99fa970e7015e4c25809e208e896e49b0",
-        "signature": "a7ad670f373dd5665c73c7dc09a8e28b976a63bd7ed08def7c1c13456e87d3dc",
+      "../src/config/config.service.ts": {
+        "version": "51d8384fa5541d1ae55fe598a66d1d3d20431671bbfc15b976416f76c29422e2",
+        "signature": "b0ed6cb7458fbc592567deb31eb58dacffef071e0f3c5d09f48bfc7199e44ce0",
+        "affectsGlobalScope": false
+      },
+      "../src/users/dto/create-user.dto.ts": {
+        "version": "300448b092e3ae1ead491aa6e3e2d39a38b0a332f81e318b64476ea3fc8ee975",
+        "signature": "40ed148fa4c6b37645a1293144445dc588598c37ff33a38f98561c5b009c2f12",
+        "affectsGlobalScope": false
+      },
+      "../node_modules/@nestjs/mapped-types/dist/mapped-type.interface.d.ts": {
+        "version": "2bad09c4dc0810666ef5b6150aa910dd711051ce5f2184050c9859c708092a36",
+        "signature": "2bad09c4dc0810666ef5b6150aa910dd711051ce5f2184050c9859c708092a36",
+        "affectsGlobalScope": false
+      },
+      "../node_modules/@nestjs/mapped-types/dist/intersection-type.helper.d.ts": {
+        "version": "f9466e9b33fddf349c95d02835d174b946f1e81d61b72100d91ce5ff2f9abe3b",
+        "signature": "f9466e9b33fddf349c95d02835d174b946f1e81d61b72100d91ce5ff2f9abe3b",
+        "affectsGlobalScope": false
+      },
+      "../node_modules/@nestjs/mapped-types/dist/omit-type.helper.d.ts": {
+        "version": "c938dac97b83703e7bd03862b5bc558425acc9f16ad9e24220771df184d25fcf",
+        "signature": "c938dac97b83703e7bd03862b5bc558425acc9f16ad9e24220771df184d25fcf",
+        "affectsGlobalScope": false
+      },
+      "../node_modules/@nestjs/mapped-types/dist/partial-type.helper.d.ts": {
+        "version": "8941525aa2f1e097f0352e586bb9c755e2d533e9945508b7518346759b26e1b8",
+        "signature": "8941525aa2f1e097f0352e586bb9c755e2d533e9945508b7518346759b26e1b8",
+        "affectsGlobalScope": false
+      },
+      "../node_modules/@nestjs/mapped-types/dist/pick-type.helper.d.ts": {
+        "version": "8acfefd1aec7626a3016ce7e82e3ac1a0e5b57248cffd8255b833503c29954c7",
+        "signature": "8acfefd1aec7626a3016ce7e82e3ac1a0e5b57248cffd8255b833503c29954c7",
+        "affectsGlobalScope": false
+      },
+      "../node_modules/@nestjs/mapped-types/dist/type-helpers.utils.d.ts": {
+        "version": "3cf73a203d499608e5b91d0c8f6ec729a39dd547cc2651a0d4647cdb420cc1fc",
+        "signature": "3cf73a203d499608e5b91d0c8f6ec729a39dd547cc2651a0d4647cdb420cc1fc",
+        "affectsGlobalScope": false
+      },
+      "../node_modules/@nestjs/mapped-types/dist/index.d.ts": {
+        "version": "17f1d99666811b576261c5c9399cf2a643220188d6dcd0e6fe605a68a696d2c8",
+        "signature": "17f1d99666811b576261c5c9399cf2a643220188d6dcd0e6fe605a68a696d2c8",
+        "affectsGlobalScope": false
+      },
+      "../node_modules/@nestjs/mapped-types/index.d.ts": {
+        "version": "8f1241f5d9f0d3d72117768b3c974e462840fbd85026fb66685078945404cf2f",
+        "signature": "8f1241f5d9f0d3d72117768b3c974e462840fbd85026fb66685078945404cf2f",
+        "affectsGlobalScope": false
+      },
+      "../src/users/dto/update-user.dto.ts": {
+        "version": "7ae221f2ac29a269c32baa485f4bfbd13b97d63159c6bb0471b0789104858642",
+        "signature": "2c238db955c7dd78a3ed0bb25a98e0b14fb88646931d0c9c02b0750b6531061c",
+        "affectsGlobalScope": false
+      },
+      "../src/users/users.service.ts": {
+        "version": "8d47b344b569d5a38652131dc20cfbfbde5134fb89e85b2be822a70c433fa6a9",
+        "signature": "2f2fe3ba9a6448a6d4a2c03aa01eda267daf2a1d756aa081d7be27c5374210ca",
+        "affectsGlobalScope": false
+      },
+      "../src/users/users.controller.ts": {
+        "version": "e7c4c54e754332f727c684d5ec4ca6dccac5a61bf9c49dd2c4988406ab65a6df",
+        "signature": "6714da9426831594b4d82fc99ff8127248813671dbdea2bb8cf9472214bd0f7d",
+        "affectsGlobalScope": false
+      },
+      "../src/users/users.module.ts": {
+        "version": "6917efc8530590a0bf1353de11e2fd35dc859d1e1ef03e82546c68972ede00e2",
+        "signature": "aa1725e38b5a0b4009f6a74f296f173e7926c119a60454dbd2e523861735df69",
         "affectsGlobalScope": false
       },
       "../src/app.module.ts": {
-        "version": "6a30044f090be1e2e990dd62745d84fcdf297e84df533eb74c89d6561acb10a5",
+        "version": "2cef1900da2c404d036fa9fe6618b30a61b967fcebec1fb1b5872551a9ad3a93",
         "signature": "b82491e2990291580288c5602d4c017238977749d52b17391f0e45d9a29be644",
         "affectsGlobalScope": false
       },
@@ -3146,14 +3211,9 @@
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
         "affectsGlobalScope": false
       },
-      "../src/entitites/post.entity.ts": {
-        "version": "e45750dc012731e6bacef9c0fd5ba8dd11ffb826cbfa9b6881f413d187e0cb89",
-        "signature": "1884b7bba29402cde2a46decbb58e405d4e35c133b5aabd4100788af2b6c7746",
-        "affectsGlobalScope": false
-      },
-      "../src/posts/posts.module.ts": {
-        "version": "3af2fd842bfc08cc2220fac9e1871bf3f2431c0a6ea311afb3a6ab6b9f416ca2",
-        "signature": "d73d1be1edc2a3da3bf5a4272781d7c793d79993a6f261bb91fa64bb4ad5b57b",
+      "../src/users/entities/user.entity.ts": {
+        "version": "d6c0945659f48059b2693b4a946705d16a46e28adc9dd4896b7ed904da0af334",
+        "signature": "4e5e9a792f1d5b7e88ac14800204cd5dcc86f48ab07d44b9c3701d6b10a3de4c",
         "affectsGlobalScope": false
       },
       "../node_modules/@babel/types/lib/index.d.ts": {
@@ -4272,6 +4332,39 @@
       ],
       "../node_modules/@nestjs/core/services/reflector.service.d.ts": [
         "../node_modules/@nestjs/common/index.d.ts"
+      ],
+      "../node_modules/@nestjs/mapped-types/dist/index.d.ts": [
+        "../node_modules/@nestjs/mapped-types/dist/intersection-type.helper.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/mapped-type.interface.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/omit-type.helper.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/partial-type.helper.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/pick-type.helper.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/type-helpers.utils.d.ts"
+      ],
+      "../node_modules/@nestjs/mapped-types/dist/intersection-type.helper.d.ts": [
+        "../node_modules/@nestjs/common/index.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/mapped-type.interface.d.ts"
+      ],
+      "../node_modules/@nestjs/mapped-types/dist/mapped-type.interface.d.ts": [
+        "../node_modules/@nestjs/common/index.d.ts"
+      ],
+      "../node_modules/@nestjs/mapped-types/dist/omit-type.helper.d.ts": [
+        "../node_modules/@nestjs/common/index.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/mapped-type.interface.d.ts"
+      ],
+      "../node_modules/@nestjs/mapped-types/dist/partial-type.helper.d.ts": [
+        "../node_modules/@nestjs/common/index.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/mapped-type.interface.d.ts"
+      ],
+      "../node_modules/@nestjs/mapped-types/dist/pick-type.helper.d.ts": [
+        "../node_modules/@nestjs/common/index.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/mapped-type.interface.d.ts"
+      ],
+      "../node_modules/@nestjs/mapped-types/dist/type-helpers.utils.d.ts": [
+        "../node_modules/@nestjs/common/index.d.ts"
+      ],
+      "../node_modules/@nestjs/mapped-types/index.d.ts": [
+        "../node_modules/@nestjs/mapped-types/dist/index.d.ts"
       ],
       "../node_modules/@nestjs/typeorm/dist/common/index.d.ts": [
         "../node_modules/@nestjs/typeorm/dist/common/typeorm.decorators.d.ts",
@@ -6123,25 +6216,41 @@
         "../node_modules/@types/hapi__joi/index.d.ts",
         "../src/app.controller.ts",
         "../src/app.service.ts",
-        "../src/database/database.module.ts"
+        "../src/config/config.service.ts",
+        "../src/users/users.module.ts"
       ],
       "../src/app.service.ts": [
         "../node_modules/@nestjs/common/index.d.ts"
       ],
-      "../src/database/database.module.ts": [
-        "../node_modules/@nestjs/common/index.d.ts",
-        "../node_modules/@nestjs/config/index.d.ts",
+      "../src/config/config.service.ts": [
         "../node_modules/@nestjs/typeorm/index.d.ts"
-      ],
-      "../src/entitites/post.entity.ts": [
-        "../node_modules/typeorm/index.d.ts"
       ],
       "../src/main.ts": [
         "../node_modules/@nestjs/core/index.d.ts",
         "../src/app.module.ts"
       ],
-      "../src/posts/posts.module.ts": [
-        "../node_modules/@nestjs/common/index.d.ts"
+      "../src/users/dto/update-user.dto.ts": [
+        "../node_modules/@nestjs/mapped-types/index.d.ts",
+        "../src/users/dto/create-user.dto.ts"
+      ],
+      "../src/users/entities/user.entity.ts": [
+        "../node_modules/typeorm/index.d.ts"
+      ],
+      "../src/users/users.controller.ts": [
+        "../node_modules/@nestjs/common/index.d.ts",
+        "../src/users/dto/create-user.dto.ts",
+        "../src/users/dto/update-user.dto.ts",
+        "../src/users/users.service.ts"
+      ],
+      "../src/users/users.module.ts": [
+        "../node_modules/@nestjs/common/index.d.ts",
+        "../src/users/users.controller.ts",
+        "../src/users/users.service.ts"
+      ],
+      "../src/users/users.service.ts": [
+        "../node_modules/@nestjs/common/index.d.ts",
+        "../src/users/dto/create-user.dto.ts",
+        "../src/users/dto/update-user.dto.ts"
       ]
     },
     "exportedModulesMap": {
@@ -6800,6 +6909,39 @@
       ],
       "../node_modules/@nestjs/core/services/reflector.service.d.ts": [
         "../node_modules/@nestjs/common/index.d.ts"
+      ],
+      "../node_modules/@nestjs/mapped-types/dist/index.d.ts": [
+        "../node_modules/@nestjs/mapped-types/dist/intersection-type.helper.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/mapped-type.interface.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/omit-type.helper.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/partial-type.helper.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/pick-type.helper.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/type-helpers.utils.d.ts"
+      ],
+      "../node_modules/@nestjs/mapped-types/dist/intersection-type.helper.d.ts": [
+        "../node_modules/@nestjs/common/index.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/mapped-type.interface.d.ts"
+      ],
+      "../node_modules/@nestjs/mapped-types/dist/mapped-type.interface.d.ts": [
+        "../node_modules/@nestjs/common/index.d.ts"
+      ],
+      "../node_modules/@nestjs/mapped-types/dist/omit-type.helper.d.ts": [
+        "../node_modules/@nestjs/common/index.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/mapped-type.interface.d.ts"
+      ],
+      "../node_modules/@nestjs/mapped-types/dist/partial-type.helper.d.ts": [
+        "../node_modules/@nestjs/common/index.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/mapped-type.interface.d.ts"
+      ],
+      "../node_modules/@nestjs/mapped-types/dist/pick-type.helper.d.ts": [
+        "../node_modules/@nestjs/common/index.d.ts",
+        "../node_modules/@nestjs/mapped-types/dist/mapped-type.interface.d.ts"
+      ],
+      "../node_modules/@nestjs/mapped-types/dist/type-helpers.utils.d.ts": [
+        "../node_modules/@nestjs/common/index.d.ts"
+      ],
+      "../node_modules/@nestjs/mapped-types/index.d.ts": [
+        "../node_modules/@nestjs/mapped-types/dist/index.d.ts"
       ],
       "../node_modules/@nestjs/typeorm/dist/common/index.d.ts": [
         "../node_modules/@nestjs/typeorm/dist/common/typeorm.decorators.d.ts",
@@ -8642,6 +8784,22 @@
       ],
       "../src/app.controller.ts": [
         "../src/app.service.ts"
+      ],
+      "../src/config/config.service.ts": [
+        "../node_modules/@nestjs/typeorm/index.d.ts"
+      ],
+      "../src/users/dto/update-user.dto.ts": [
+        "../node_modules/@nestjs/mapped-types/index.d.ts",
+        "../src/users/dto/create-user.dto.ts"
+      ],
+      "../src/users/users.controller.ts": [
+        "../src/users/dto/create-user.dto.ts",
+        "../src/users/dto/update-user.dto.ts",
+        "../src/users/users.service.ts"
+      ],
+      "../src/users/users.service.ts": [
+        "../src/users/dto/create-user.dto.ts",
+        "../src/users/dto/update-user.dto.ts"
       ]
     },
     "semanticDiagnosticsPerFile": [
@@ -8833,6 +8991,14 @@
       "../node_modules/@nestjs/core/router/request/request-constants.d.ts",
       "../node_modules/@nestjs/core/services/index.d.ts",
       "../node_modules/@nestjs/core/services/reflector.service.d.ts",
+      "../node_modules/@nestjs/mapped-types/dist/index.d.ts",
+      "../node_modules/@nestjs/mapped-types/dist/intersection-type.helper.d.ts",
+      "../node_modules/@nestjs/mapped-types/dist/mapped-type.interface.d.ts",
+      "../node_modules/@nestjs/mapped-types/dist/omit-type.helper.d.ts",
+      "../node_modules/@nestjs/mapped-types/dist/partial-type.helper.d.ts",
+      "../node_modules/@nestjs/mapped-types/dist/pick-type.helper.d.ts",
+      "../node_modules/@nestjs/mapped-types/dist/type-helpers.utils.d.ts",
+      "../node_modules/@nestjs/mapped-types/index.d.ts",
       "../node_modules/@nestjs/typeorm/dist/common/index.d.ts",
       "../node_modules/@nestjs/typeorm/dist/common/typeorm.decorators.d.ts",
       "../node_modules/@nestjs/typeorm/dist/common/typeorm.utils.d.ts",
@@ -9361,10 +9527,14 @@
       "../src/app.controller.ts",
       "../src/app.module.ts",
       "../src/app.service.ts",
-      "../src/database/database.module.ts",
-      "../src/entitites/post.entity.ts",
+      "../src/config/config.service.ts",
       "../src/main.ts",
-      "../src/posts/posts.module.ts"
+      "../src/users/dto/create-user.dto.ts",
+      "../src/users/dto/update-user.dto.ts",
+      "../src/users/entities/user.entity.ts",
+      "../src/users/users.controller.ts",
+      "../src/users/users.module.ts",
+      "../src/users/users.service.ts"
     ]
   },
   "version": "4.2.4"

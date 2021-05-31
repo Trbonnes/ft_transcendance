@@ -3,29 +3,29 @@ version: '3.7'
 services:
   postgres:
     container_name: postgres
-    image: postgres:12
-    networks:
-      - webnet
-      - postgres
-    env_file:
-      - .env
+    image: postgres:latest
     ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    - "5432:5432"
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data
-  pgadmin:
-    links:
-    - postgres:postgres
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    ports:
-    - "8080:80"
-    volumes:
-    - ./data/pgadmin:/root/.pgadmin
+    - ./data/postgres:/data/postgres
     env_file:
     - .env
     networks:
     - postgres
+ 
+  # pgadmin:
+  #   links:
+  #   - postgres:postgres
+  #   container_name: pgadmin
+  #   image: dpage/pgadmin4
+  #   ports:
+  #   - "8080:80"
+  #   volumes:
+  #   - ./data/pgadmin:/root/.pgadmin
+  #   env_file:
+  #   - .env
+  #   networks:
+  #   - postgres
   backend:
     container_name: backend
     build:

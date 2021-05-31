@@ -30,6 +30,7 @@
     "@nestjs/typeorm": "^7.1.5",
     "@types/hapi__joi": "^17.1.6",
     "dotenv": "^8.2.0",
+    "nestjs-cli": "^1.4.7",
     "pg": "^8.6.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",

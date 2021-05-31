@@ -6,24 +6,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppModule = void 0;
+exports.GuildsModule = void 0;
 const common_1 = require("@nestjs/common");
-const app_controller_1 = require("./app.controller");
-const app_service_1 = require("./app.service");
-const typeorm_1 = require("@nestjs/typeorm");
-const config_service_1 = require("./config/config.service");
-const users_module_1 = require("./users/users.module");
-let AppModule = class AppModule {
+const guilds_service_1 = require("./guilds.service");
+const guilds_controller_1 = require("./guilds.controller");
+let GuildsModule = class GuildsModule {
 };
-AppModule = __decorate([
+GuildsModule = __decorate([
     common_1.Module({
-        imports: [
-            typeorm_1.TypeOrmModule.forRoot(config_service_1.configService.getTypeOrmConfig()),
-            users_module_1.UsersModule,
-        ],
-        controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        controllers: [guilds_controller_1.GuildsController],
+        providers: [guilds_service_1.GuildsService]
     })
-], AppModule);
-exports.AppModule = AppModule;
-//# sourceMappingURL=app.module.js.map
+], GuildsModule);
+exports.GuildsModule = GuildsModule;
+//# sourceMappingURL=guilds.module.js.map
