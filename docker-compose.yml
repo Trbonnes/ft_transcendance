@@ -11,21 +11,8 @@ services:
     env_file:
     - .env
     networks:
-    - postgres
- 
-  # pgadmin:
-  #   links:
-  #   - postgres:postgres
-  #   container_name: pgadmin
-  #   image: dpage/pgadmin4
-  #   ports:
-  #   - "8080:80"
-  #   volumes:
-  #   - ./data/pgadmin:/root/.pgadmin
-  #   env_file:
-  #   - .env
-  #   networks:
-  #   - postgres
+    - webnet
+  
   backend:
     container_name: backend
     build:
@@ -46,8 +33,6 @@ services:
       - postgres
  
 networks:
-  postgres:
-    driver: bridge
   webnet:
 volumes:
   pgdata:

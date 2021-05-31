@@ -3212,8 +3212,8 @@
         "affectsGlobalScope": false
       },
       "../src/users/entities/user.entity.ts": {
-        "version": "d6c0945659f48059b2693b4a946705d16a46e28adc9dd4896b7ed904da0af334",
-        "signature": "4e5e9a792f1d5b7e88ac14800204cd5dcc86f48ab07d44b9c3701d6b10a3de4c",
+        "version": "2eddc81136ca131888cba956efcbc562e4b0a64dd975d5fd84bd72e290671d98",
+        "signature": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "affectsGlobalScope": false
       },
       "../node_modules/@babel/types/lib/index.d.ts": {
@@ -6232,9 +6232,6 @@
       "../src/users/dto/update-user.dto.ts": [
         "../node_modules/@nestjs/mapped-types/index.d.ts",
         "../src/users/dto/create-user.dto.ts"
-      ],
-      "../src/users/entities/user.entity.ts": [
-        "../node_modules/typeorm/index.d.ts"
       ],
       "../src/users/users.controller.ts": [
         "../node_modules/@nestjs/common/index.d.ts",

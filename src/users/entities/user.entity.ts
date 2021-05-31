@@ -1,5 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-export class User {
+// export class User {
 
-}
+// }
