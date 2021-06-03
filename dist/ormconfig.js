@@ -8,7 +8,7 @@ const config = {
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DB,
     entities: [
-        __dirname + '/../**/*.entity{.ts,.js}',
+        __dirname + '/../**/*.entities{.ts,.js}',
     ],
     synchronize: true,
 };
