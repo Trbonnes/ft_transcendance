@@ -1,30 +1,32 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.configService = void 0;
 require('dotenv').config();
-class ConfigService {
-    constructor(env) {
+var ConfigService = /** @class */ (function () {
+    function ConfigService(env) {
         this.env = env;
     }
-    getValue(key, throwOnMissing = true) {
-        const value = this.env[key];
+    ConfigService.prototype.getValue = function (key, throwOnMissing) {
+        if (throwOnMissing === void 0) { throwOnMissing = true; }
+        var value = this.env[key];
         if (!value && throwOnMissing) {
-            throw new Error(`config error - missing env.${key}`);
+            throw new Error("config error - missing env." + key);
         }
         return value;
-    }
-    ensureValues(keys) {
-        keys.forEach(k => this.getValue(k, true));
+    };
+    ConfigService.prototype.ensureValues = function (keys) {
+        var _this = this;
+        keys.forEach(function (k) { return _this.getValue(k, true); });
         return this;
-    }
-    getPort() {
+    };
+    ConfigService.prototype.getPort = function () {
         return this.getValue('PORT', true);
-    }
-    isProduction() {
-        const mode = this.getValue('MODE', false);
+    };
+    ConfigService.prototype.isProduction = function () {
+        var mode = this.getValue('MODE', false);
         return mode != 'DEV';
-    }
-    getTypeOrmConfig() {
+    };
+    ConfigService.prototype.getTypeOrmConfig = function () {
         return {
             type: 'postgres',
             host: this.getValue('POSTGRES_HOST'),
@@ -37,13 +39,14 @@ class ConfigService {
             migrationsTableName: 'migration',
             migrations: ['src/migration/*.ts'],
             cli: {
-                migrationsDir: 'src/migration',
+                migrationsDir: 'src/migration'
             },
-            ssl: this.isProduction(),
+            ssl: this.isProduction()
         };
-    }
-}
-const configService = new ConfigService(process.env)
+    };
+    return ConfigService;
+}());
+var configService = new ConfigService(process.env)
     .ensureValues([
     'POSTGRES_HOST',
     'POSTGRES_PORT',
@@ -52,4 +55,3 @@ const configService = new ConfigService(process.env)
     'POSTGRES_DATABASE'
 ]);
 exports.configService = configService;
-//# sourceMappingURL=config.service.js.map
