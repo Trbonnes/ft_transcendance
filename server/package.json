@@ -21,12 +21,21 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "@nestjs/common": "^7.6.15",
+    "@nestjs/config": "^0.6.3",
     "@nestjs/core": "^7.6.15",
+    "@nestjs/mapped-types": "^0.4.1",
     "@nestjs/platform-express": "^7.6.15",
+    "@nestjs/typeorm": "^7.1.5",
+    "@types/hapi__joi": "^17.1.6",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.2.5",
+    "pg": "^8.6.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^6.6.6"
+    "rxjs": "^6.6.6",
+    "typeorm": "^0.2.33"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.6.0",
