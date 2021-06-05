@@ -1,16 +1,16 @@
 
 version: '3.7'
 services:
-  #frontend:
-  #  image: node
-  #  command: yarn docker
-  #  volumes:
-  #    - ./client:/usr/src/app
-  #  working_dir: /usr/src/app
-  #  ports:
-  #    - "80:3000"
-  #  environment:
-  #    HOST: 0.0.0.0
+  frontend:
+    image: node
+    command: yarn docker
+    volumes:
+      - ./client:/usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - "80:3000"
+    environment:
+      HOST: 0.0.0.0
   postgres: # https://medium.com/analytics-vidhya/getting-started-with-postgresql-using-docker-compose-34d6b808c47c
     image: postgres
     env_file:
