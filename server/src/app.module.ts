@@ -9,7 +9,7 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-	//TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
+	TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
 	UsersModule,
   ],
   controllers: [AppController],
