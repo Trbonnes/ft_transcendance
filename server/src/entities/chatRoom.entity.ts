@@ -1,4 +1,5 @@
-import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity, OneToMany, OneToOne, ManyToMany } from 'typeorm';
+import { UserInChatRoom } from './userInChatRoom.entity';
 
 @Entity()
 export class ChatRoom {
@@ -9,12 +10,21 @@ export class ChatRoom {
     @Column()
     password: string = "" //if not set channel is public
 
-    @Column()
-    owner: string //User id
-
 	@CreateDateColumn()
 	createdDate: Date
 
 	@UpdateDateColumn()
-	lastUpdated: Date
+    lastUpdated: Date
+
+    @OneToMany(() => UserInChatRoom, userInChatRoom => userInChatRoom.chatRoom)
+    public usersInChatRoom: UserInChatRoom[]
+
+    public get owner(): UserInChatRoom | null {
+        return this.usersInChatRoom.find(userInChatRoom => userInChatRoom.isOwner)
+    }
+
+    public get administrators(): UserInChatRoom[] {
+        return this.usersInChatRoom.filter(userInChatRoom => userInChatRoom.isAdministrator)
+    }
+
 }

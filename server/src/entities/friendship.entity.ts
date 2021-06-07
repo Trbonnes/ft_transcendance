@@ -1,15 +1,11 @@
-import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity, PrimaryColumn, ManyToMany } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity()
 export class Friendship {
 	@PrimaryColumn()
 	status: boolean // 0: pending 1:active
 
-    @Column()
-	userId1: string
-
-    @Column()
-	userId2: string
-
-	
+    @ManyToMany(() => User, user => user.friendships)
+    public users: User[]
 }

@@ -1,17 +1,23 @@
-import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity, PrimaryColumn, ManyToOne } from 'typeorm';
+import { ChatRoom } from './chatRoom.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class UserInChatRoom {
 
-    @PrimaryColumn('uuid') // generates unique id for each user
-    userId: string
+    @PrimaryGeneratedColumn('uuid') // generates unique id for each user
+    id: string;
 
-    @Column()
-    chatId: string
+    @ManyToOne(() => User, user => user.userInChatRoom)
+    public user: User
+
+    @ManyToOne(() => ChatRoom, chatRoom => chatRoom.usersInChatRoom)
+    public chatRoom: ChatRoom
     
     @Column()
     isOwner: boolean
 
     @Column()
     isAdministrator: boolean
+
 }

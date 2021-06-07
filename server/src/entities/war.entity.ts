@@ -1,4 +1,5 @@
-import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity, ManyToMany, OneToOne, JoinColumn } from 'typeorm';
+import { Guild } from './guild.entity';
 
 @Entity()
 export class War {
@@ -9,15 +10,14 @@ export class War {
     @Column()
     status: boolean // 0: ongoing 1: finished
 
-    @Column()
-    guild1: string // Guild id
+	@ManyToMany(() => Guild, guild => guild.wars)
+    public guilds: Guild[]
 
-    @Column()
-	guild2: string
-	
-	@Column()
-	winner: string
+    @OneToOne(() => Guild)
+    @JoinColumn()
+	public winner: Guild
 
 	@CreateDateColumn()
-	date: Date
+    date: Date
+    
 }

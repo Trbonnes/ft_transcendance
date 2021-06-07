@@ -1,4 +1,8 @@
-import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity, OneToMany, ManyToMany, OneToOne, JoinTable, JoinColumn } from 'typeorm';
+import { Friendship } from './friendship.entity';
+import { Game } from './game.entity';
+import { UserInChatRoom } from './userInChatRoom.entity';
+import { UserInGuild } from './userInGuild.entity';
 
 @Entity()
 export class User {
@@ -50,4 +54,19 @@ export class User {
 
 	@UpdateDateColumn()
 	lastUpdated: Date
+
+	@ManyToMany(() => Game, game => game.players)
+	@JoinTable()
+	public games: Game[]
+
+	@ManyToMany(() => Friendship, friendship => friendship.users)
+	public friendships: Friendship[]
+
+	@OneToOne(() => UserInGuild, userInGuild => userInGuild.user)
+	@JoinColumn()
+	public userInGuild: UserInGuild
+
+	@OneToMany(() => UserInChatRoom, userInChatRoom => userInChatRoom.user)
+	public userInChatRoom: UserInChatRoom[]
+	
 }

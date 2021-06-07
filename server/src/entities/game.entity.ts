@@ -1,4 +1,5 @@
-import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity, ManyToMany, OneToMany, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity()
 export class Game {
@@ -9,15 +10,13 @@ export class Game {
     @Column()
     status: boolean // 0: ongoing 1: finished
 
-    @Column()
-    player1: string // User id
-
-    @Column()
-	player2: string
+    @ManyToMany(() => User, user => user.games)
+    public players: User[]
 	
-	@Column()
-	winner: string
+    @OneToOne(() => User)
+    @JoinColumn()
+	public winner: User
 
 	@CreateDateColumn()
-	date: Date
+    date: Date
 }
