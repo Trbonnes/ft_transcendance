@@ -34,6 +34,7 @@ export default {
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/fontawesome'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -42,6 +43,12 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/pwa'
   ],
+
+  fontawesome : {
+    icons: {
+      solid: true
+    }
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
