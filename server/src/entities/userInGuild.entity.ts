@@ -1,10 +1,10 @@
-import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class UserInGuild {
 
-    @PrimaryGeneratedColumn('uuid') // generates unique id for each user
-    id: string
+    @PrimaryColumn() // generates unique id for each user
+    userId: string
 
     @Column()
     guildId: string

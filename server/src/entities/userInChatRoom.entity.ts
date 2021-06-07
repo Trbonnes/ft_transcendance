@@ -1,10 +1,10 @@
-import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class UserInChatRoom {
 
-    @PrimaryGeneratedColumn('uuid') // generates unique id for each user
-    id: string
+    @PrimaryColumn('uuid') // generates unique id for each user
+    userId: string
 
     @Column()
     chatId: string
