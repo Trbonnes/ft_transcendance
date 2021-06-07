@@ -4,25 +4,50 @@ import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Ent
 export class User {
 
     @PrimaryGeneratedColumn('uuid') // generates unique id for each user
-    id: string;
-
-    @Column()
-    firstName: string;
-
-    @Column()
-    lastName: string;
-
-    @Column()
-	isActive: boolean;
+	id: string
 	
 	@Column()
-	email: string;
+	email: string
+
+	@Column()
+	password: string;
+
+    @Column()
+	name: string
+	
+	@Column()
+	avatar: string // link to the image
+
+    @Column()
+	isActive: boolean
+
+	@Column()
+	inGame: boolean
+
+	@Column()
+	guild: string = ""
+
+	@Column()
+	twoFactors: boolean = false
+
+	@Column()
+	victory: number
+
+	@Column()
+	defeat: number
+
+	@Column()
+	ladder: number
+
+	@Column()
+	wonTournaments: number
+
+	@Column()
+	isAdministrator: boolean
 
 	@CreateDateColumn()
-	createdDate: Date;
+	createdDate: Date
 
 	@UpdateDateColumn()
-	lastUpdated: Date;
-	// @Column()
-	// guild: string;
+	lastUpdated: Date
 }

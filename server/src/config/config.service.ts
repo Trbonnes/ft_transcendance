@@ -41,10 +41,10 @@ class ConfigService {
       database: this.getValue('POSTGRES_DATABASE'),
 
       entities: ["dist/entities/**/*.ts"],
-	  autoLoadEntities: true,
-      migrationsTableName: 'migration',
-
+	    autoLoadEntities: true,
       migrations: ['src/migration/*.ts'],
+      migrationsTableName: 'migration',
+      migrationsRun: true,
 
       cli: {
         migrationsDir: 'src/migration',

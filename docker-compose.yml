@@ -17,6 +17,7 @@ services:
       - ./dev.env
     volumes:
       - ./database:/var/lib/postgresql/data
+     # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5000:5432"
   pgadmin:
