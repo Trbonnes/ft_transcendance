@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import * as Joi from '@hapi/joi';
 import { configService } from './config/config.service';
 import { UsersModule } from './users/users.module';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { UsersModule } from './users/users.module';
 	UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppGateway],
 })
 export class AppModule {}

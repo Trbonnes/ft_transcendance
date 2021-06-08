@@ -5,9 +5,13 @@
 			<h1 class="title">transcendence</h1>
 			<div class="links">
 				<NuxtLink	to="/game"
-							class="button--grey"
+							class="button--blue"
 				>
 				Game</NuxtLink>
+        <NuxtLink to="/testchat"
+              class="button--grey"
+        >
+        Chat</NuxtLink>
 			</div>
 		</div>
 	</div>
