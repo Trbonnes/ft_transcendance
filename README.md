@@ -4,9 +4,9 @@
 Vuejs with Nuxt and typescript
 
 # Backend in Server directory
-Nodejs with Express and typescript
+Nestjs, TypeOrm and Postgresql
 
 # Run
 In the project root, simply run docker-compose up
 This will launch both frontend and backend using the specifications of docker-compose.yml
-Both frontend and backend are using the package manager yarn and NOT npm
+Both frontend and backend are using the package manager yarn
