@@ -1,6 +1,6 @@
 <template>
 	<div>
-    <main-menu></main-menu> 
+		The index page should be a sort of a dashboar
 	</div>
 </template>
 

@@ -16,7 +16,6 @@ export default {
 .container{
 	font-size: 3em;
 	background-color: rgb(201, 201, 201);
-	min-height: 10vh;
 }
 
 .container > svg
