@@ -4,8 +4,8 @@ import { Socket, Server } from 'socket.io'
 import { AppService } from './app.service'
 
 
-@WebSocketGateway({ namespace: 'game' })
-export class ChatGateway {
+@WebSocketGateway({ namespace: 'game', cors: true })
+export class GameGateway {
   constructor(private appService: AppService) {}
 
   @WebSocketServer()

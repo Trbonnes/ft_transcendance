@@ -47,24 +47,24 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    proxy: true
+    // proxy: true
   },
 
-  proxy: {
-    '/api/': {target: 'http:localhost:3000/api', pathRewrite: {'^/api/': ''}, changeOrigin: true },
-  },
+  // proxy: {
+  //   '/api/': {target: 'http:localhost:3000', pathRewrite: {'^/api/': ''}, changeOrigin: true },
+  // },
 
-  io: {
-    sockets: [
-      {
-        name: 'default',
-        url: 'http://localhost:3000',
-        default: true,
-        vuex: {},
-        namespaces: {},
-      },
-    ]
-  },
+  // io: {
+  //   sockets: [
+  //     {
+  //       name: 'default',
+  //       url: 'http://localhost:3000',
+  //       default: true,
+  //       vuex: {},
+  //       namespaces: {},
+  //     },
+  //   ]
+  // },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
