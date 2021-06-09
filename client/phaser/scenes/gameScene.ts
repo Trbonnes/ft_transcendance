@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import io from 'socket.io-client'
 import { config } from '../phaserconfig'
 import { scenesList, activeScene, setActiveScene } from '../sceneManager'
 
@@ -8,6 +9,7 @@ import Ball from '../objects/BallObject'
 
 
 export default class GameScene extends Phaser.Scene {
+    private socket = io('http://localhost:3000/game')
     private leftBar?: PongBar
     private rightBar?: PongBar
     private ball?: Ball
@@ -23,8 +25,8 @@ export default class GameScene extends Phaser.Scene {
 
     create() {
         setActiveScene(scenesList.GameScene);
+        this.socket.emit('game')
         this.input.setDefaultCursor('none') // Not forget to this.input.setDefaultCursor('default') when stopping the scene
-
         this.leftBar = new PongBar(this)
         this.rightBar = new PongBar(this, 1)
         this.ball = new Ball(this)

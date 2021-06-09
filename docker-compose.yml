@@ -46,7 +46,7 @@ services:
     ports:
       - 3000:3000
       - 9229:9229
-    command: npm run start:dev
+    command: yarn docker
     depends_on:
       - postgres
 

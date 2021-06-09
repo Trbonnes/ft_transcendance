@@ -1,35 +1,28 @@
-import {
-  SubscribeMessage,
-  WebSocketGateway,
-  OnGatewayInit,
-  WebSocketServer,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-} from '@nestjs/websockets';
+import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common'
 import { Socket, Server } from 'socket.io'
+import { AppService } from './app.service'
 
-@WebSocketGateway()
-export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
-  @WebSocketServer() server: Server
-  private logger: Logger = new Logger('AppGateway')
+@WebSocketGateway({ namespace: 'game' })
+export class ChatGateway {
+  constructor(private appService: AppService) {}
 
-  @SubscribeMessage('msgToServer')
-  handleMessage(client: Socket, payload: any): void {
-    this.server.emit('msgToClient', payload)
-  }
-
-  afterInit(server: Server) {
-    this.logger.log('Init')
-  }
-
-  handleDisconnect(client: Socket) {
-    this.logger.log(`Client disconnected: ${client.id}`)
-  }
+  @WebSocketServer()
+  private server: Server
 
   handleConnection(client: Socket, ...args: any[]) {
-    this.logger.log(`Client connected: ${client.id}`)
+    console.log('WS Connect', { id: client.id })
+  }
+
+  @SubscribeMessage('game')
+  handleEvent(
+    @MessageBody() data: unknown,
+    @ConnectedSocket() client: Socket,
+    ) {
+      const ret = 'hello'
+      console.log('Emit', client.id, 'game', ret)
+      client.emit('game', ret)
   }
 
 }

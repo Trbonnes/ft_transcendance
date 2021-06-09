@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "docker": "yarn && yarn start:debug",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -31,12 +32,14 @@
     "@nestjs/typeorm": "^7.1.5",
     "@nestjs/websockets": "^7.6.17",
     "@types/hapi__joi": "^17.1.6",
+    "@types/socket.io": "^3.0.2",
     "mysql": "^2.18.1",
     "mysql2": "^2.2.5",
     "pg": "^8.6.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.6",
+    "socket.io": "^4.1.2",
     "typeorm": "^0.2.33"
   },
   "devDependencies": {

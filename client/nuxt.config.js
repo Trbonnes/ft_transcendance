@@ -40,12 +40,30 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    '@nuxtjs/proxy',
+    'nuxt-socket-io'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURl: 'http:localhost:3000/api',
+    proxy: true
+  },
+
+  proxy: {
+    '/api/': {target: 'http:localhost:3000/api', pathRewrite: {'^/api/': ''}, changeOrigin: true },
+  },
+
+  io: {
+    sockets: [
+      {
+        name: 'default',
+        url: 'http://localhost:3000',
+        default: true,
+        vuex: {},
+        namespaces: {},
+      },
+    ]
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

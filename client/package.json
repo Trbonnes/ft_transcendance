@@ -10,7 +10,7 @@
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint": "yarn lint:js",
     "test": "jest",
-    "docker": "yarn install && yarn dev"
+    "docker": "yarn && yarn dev"
   },
   "dependencies": {
     "@babel/core": "^7.14.3",
@@ -19,10 +19,13 @@
     "@nuxtjs/tailwindcss": "^4.1.1",
     "core-js": "^3.9.1",
     "nuxt": "^2.15.3",
+    "nuxt-property-decorator": "^2.9.1",
     "nuxt-socket-io": "^1.1.18",
     "phaser": "^3.54.0",
     "typescript": "^4.2.4",
     "vue": "^2.6.12",
+    "vue-socket.io": "^3.0.10",
+    "vue-socket.io-extended": "^4.2.0",
     "webpack": "^5.37.1"
   },
   "devDependencies": {
