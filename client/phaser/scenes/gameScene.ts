@@ -25,6 +25,7 @@ export default class GameScene extends Phaser.Scene {
 
     create() {
         setActiveScene(scenesList.GameScene)
+        //scutil --get LocalHostName
         this.socket = io("http://e2r3p14:3000/game", {
             transportOptions: {
                 cors : {
