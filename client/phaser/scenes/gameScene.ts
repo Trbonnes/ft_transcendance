@@ -33,7 +33,7 @@ export default class GameScene extends Phaser.Scene {
                 transports: ['websockets']
             }
           })
-        //this.socket.emit('game')
+        this.socket.emit('game')
         this.input.setDefaultCursor('none') // Not forget to this.input.setDefaultCursor('default') when stopping the scene
         this.leftBar = new PongBar(this)
         this.rightBar = new PongBar(this, 1)
