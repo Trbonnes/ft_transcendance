@@ -3,6 +3,8 @@ version: '3.7'
 services:
   frontend:
     image: node
+    env_file:
+      - ./dev.env
     command: yarn docker
     volumes:
       - ./client:/usr/src/app
