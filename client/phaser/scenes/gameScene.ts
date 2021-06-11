@@ -27,7 +27,10 @@ export default class GameScene extends Phaser.Scene {
         setActiveScene(scenesList.GameScene)
         this.socket = io("http://localhost:3000/game", {
             transportOptions: {
-                cors : true
+                cors : {
+                    origin: '*'
+                },
+                transports: ['websockets']
             }
           })
         //this.socket.emit('game')
