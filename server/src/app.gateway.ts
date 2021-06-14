@@ -11,6 +11,9 @@ import { AppService } from './app.service'
   }
 })
 export class GameGateway {
+  private player0: Socket = undefined
+  private player1: Socket = undefined
+
   constructor(private appService: AppService) {}
 
   @WebSocketServer()
@@ -18,16 +21,45 @@ export class GameGateway {
 
   handleConnection(client: Socket, ...args: any[]) {
     console.log('WS Connect', { id: client.id })
+    client.on('disconnect', () => {
+      console.log(client.id, 'disconnected')
+      if (this.player0 == client)
+        this.player0 = undefined
+      else if (this.player1 == client)
+        this.player1 = undefined
+    })
   }
 
-  @SubscribeMessage('game')
-  handleEvent(
+  @SubscribeMessage('JoinGame')
+  handleJoinGame(
     @MessageBody() data: unknown,
     @ConnectedSocket() client: Socket,
     ) {
-      const ret = 'hello'
-      console.log('Emit', client.id, 'game', ret)
-      client.emit('game', ret)
+      let ret: number
+      if (!this.player0) {
+        this.player0 = client
+        ret = 0
+      }
+      else if (!this.player1) {
+        this.player1 = client
+        ret = 1
+        this.player0.emit('OpponentFound')
+        this.player1.emit('OpponentFound')
+      }
+      console.log('Emit', client.id, 'JoinGame', ret)
+      return ret
+  }
+
+  @SubscribeMessage('MoveBar')
+  handleMoveBar(
+    @MessageBody() data: number,
+    @ConnectedSocket() client: Socket,
+  ) {
+    console.log('Emit', client.id, 'MoveBar', data)
+    if (this.player0 == client)
+      this.player1.emit('OpponentMove', data)
+    else if (this.player1 == client)
+      this.player0.emit('OpponentMove', data)
   }
 
 }

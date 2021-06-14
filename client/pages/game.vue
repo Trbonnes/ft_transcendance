@@ -20,8 +20,11 @@ export default Vue.extend({
 </script>
 
 <style scoped>
+
 #gameCtnr {
 	width: 100%;
 	height: 100%;
+	/* background: black; */
 }
+
 </style>
