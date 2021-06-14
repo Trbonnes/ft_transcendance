@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import io from 'socket.io-client'
+import os from 'os'
 import { config } from '../phaserconfig'
 import { scenesList, activeScene, setActiveScene } from '../sceneManager'
 
@@ -25,8 +26,8 @@ export default class GameScene extends Phaser.Scene {
 
     create() {
         setActiveScene(scenesList.GameScene)
-        //scutil --get LocalHostName
-        this.socket = io("http://e2r3p14:3000/game", {
+        //console.log(os.hostname())
+        this.socket = io("http://" + os.hostname() + ":3000/game", {
             transportOptions: {
                 cors : {
                     origin: '*'
