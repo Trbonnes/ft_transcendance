@@ -29,9 +29,11 @@ export default class JoinGameScene extends Phaser.Scene {
                 transports: ['websockets']
             }
           })
+
         this.socket.emit('JoinGame', (response: boolean) => {
             this.player = response
         })
+        
         this.socket.on('OpponentFound', () => {
             this.scene.run(scenesList.GameScene,  { socket: this.socket, player: this.player })
             this.scene.stop(this)

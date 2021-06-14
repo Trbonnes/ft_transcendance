@@ -55,7 +55,7 @@ export class GameGateway {
     @MessageBody() data: number,
     @ConnectedSocket() client: Socket,
   ) {
-    console.log('Emit', client.id, 'MoveBar', data)
+    //console.log('Emit', client.id, 'MoveBar', data)
     if (this.player0 == client)
       this.player1.emit('OpponentMove', data)
     else if (this.player1 == client)
