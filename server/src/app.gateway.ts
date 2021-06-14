@@ -11,8 +11,8 @@ import { AppService } from './app.service'
   }
 })
 export class GameGateway {
-  private player0: Socket = undefined
-  private player1: Socket = undefined
+  private client0: Socket = undefined
+  private client1: Socket = undefined
 
   constructor(private appService: AppService) {}
 
@@ -23,10 +23,12 @@ export class GameGateway {
     console.log('WS Connect', { id: client.id })
     client.on('disconnect', () => {
       console.log(client.id, 'disconnected')
-      if (this.player0 == client)
-        this.player0 = undefined
-      else if (this.player1 == client)
-        this.player1 = undefined
+      if (this.client0 == client)
+        this.client1.emit('OpponentDisconnected')
+      else if (this.client1 == client)
+        this.client0.emit('OpponentDisconnected')
+      this.client0 = undefined
+      this.client1 = undefined
     })
   }
 
@@ -36,15 +38,15 @@ export class GameGateway {
     @ConnectedSocket() client: Socket,
     ) {
       let ret: number
-      if (!this.player0) {
-        this.player0 = client
+      if (!this.client0) {
+        this.client0 = client
         ret = 0
       }
-      else if (!this.player1) {
-        this.player1 = client
+      else if (!this.client1) {
+        this.client1 = client
         ret = 1
-        this.player0.emit('OpponentFound')
-        this.player1.emit('OpponentFound')
+        this.client0.emit('OpponentFound')
+        this.client1.emit('OpponentFound')
       }
       console.log('Emit', client.id, 'JoinGame', ret)
       return ret
@@ -56,10 +58,10 @@ export class GameGateway {
     @ConnectedSocket() client: Socket,
   ) {
     //console.log('Emit', client.id, 'MoveBar', data)
-    if (this.player0 == client)
-      this.player1.emit('OpponentMove', data)
-    else if (this.player1 == client)
-      this.player0.emit('OpponentMove', data)
+    if (this.client0 == client)
+      this.client1.emit('OpponentMove', data)
+    else if (this.client1 == client)
+      this.client0.emit('OpponentMove', data)
   }
 
 }

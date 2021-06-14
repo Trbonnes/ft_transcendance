@@ -6,7 +6,6 @@ import { scenesList, activeScene, setActiveScene } from '../sceneManager'
 
 export default class JoinGameScene extends Phaser.Scene {
     private socket?: SocketIOClient.Socket
-    private player?: boolean
 
     constructor() {
         super('JoinGameScene')
@@ -30,12 +29,10 @@ export default class JoinGameScene extends Phaser.Scene {
             }
           })
 
-        this.socket.emit('JoinGame', (response: boolean) => {
-            this.player = response
-        })
+        this.socket.emit('JoinGame')
         
         this.socket.on('OpponentFound', () => {
-            this.scene.run(scenesList.GameScene,  { socket: this.socket, player: this.player })
+            this.scene.run(scenesList.GameScene,  { socket: this.socket })
             this.scene.stop(this)
         })
     }
