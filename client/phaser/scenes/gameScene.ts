@@ -10,6 +10,7 @@ import Ball from '../objects/BallObject'
 
 export default class GameScene extends Phaser.Scene {
     private socket?: SocketIOClient.Socket
+    private player?: number
     private myBar?: PongBar
     private opponentBar?: PongBar
     private opponentUpdateY?: number
@@ -21,9 +22,10 @@ export default class GameScene extends Phaser.Scene {
 
     init(data: {
         socket: SocketIOClient.Socket
-        player: boolean
+        player: number
     }) {
         this.socket = data.socket
+        this.player = data.player
     }
 
     preload() {}
@@ -31,8 +33,16 @@ export default class GameScene extends Phaser.Scene {
     create() {
         setActiveScene(scenesList.GameScene)
         this.input.setDefaultCursor('none') // Not forget to this.input.setDefaultCursor('default') when stopping the scene
-        this.myBar = new PongBar(this)
-        this.opponentBar = new PongBar(this, 1)
+        
+        console.log(this.player)
+        if(this.player == 0) {
+            this.myBar = new PongBar(this)
+            this.opponentBar = new PongBar(this, 1)
+        }
+        else {
+            this.myBar = new PongBar(this, 1)
+            this.opponentBar = new PongBar(this)
+        }
         this.opponentUpdateY = this.opponentBar!.bar.y
 
         this.ball = new Ball(this)

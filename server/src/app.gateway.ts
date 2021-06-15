@@ -21,36 +21,49 @@ export class GameGateway {
 
   handleConnection(client: Socket, ...args: any[]) {
     console.log('WS Connect', { id: client.id })
+    
+    if (!this.client0)
+      this.client0 = client
+    else if (!this.client1) {
+      this.client1 = client
+      this.client0.emit('OpponentFound', 0)
+      this.client1.emit('OpponentFound', 1)
+    }
+
     client.on('disconnect', () => {
       console.log(client.id, 'disconnected')
-      if (this.client0 == client)
+      if (this.client0 == client) {
         this.client1.emit('OpponentDisconnected')
-      else if (this.client1 == client)
+        this.client1.disconnect()
+      }
+      else if (this.client1 == client) {
         this.client0.emit('OpponentDisconnected')
+        this.client0.disconnect()
+      }
       this.client0 = undefined
       this.client1 = undefined
     })
   }
 
-  @SubscribeMessage('JoinGame')
-  handleJoinGame(
-    @MessageBody() data: unknown,
-    @ConnectedSocket() client: Socket,
-    ) {
-      let ret: number
-      if (!this.client0) {
-        this.client0 = client
-        ret = 0
-      }
-      else if (!this.client1) {
-        this.client1 = client
-        ret = 1
-        this.client0.emit('OpponentFound')
-        this.client1.emit('OpponentFound')
-      }
-      console.log('Emit', client.id, 'JoinGame', ret)
-      return ret
-  }
+  // @SubscribeMessage('JoinGame')
+  // handleJoinGame(
+  //   @MessageBody() data: unknown,
+  //   @ConnectedSocket() client: Socket,
+  //   ) {
+  //     let ret: number
+  //     if (!this.client0) {
+  //       this.client0 = client
+  //       ret = 0
+  //     }
+  //     else if (!this.client1) {
+  //       this.client1 = client
+  //       ret = 1
+  //       this.client0.emit('OpponentFound')
+  //       this.client1.emit('OpponentFound')
+  //     }
+  //     console.log('Emit', client.id, 'JoinGame', ret)
+  //     return ret
+  // }
 
   @SubscribeMessage('MoveBar')
   handleMoveBar(
