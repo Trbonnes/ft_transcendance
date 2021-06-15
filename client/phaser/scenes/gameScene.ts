@@ -46,6 +46,8 @@ export default class GameScene extends Phaser.Scene {
         this.opponentUpdateY = this.opponentBar!.bar.y
 
         this.ball = new Ball(this)
+
+        this.socket!.emit('JoinGame')
         
         this.socket!.on('OpponentMove', (data: number) => {
             this.opponentUpdateY = data

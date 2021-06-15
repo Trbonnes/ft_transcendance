@@ -13,8 +13,45 @@ import { AppService } from './app.service'
 export class GameGateway {
   private client0: Socket = undefined
   private client1: Socket = undefined
+  private player0: {
+    x: number
+    y: number
+    height: number
+    score: number
+    ready: boolean
+  }
+  private player1: {
+    x: number
+    y: number
+    height: number
+    score: number
+    ready: boolean
+  }
+  private ball: {
+    x: number,
+    y: number
+  }
 
-  constructor(private appService: AppService) {}
+  constructor(private appService: AppService) {
+    this.player0 = {
+      x: 79.6,
+      y: 540,
+      height: (1920 * 0.1),
+      score: 0,
+      ready: false
+    }
+    this.player1 = {
+      x: 1840.4,
+      y: 540,
+      height: (1920 * 0.1),
+      score: 0,
+      ready: false
+    }
+    this.ball = {
+      x: (1920 / 2),
+      y: (1080 / 2)
+    }
+  }
 
   @WebSocketServer()
   private server: Server
@@ -45,25 +82,19 @@ export class GameGateway {
     })
   }
 
-  // @SubscribeMessage('JoinGame')
-  // handleJoinGame(
-  //   @MessageBody() data: unknown,
-  //   @ConnectedSocket() client: Socket,
-  //   ) {
-  //     let ret: number
-  //     if (!this.client0) {
-  //       this.client0 = client
-  //       ret = 0
-  //     }
-  //     else if (!this.client1) {
-  //       this.client1 = client
-  //       ret = 1
-  //       this.client0.emit('OpponentFound')
-  //       this.client1.emit('OpponentFound')
-  //     }
-  //     console.log('Emit', client.id, 'JoinGame', ret)
-  //     return ret
-  // }
+  @SubscribeMessage('JoinGame')
+  handleJoinGame(
+    @MessageBody() data: unknown,
+    @ConnectedSocket() client: Socket,
+    ) {
+      if (client == this.client0)
+        this.player0.ready = true
+      else if (client == this.client1)
+        this.player1.ready = true
+
+      if (this.player0.ready && this.player1.ready)
+        this.handleGame()
+  }
 
   @SubscribeMessage('MoveBar')
   handleMoveBar(
@@ -71,10 +102,25 @@ export class GameGateway {
     @ConnectedSocket() client: Socket,
   ) {
     //console.log('Emit', client.id, 'MoveBar', data)
-    if (this.client0 == client)
+    if (this.client0 == client) {
+      this.player0.y = data
       this.client1.emit('OpponentMove', data)
-    else if (this.client1 == client)
+    }
+    else if (this.client1 == client) {
+      this.player1.y = data
       this.client0.emit('OpponentMove', data)
+    }
+  }
+
+  handleGame() {
+    while (this.player0.score != 6 || this.player1.score != 6) {
+        this.handleBall()
+    }
+
+  }
+
+  handleBall() {
+
   }
 
 }
