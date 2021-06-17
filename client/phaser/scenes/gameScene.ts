@@ -82,6 +82,7 @@ export default class GameScene extends Phaser.Scene {
                 this.opponentBar = new PongBar(this)
             }
             this.opponentUpdateY = this.opponentBar!.bar.y
+            this.ball = new Ball(this)
         }) 
 
         this.socket!.on('OpponentDisconnected', () => {
