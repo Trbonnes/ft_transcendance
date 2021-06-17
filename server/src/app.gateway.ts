@@ -93,8 +93,10 @@ export class GameGateway {
       else if (client == this.client1)
         this.player1.ready = true
 
-      if (this.player0.ready && this.player1.ready)
+      if (this.player0.ready && this.player1.ready) {
+        console.log('start')
         this.handleGame()
+      }
   }
 
   @SubscribeMessage('MoveBar')
@@ -113,15 +115,22 @@ export class GameGateway {
     }
   }
 
+  resetPosition() {
+    this.ball = {
+      x: (1920 / 2),
+      y: (1080 / 2)
+    }
+    this.player0.x = 79.6
+    this.player0.y = 540
+    this.player1.x = 1840.4
+    this.player1.y = 540
+  }
+
   handleGame() {
-    while (this.player0.score != 6 || this.player1.score != 6) {
-      this.ball = {
-        x: (1920 / 2),
-        y: (1080 / 2)
-      }
+    if (this.player0.score != 6 || this.player1.score != 6) {
+      this.resetPosition()
       this.handleBall()
     }
-
   }
 
   handleBall() {
@@ -156,7 +165,7 @@ export class GameGateway {
     this.client0.emit('Goal', {scoreP0: this.player0.score, scoreP1: this.player1.score})
     this.client1.emit('Goal', {scoreP0: this.player0.score, scoreP1: this.player1.score})
 
-    return
+    return 
   }
 
   hitWall(dy: number): number {
@@ -183,7 +192,7 @@ export class GameGateway {
         delta.dy = 0
 
       delta.dx = Math.abs(delta.dx)
-      delta.dx += 0.1
+      delta.dx += 0.02
     }
     else {
       delta.dx = 0
@@ -209,7 +218,7 @@ export class GameGateway {
         delta.dy = 0
 
       delta.dx = -Math.abs(delta.dx)
-      delta.dx -= 0.1
+      delta.dx -= 0.02
     }
     else {
       delta.dx = 0
