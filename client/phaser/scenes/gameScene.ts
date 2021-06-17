@@ -38,7 +38,7 @@ export default class GameScene extends Phaser.Scene {
         setActiveScene(scenesList.GameScene)
         this.input.setDefaultCursor('none') // Not forget to this.input.setDefaultCursor('default') when stopping the scene
         
-        console.log(this.player)
+        console.log('player num: ', this.player)
 
         let scoreBoard = this.add.text(config.width / 2, 50, this.score.left.toString() + "  |  " + this.score.right.toString()).setOrigin(0.5, 0.5).setTint(0x00ff00).setFontSize(60).setFontStyle('Bold')
 
