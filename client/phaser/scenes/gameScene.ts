@@ -49,6 +49,10 @@ export default class GameScene extends Phaser.Scene {
 
         this.socket!.emit('JoinGame')
         
+        this.socket!.on('BallMove', (data: {x:number, y:number}) => {
+
+        })
+
         this.socket!.on('OpponentMove', (data: number) => {
             this.opponentUpdateY = data
         })
@@ -61,6 +65,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     update(/*time, delta*/) {
+
         while (this.input.mousePointer.y > this.myBar!.bar.y) {
             this.myBar!.updatePosition(1)
             this.socket!.emit('MoveBar', this.myBar!.bar.y)

@@ -1,0 +1,347 @@
+
+{
+  "header": {
+    "reportVersion": 1,
+    "event": "Allocation failed - JavaScript heap out of memory",
+    "trigger": "FatalError",
+    "filename": "report.20210617.095217.317.0.001.json",
+    "dumpEventTime": "2021-06-17T09:52:18Z",
+    "dumpEventTimeStamp": "1623923538476",
+    "processId": 317,
+    "cwd": "/usr/src/app",
+    "commandLine": [
+      "/usr/local/bin/node",
+      "--inspect",
+      "/usr/src/app/dist/main"
+    ],
+    "nodejsVersion": "v12.13.1",
+    "wordSize": 64,
+    "arch": "x64",
+    "platform": "linux",
+    "componentVersions": {
+      "node": "12.13.1",
+      "v8": "7.7.299.13-node.16",
+      "uv": "1.33.1",
+      "zlib": "1.2.11",
+      "brotli": "1.0.7",
+      "ares": "1.15.0",
+      "modules": "72",
+      "nghttp2": "1.39.2",
+      "napi": "5",
+      "llhttp": "1.1.4",
+      "http_parser": "2.8.0",
+      "openssl": "1.1.1d",
+      "cldr": "35.1",
+      "icu": "64.2",
+      "tz": "2019c",
+      "unicode": "12.1"
+    },
+    "release": {
+      "name": "node",
+      "lts": "Erbium",
+      "headersUrl": "https://unofficial-builds.nodejs.org/download/release/v12.13.1/node-v12.13.1-headers.tar.gz",
+      "sourceUrl": "https://unofficial-builds.nodejs.org/download/release/v12.13.1/node-v12.13.1.tar.gz"
+    },
+    "osName": "Linux",
+    "osRelease": "4.9.184-linuxkit",
+    "osVersion": "#1 SMP Tue Jul 2 22:58:16 UTC 2019",
+    "osMachine": "x86_64",
+    "cpus": [
+      {
+        "model": "Intel(R) Core(TM) i5-3470S CPU @ 2.90GHz",
+        "speed": 2891,
+        "user": 3059400,
+        "nice": 0,
+        "sys": 5147000,
+        "idle": 83971700,
+        "irq": 0
+      },
+      {
+        "model": "Intel(R) Core(TM) i5-3470S CPU @ 2.90GHz",
+        "speed": 2891,
+        "user": 4525300,
+        "nice": 0,
+        "sys": 3980000,
+        "idle": 84144100,
+        "irq": 0
+      }
+    ],
+    "networkInterfaces": [
+      {
+        "name": "lo",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "127.0.0.1",
+        "netmask": "255.0.0.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "eth0",
+        "internal": false,
+        "mac": "02:42:ac:12:00:05",
+        "address": "172.18.0.5",
+        "netmask": "255.255.0.0",
+        "family": "IPv4"
+      }
+    ],
+    "host": "aca54706e387"
+  },
+  "javascriptStack": {
+    "message": "No stack.",
+    "stack": [
+      "Unavailable."
+    ]
+  },
+  "nativeStack": [
+  ],
+  "javascriptHeap": {
+    "totalMemory": 1052983296,
+    "totalCommittedMemory": 1049638960,
+    "usedMemory": 1046426168,
+    "availableMemory": 23939872,
+    "memoryLimit": 1072693248,
+    "heapSpaces": {
+      "read_only_space": {
+        "memorySize": 262144,
+        "committedMemory": 32568,
+        "capacity": 261872,
+        "used": 32296,
+        "available": 229576
+      },
+      "new_space": {
+        "memorySize": 4194304,
+        "committedMemory": 1278920,
+        "capacity": 2094976,
+        "used": 227136,
+        "available": 1867840
+      },
+      "old_space": {
+        "memorySize": 1007529984,
+        "committedMemory": 1007459152,
+        "capacity": 1005789224,
+        "used": 1005751696,
+        "available": 37528
+      },
+      "code_space": {
+        "memorySize": 425984,
+        "committedMemory": 415584,
+        "capacity": 296992,
+        "used": 296992,
+        "available": 0
+      },
+      "map_space": {
+        "memorySize": 1314816,
+        "committedMemory": 1196672,
+        "capacity": 946960,
+        "used": 946960,
+        "available": 0
+      },
+      "large_object_space": {
+        "memorySize": 39206912,
+        "committedMemory": 39206912,
+        "capacity": 39167536,
+        "used": 39167536,
+        "available": 0
+      },
+      "code_large_object_space": {
+        "memorySize": 49152,
+        "committedMemory": 49152,
+        "capacity": 3552,
+        "used": 3552,
+        "available": 0
+      },
+      "new_large_object_space": {
+        "memorySize": 0,
+        "committedMemory": 0,
+        "capacity": 2094976,
+        "used": 0,
+        "available": 2094976
+      }
+    }
+  },
+  "resourceUsage": {
+    "userCpuSeconds": 70.13,
+    "kernelCpuSeconds": 13.06,
+    "cpuConsumptionPercent": 75.6273,
+    "maxRss": 1120137216,
+    "pageFaults": {
+      "IORequired": 302,
+      "IONotRequired": 378748
+    },
+    "fsActivity": {
+      "reads": 36688,
+      "writes": 0
+    }
+  },
+  "uvthreadResourceUsage": {
+    "userCpuSeconds": 28.99,
+    "kernelCpuSeconds": 5.41,
+    "cpuConsumptionPercent": 31.2727,
+    "fsActivity": {
+      "reads": 29768,
+      "writes": 0
+    }
+  },
+  "libuv": [
+  ],
+  "environmentVariables": {
+    "npm_package_jest_testRegex": ".*\\.spec\\.ts$",
+    "npm_package_devDependencies_ts_node": "^10.0.0",
+    "npm_package_devDependencies__types_supertest": "^2.0.10",
+    "npm_package_devDependencies__types_node": "^14.14.36",
+    "npm_package_dependencies__nestjs_platform_express": "^7.6.15",
+    "npm_package_devDependencies_jest": "^26.6.3",
+    "npm_config_version_commit_hooks": "true",
+    "npm_config_user_agent": "yarn/1.19.1 npm/? node/v12.13.1 linux x64",
+    "NODE_VERSION": "12.13.1",
+    "npm_package_jest_testEnvironment": "node",
+    "npm_package_jest_moduleFileExtensions_0": "js",
+    "npm_package_dependencies_socket_io": "^4.1.2",
+    "npm_package_dependencies__nestjs_websockets": "^7.6.17",
+    "npm_config_bin_links": "true",
+    "npm_config_wrap_output": "",
+    "HOSTNAME": "aca54706e387",
+    "MODE": "DEV",
+    "YARN_VERSION": "1.19.1",
+    "npm_node_execpath": "/usr/local/bin/node",
+    "npm_package_jest_moduleFileExtensions_1": "json",
+    "npm_package_scripts_start_dev": "nest start --watch",
+    "npm_package_scripts_prebuild": "rimraf dist",
+    "npm_config_init_version": "1.0.0",
+    "SHLVL": "8",
+    "npm_package_jest_moduleFileExtensions_2": "ts",
+    "npm_package_devDependencies__types_express": "^4.17.11",
+    "npm_package_dependencies_rxjs": "^6.6.6",
+    "npm_package_scripts_start_prod": "node dist/main",
+    "PGADMIN_DEFAULT_PASSWORD": "admin",
+    "PORT": "3000",
+    "HOME": "/root",
+    "npm_package_devDependencies__typescript_eslint_parser": "^4.19.0",
+    "npm_package_devDependencies_eslint_config_prettier": "^8.1.0",
+    "npm_config_init_license": "MIT",
+    "YARN_WRAP_OUTPUT": "false",
+    "npm_package_dependencies__nestjs_core": "^7.6.15",
+    "npm_package_scripts_start_debug": "nest start --debug --watch",
+    "npm_config_version_tag_prefix": "v",
+    "npm_package_dependencies_reflect_metadata": "^0.1.13",
+    "npm_package_dependencies_mysql2": "^2.2.5",
+    "npm_package_devDependencies_tsconfig_paths": "^3.9.0",
+    "npm_package_dependencies_dotenv": "^10.0.0",
+    "PGADMIN_DEFAULT_EMAIL": "admin@admin.com",
+    "npm_package_devDependencies_typescript": "^4.2.3",
+    "npm_package_dependencies__hapi_joi": "^17.1.1",
+    "npm_package_description": "[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.",
+    "npm_package_readmeFilename": "README.md",
+    "npm_package_devDependencies__nestjs_testing": "^7.6.15",
+    "npm_package_devDependencies_ts_loader": "^8.0.18",
+    "npm_package_devDependencies_prettier": "^2.2.1",
+    "npm_package_jest_collectCoverageFrom_0": "**/*.(t|j)s",
+    "npm_package_scripts_docker": "yarn && yarn start:debug",
+    "npm_package_devDependencies_ts_jest": "^26.5.4",
+    "npm_package_devDependencies__types_jest": "^26.0.22",
+    "npm_package_scripts_test_debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "npm_package_private": "true",
+    "npm_package_devDependencies__typescript_eslint_eslint_plugin": "^4.19.0",
+    "npm_package_dependencies__types_socket_io": "^3.0.2",
+    "npm_package_dependencies__nestjs_typeorm": "^7.1.5",
+    "npm_package_dependencies__nestjs_mapped_types": "^0.4.1",
+    "npm_package_scripts_lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "npm_config_registry": "https://registry.yarnpkg.com",
+    "npm_package_jest_rootDir": "src",
+    "npm_package_jest_coverageDirectory": "../coverage",
+    "npm_package_dependencies__nestjs_config": "^0.6.3",
+    "npm_package_scripts_start": "nest start",
+    "npm_config_ignore_scripts": "",
+    "npm_config_version": "1.19.1",
+    "POSTGRES_PASSWORD": "admin",
+    "npm_package_scripts_test_cov": "jest --coverage",
+    "PATH": "/tmp/yarn--1623915541010-0.11932273812506256:/usr/src/app/node_modules/.bin:/usr/local/share/.config/yarn/link/node_modules/.bin:/usr/local/libexec/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/bin/node_modules/npm/bin/node-gyp-bin:/tmp/yarn--1623915538725-0.6813677607600168:/usr/src/app/node_modules/.bin:/usr/local/share/.config/yarn/link/node_modules/.bin:/usr/local/libexec/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/bin/node_modules/npm/bin/node-gyp-bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "NODE": "/usr/local/bin/node",
+    "npm_package_name": "server",
+    "npm_package_dependencies_typeorm": "^0.2.33",
+    "npm_package_scripts_test_e2e": "jest --config ./test/jest-e2e.json",
+    "POSTGRES_HOST": "postgres",
+    "POSTGRES_USER": "admin",
+    "npm_package_devDependencies_eslint": "^7.22.0",
+    "npm_lifecycle_script": "nest start --debug --watch",
+    "npm_package_devDependencies_supertest": "^6.1.3",
+    "npm_package_dependencies__types_hapi__joi": "^17.1.6",
+    "npm_package_dependencies__nestjs_platform_socket_io": "^7.6.17",
+    "npm_package_scripts_test": "jest",
+    "npm_config_version_git_message": "v%s",
+    "npm_lifecycle_event": "start:debug",
+    "npm_package_devDependencies__nestjs_cli": "^7.6.0",
+    "npm_package_version": "0.0.1",
+    "npm_config_argv": "{\"remain\":[],\"cooked\":[\"run\",\"docker\"],\"original\":[\"docker\"]}",
+    "npm_package_scripts_build": "nest build",
+    "POSTGRES_PORT": "5432",
+    "npm_config_version_git_tag": "true",
+    "npm_config_version_git_sign": "",
+    "npm_package_license": "UNLICENSED",
+    "npm_config_strict_ssl": "true",
+    "npm_package_devDependencies_eslint_plugin_prettier": "^3.3.1",
+    "npm_package_scripts_test_watch": "jest --watch",
+    "npm_package_scripts_format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "PWD": "/usr/src/app",
+    "npm_execpath": "/opt/yarn-v1.19.1/bin/yarn.js",
+    "npm_package_jest_transform_______t_j_s_": "ts-jest",
+    "npm_package_devDependencies__nestjs_schematics": "^7.3.0",
+    "npm_package_dependencies_rimraf": "^3.0.2",
+    "npm_config_save_prefix": "^",
+    "npm_config_ignore_optional": "",
+    "POSTGRES_DATABASE": "postgres",
+    "INIT_CWD": "/usr/src/app",
+    "RUN_MIGRATIONS": "true",
+    "npm_package_dependencies_pg": "^8.6.0",
+    "npm_package_dependencies_mysql": "^2.18.1",
+    "npm_package_dependencies__nestjs_common": "^7.6.15"
+  },
+  "userLimits": {
+    "core_file_size_blocks": {
+      "soft": 0,
+      "hard": "unlimited"
+    },
+    "data_seg_size_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "file_size_blocks": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "max_locked_memory_bytes": {
+      "soft": 83968000,
+      "hard": 83968000
+    },
+    "max_memory_size_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "open_files": {
+      "soft": 1048576,
+      "hard": 1048576
+    },
+    "stack_size_bytes": {
+      "soft": 8388608,
+      "hard": "unlimited"
+    },
+    "cpu_time_seconds": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "max_user_processes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "virtual_memory_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    }
+  },
+  "sharedObjects": [
+    "/usr/local/bin/node",
+    "/usr/lib/libstdc++.so.6",
+    "/usr/lib/libgcc_s.so.1",
+    "/lib/ld-musl-x86_64.so.1"
+  ]
+}
