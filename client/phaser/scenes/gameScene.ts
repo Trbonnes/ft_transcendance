@@ -10,6 +10,7 @@ import Ball from '../objects/BallObject'
 
 export default class GameScene extends Phaser.Scene {
     private socket?: SocketIOClient.Socket
+    private room?: string
     private player?: number
     private myBar?: PongBar
     private opponentBar?: PongBar
@@ -27,9 +28,11 @@ export default class GameScene extends Phaser.Scene {
     init(data: {
         socket: SocketIOClient.Socket
         player: number
+        room: string
     }) {
         this.socket = data.socket
         this.player = data.player
+        this.room = data.room
     }
 
     preload() {}

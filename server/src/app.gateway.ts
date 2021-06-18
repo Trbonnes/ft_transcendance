@@ -1,6 +1,6 @@
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common'
-import io, { Socket, Server } from 'socket.io'
+import { Socket, Server } from 'socket.io'
 import { AppService } from './app.service'
 import GameRoom from './GameRoom.class'
 
@@ -13,13 +13,10 @@ import GameRoom from './GameRoom.class'
   }
 })
 export class GameGateway {
-  private rooms : GameRoom[] = []
-
-  initRoom() {}
+  private rooms: GameRoom[] = []
+  private roomNumber: number = 0
 
   constructor(private appService: AppService) {
-
-    this.rooms = null
   }
 
   @WebSocketServer()
@@ -30,33 +27,45 @@ export class GameGateway {
 
     if (!this.rooms)
       this.createRoom(client)
-    
-    if (!this.client0)
-      this.client0 = client
-    else if (!this.client1) {
-      this.client1 = client
-      this.client0.emit('OpponentFound', 0)
-      this.client1.emit('OpponentFound', 1)
+    else if (!this.rooms[this.roomNumber].client1) {
+      this.joinRoom(client, this.roomNumber)
     }
-
-    client.on('disconnect', () => {
-      console.log(client.id, 'disconnected')
-      if (this.client0 == client) {
-        this.client1.emit('OpponentDisconnected')
-        this.client1.disconnect()
-      }
-      else if (this.client1 == client) {
-        this.client0.emit('OpponentDisconnected')
-        this.client0.disconnect()
-      }
-      this.client0 = undefined
-      this.client1 = undefined
-    })
+    else
+      this.createRoom(client)
   }
 
-  createRoom(client: Socket): WsResponse<unknown> {
-    client.join('Room')
-    io.in()
+  handleDisconnect(client: Socket, ...args: any[]) {
+    this.leaveRoom(client)
+    console.log(client.id, 'disconnected')
+  }
+
+  createRoom(client: Socket) {
+    let room = new GameRoom(client)
+    this.rooms.push(room)
+    client.join(room.id)
+    this.roomNumber++
+  }
+
+  joinRoom(client: Socket, index: number) {
+    let roomId = this.rooms[index].id
+    this.rooms[index].client1 = client
+    client.join(roomId)
+
+    this.rooms[index].client0.emit('OpponentFound', {player: 0, room: roomId})
+    this.rooms[index].client1.emit('OpponentFound', {player: 1, room: roomId})
+  }
+
+  leaveRoom(client: Socket) {
+    let room = this.server.sockets.adapter.sids.get(client.id)
+    let clients = this.server.sockets.adapter.rooms.get(room.values()[0])
+    this.server.to(room.values()[0]).emit('OpponentDisconnected')
+    clients.values()[0].leave(room.values()[0])
+    clients.values()[1].leave(room.values()[0])
+    client.disconnect()
+    for (let gameRoom of this.rooms) {
+      if (gameRoom.id == room.values()[0])
+        this.rooms.splice(this.rooms.indexOf(gameRoom))
+    }
   }
 
   @SubscribeMessage('JoinGame')
