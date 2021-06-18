@@ -1,0 +1,54 @@
+import io, { Socket, Server } from 'socket.io'
+import {v4 as uuidv4} from 'uuid'
+
+export default class GameRoom {
+    public id: string
+    public client0: Socket //= undefined
+    public client1: Socket //= undefined
+    public player0: {
+      x: number
+      y: number
+      height: number
+      score: number
+      ready: boolean
+    }
+    public player1: {
+      x: number
+      y: number
+      height: number
+      score: number
+      ready: boolean
+    }
+    public ball: {
+      x: number,
+      y: number
+    }
+    public goal: boolean //= false
+
+    constructor(client: Socket) {
+
+        this.id = uuidv4()
+        this.client0 = client
+        this.client1 = undefined
+        this.player0 = {
+            x: 79.6,
+            y: 540,
+            height: (1920 * 0.1),
+            score: 0,
+            ready: false
+        }
+        this.player1 = {
+            x: 1840.4,
+            y: 540,
+            height: (1920 * 0.1),
+            score: 0,
+            ready: false
+        }
+        this.ball = {
+            x: (1920 / 2),
+            y: (1080 / 2)
+        }
+        this.goal = false
+    }
+    
+}

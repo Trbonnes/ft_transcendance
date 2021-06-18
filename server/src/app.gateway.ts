@@ -1,7 +1,9 @@
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common'
-import { Socket, Server } from 'socket.io'
+import io, { Socket, Server } from 'socket.io'
 import { AppService } from './app.service'
+import GameRoom from './GameRoom.class'
+
 
 
 @WebSocketGateway({
@@ -11,47 +13,13 @@ import { AppService } from './app.service'
   }
 })
 export class GameGateway {
-  private client0: Socket = undefined
-  private client1: Socket = undefined
-  private player0: {
-    x: number
-    y: number
-    height: number
-    score: number
-    ready: boolean
-  }
-  private player1: {
-    x: number
-    y: number
-    height: number
-    score: number
-    ready: boolean
-  }
-  private ball: {
-    x: number,
-    y: number
-  }
-  private goal: boolean = false
+  private rooms : GameRoom[] = []
+
+  initRoom() {}
 
   constructor(private appService: AppService) {
-    this.player0 = {
-      x: 79.6,
-      y: 540,
-      height: (1920 * 0.1),
-      score: 0,
-      ready: false
-    }
-    this.player1 = {
-      x: 1840.4,
-      y: 540,
-      height: (1920 * 0.1),
-      score: 0,
-      ready: false
-    }
-    this.ball = {
-      x: (1920 / 2),
-      y: (1080 / 2)
-    }
+
+    this.rooms = null
   }
 
   @WebSocketServer()
@@ -59,6 +27,9 @@ export class GameGateway {
 
   handleConnection(client: Socket, ...args: any[]) {
     console.log('WS Connect', { id: client.id })
+
+    if (!this.rooms)
+      this.createRoom(client)
     
     if (!this.client0)
       this.client0 = client
@@ -81,6 +52,11 @@ export class GameGateway {
       this.client0 = undefined
       this.client1 = undefined
     })
+  }
+
+  createRoom(client: Socket): WsResponse<unknown> {
+    client.join('Room')
+    io.in()
   }
 
   @SubscribeMessage('JoinGame')
