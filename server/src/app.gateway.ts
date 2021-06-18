@@ -128,7 +128,6 @@ export class GameGateway {
     console.log('score0: ', this.player0.score)
     console.log('score1: ', this.player1.score)
     if (this.player0.score != 6 && this.player1.score != 6) {
-      //this.resetPosition()
       this.handleBall()
     }
   }
@@ -164,9 +163,7 @@ export class GameGateway {
 
     this.client0.emit('Goal', {scoreP0: this.player0.score, scoreP1: this.player1.score})
     this.client1.emit('Goal', {scoreP0: this.player0.score, scoreP1: this.player1.score})
-
-    console.log('score0: ', this.player0.score)
-    console.log('score1: ', this.player1.score)
+    this.resetPosition() 
 
     return 
   }
