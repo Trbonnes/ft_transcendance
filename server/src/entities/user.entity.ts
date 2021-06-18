@@ -19,7 +19,7 @@ export class User {
 	name: string
 	
 	@Column()
-	avatar: string // link to the image
+	avatar: string = "" // link to the image
 
     @Column()
 	isActive: boolean = false

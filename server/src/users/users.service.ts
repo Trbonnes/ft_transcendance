@@ -11,10 +11,10 @@ export class UsersService {
   constructor(@InjectRepository(User) private usersRepository: Repository<User> ) {
 
   }
-  create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
 	Logger.log(createUserDto)
 	const newUser = this.usersRepository.create(createUserDto)
-    return this.usersRepository.save(newUser);  
+    return await this.usersRepository.save(newUser);  
   }
 
   findAll(): Promise<User[]> {
@@ -32,11 +32,28 @@ export class UsersService {
 	}
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;  
+  async update(id: string, updateUserDto: UpdateUserDto) {
+	try {
+		const user = await this.usersRepository.findOneOrFail({where: {id}});
+		// this.usersRepository.update(user, updateUserDto);
+		return this.usersRepository.save({...user, ...updateUserDto})
+		// return user;
+	} catch (err) {
+		// handle error
+		throw err;
+	}
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+	try {
+		const user = await this.usersRepository.findOneOrFail(id);
+		Logger.log(user)
+		this.usersRepository.remove(user);
+		return user
+	} catch (err) {
+		return "hello"
+		// handle error
+		throw err;
+	}
   }
 }
