@@ -70,17 +70,25 @@ export class GameGateway {
 
   @SubscribeMessage('JoinGame')
   handleJoinGame(
-    @MessageBody() data: unknown,
+    @MessageBody() data: string,
     @ConnectedSocket() client: Socket,
     ) {
-      if (client == this.client0)
-        this.player0.ready = true
-      else if (client == this.client1)
-        this.player1.ready = true
-      console.log('Join', client.id, this.player0.ready, this.player1.ready)
-      if (this.player0.ready && this.player1.ready) {
+
+      let gameRoom : GameRoom
+
+      for (gameRoom of this.rooms) {
+        if (gameRoom.id == data) {
+          if (gameRoom.client0.id == client.id)
+            gameRoom.player0.ready = true
+          else if (gameRoom.client1.id == client.id)
+            gameRoom.player1.ready = true
+        }
+      }
+
+      console.log('Join', client.id, gameRoom.player0.ready, gameRoom.player1.ready)
+      if (gameRoom.player0.ready && gameRoom.player1.ready) {
         console.log('Game Start')
-        this.handleGame()
+        this.handleGame(gameRoom)
       }
   }
 
@@ -109,7 +117,7 @@ export class GameGateway {
     this.player1.y = 540
   }
 
-  handleGame() {
+  handleGame(gameRoom: GameRoom) {
     console.log('score0: ', this.player0.score)
     console.log('score1: ', this.player1.score)
     if (this.player0.score != 6 && this.player1.score != 6) {
