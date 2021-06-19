@@ -13,8 +13,7 @@ import GameRoom from './GameRoom.class'
   }
 })
 export class GameGateway {
-  private rooms: GameRoom[] = []
-  private roomNumber: number = 0
+  private rooms: Map<string, GameRoom>
 
   constructor(private appService: AppService) {
   }
@@ -22,16 +21,27 @@ export class GameGateway {
   @WebSocketServer()
   private server: Server
 
+  BreakException
+  
   handleConnection(client: Socket, ...args: any[]) {
     console.log('WS Connect', { id: client.id })
-
-    if (!this.rooms)
+    let joined = false
+    if (!this.rooms.size) {
       this.createRoom(client)
-    else if (!this.rooms[this.roomNumber].client1) {
-      this.joinRoom(client, this.roomNumber)
+      joined = true
     }
-    else
-      this.createRoom(client)
+    else {
+      try{
+        this.rooms.forEach((room: GameRoom, id: string) => {
+          if (!room.client1) {
+            this.joinRoom(client, id)
+            throw 'BreakException'
+          }
+        })
+      } catch (e) { joined = true }
+      if (!joined)
+        this.createRoom(client)
+    }
   }
 
   handleDisconnect(client: Socket, ...args: any[]) {
@@ -41,18 +51,15 @@ export class GameGateway {
 
   createRoom(client: Socket) {
     let room = new GameRoom(client)
-    this.rooms.push(room)
+    this.rooms.set(room.id, room)
     client.join(room.id)
-    this.roomNumber++
   }
 
-  joinRoom(client: Socket, index: number) {
-    let roomId = this.rooms[index].id
-    this.rooms[index].client1 = client
-    client.join(roomId)
-
-    this.rooms[index].client0.emit('OpponentFound', {player: 0, room: roomId})
-    this.rooms[index].client1.emit('OpponentFound', {player: 1, room: roomId})
+  joinRoom(client: Socket, id: string) {
+    this.rooms.get(id).client1 = client
+    client.join(id)
+    this.rooms.get(id).client0.emit('OpponentFound', {player: 0, room: id})
+    this.rooms.get(id).client1.emit('OpponentFound', {player: 1, room: id})
   }
 
   leaveRoom(client: Socket) {
@@ -62,9 +69,9 @@ export class GameGateway {
     clients.values()[0].leave(room.values()[0])
     clients.values()[1].leave(room.values()[0])
     client.disconnect()
-    for (let gameRoom of this.rooms) {
-      if (gameRoom.id == room.values()[0])
-        this.rooms.splice(this.rooms.indexOf(gameRoom))
+    for (let gameRoom of this.rooms.keys()) {
+      if (gameRoom == room.values()[0])
+        this.rooms.delete(gameRoom)
     }
   }
 
@@ -74,89 +81,83 @@ export class GameGateway {
     @ConnectedSocket() client: Socket,
     ) {
 
-      let gameRoom : GameRoom
+      let gameRoomId : string
 
-      for (gameRoom of this.rooms) {
-        if (gameRoom.id == data) {
-          if (gameRoom.client0.id == client.id)
-            gameRoom.player0.ready = true
-          else if (gameRoom.client1.id == client.id)
-            gameRoom.player1.ready = true
+      for (gameRoomId of this.rooms.keys()) {
+        if (gameRoomId == data) {
+          if (this.rooms.get(gameRoomId).client0.id == client.id)
+            this.rooms.get(gameRoomId).player0.ready = true
+          else if (this.rooms.get(gameRoomId).client1.id == client.id)
+            this.rooms.get(gameRoomId).player1.ready = true
         }
       }
 
-      console.log('Join', client.id, gameRoom.player0.ready, gameRoom.player1.ready)
-      if (gameRoom.player0.ready && gameRoom.player1.ready) {
+      console.log('Join', client.id, this.rooms.get(gameRoomId).player0.ready, this.rooms.get(gameRoomId).player1.ready)
+      if (this.rooms.get(gameRoomId).player0.ready && this.rooms.get(gameRoomId).player1.ready) {
         console.log('Game Start')
-        this.handleGame(gameRoom)
+        this.handleGame(gameRoomId)
       }
   }
 
   @SubscribeMessage('MoveBar')
   handleMoveBar(
-    @MessageBody() data: number,
+    @MessageBody() data: {id: string, y: number},
     @ConnectedSocket() client: Socket,
   ) {
     //console.log('Emit', client.id, 'MoveBar', data)
-    if (this.client0 == client) {
-      this.player0.y = data
-      this.client1.emit('OpponentMove', data)
+    if (this.rooms.get(data.id).client0 == client) {
+      this.rooms.get(data.id).player0.y = data.y
+      this.rooms.get(data.id).client1.emit('OpponentMove', data.y)
     }
-    else if (this.client1 == client) {
-      this.player1.y = data
-      this.client0.emit('OpponentMove', data)
-    }
-  }
-
-  resetPosition() {
-    this.ball.x = (1920 / 2)
-    this.ball.y = (1080 / 2)
-    this.player0.x = 79.6
-    this.player0.y = 540
-    this.player1.x = 1840.4
-    this.player1.y = 540
-  }
-
-  handleGame(gameRoom: GameRoom) {
-    console.log('score0: ', this.player0.score)
-    console.log('score1: ', this.player1.score)
-    if (this.player0.score != 6 && this.player1.score != 6) {
-      this.handleBall()
+    else if (this.rooms.get(data.id).client1 == client) {
+      this.rooms.get(data.id).player1.y = data.y
+      this.rooms.get(data.id).client0.emit('OpponentMove', data.y)
     }
   }
 
-  handleBall() {
-    this.goal = false
+  handleGame(gameRoomId: string) {
+    while (this.rooms.get(gameRoomId).player0.score != 6 && this.rooms.get(gameRoomId).player1.score != 6) {
+      console.log('score0: ', this.rooms.get(gameRoomId).player0.score)
+      console.log('score1: ', this.rooms.get(gameRoomId).player1.score)
+      let goal = this.handleBall(this.rooms.get(gameRoomId))
+      if (goal == 0)
+        this.rooms.get(gameRoomId).player0.score++
+      else
+        this.rooms.get(gameRoomId).player1.score++
+    }
+  }
+
+  handleBall(gameRoom: GameRoom): number {
+    //gameRoom.goal = false
     let delta = {
       dx : 0,
       dy : 0
     }
 
-    if (this.player0.score > this.player1.score)
+    if (gameRoom.player0.score > gameRoom.player1.score)
       delta.dx = 0.5
-    else if (this.player1.score > this.player0.score)
+    else if (gameRoom.player1.score > gameRoom.player0.score)
       delta.dx = -0.5
     else if (Math.random() >= 0.5)
       delta.dx = 0.2
     else
       delta.dx = -0.2
 
-    while (!this.goal) {
-      this.ball.x += delta.dx
-      this.ball.y += delta.dy
-      this.client0.emit('BallMove', this.ball)
-      this.client1.emit('BallMove', this.ball)
-      if (this.ball.y >= 1080 || this.ball.y <= 0)
+    while (!gameRoom.goal) {
+      gameRoom.ball.x += delta.dx
+      gameRoom.ball.y += delta.dy
+      gameRoom.client0.emit('BallMove', gameRoom.ball)
+      gameRoom.client1.emit('BallMove', gameRoom.ball)
+      if (gameRoom.ball.y >= 1080 || gameRoom.ball.y <= 0)
         delta.dy = this.hitWall(delta.dy)
-      if (this.ball.x <= this.player0.x)
-        delta = this.hitLeftBar(delta)
-      if (this.ball.x >= this.player1.x)
-        delta = this.hitRightBar(delta)
+      if (gameRoom.ball.x <= gameRoom.player0.x)
+        delta = this.hitLeftBar(delta, gameRoom)
+      if (gameRoom.ball.x >= gameRoom.player1.x)
+        delta = this.hitRightBar(delta, gameRoom)
     }
 
-    this.client0.emit('Goal', {scoreP0: this.player0.score, scoreP1: this.player1.score})
-    this.client1.emit('Goal', {scoreP0: this.player0.score, scoreP1: this.player1.score})
-    this.resetPosition() 
+    gameRoom.client0.emit('Goal', {scoreP0: gameRoom.player0.score, scoreP1: gameRoom.player1.score})
+    gameRoom.client1.emit('Goal', {scoreP0: gameRoom.player0.score, scoreP1: gameRoom.player1.score})
 
     return 
   }
@@ -171,7 +172,7 @@ export class GameGateway {
     return dy
   }
 
-  hitLeftBar(delta: {dx:number, dy:number}): {dx:number; dy:number;} {
+  hitLeftBar(delta: {dx:number, dy:number}, gameRoom: GameRoom): {dx:number; dy:number;} {
 
     if (this.ball.y <= (this.player0.y + this.player0.height / 2) || this.ball.y <= (this.player0.y - this.player0.height / 2)) {
       let hitZone = this.ball.y - this.player0.y
@@ -197,7 +198,7 @@ export class GameGateway {
     return delta
   }
 
-  hitRightBar(delta: {dx:number, dy:number}): {dx:number; dy:number;} {
+  hitRightBar(delta: {dx:number, dy:number}, gameRoom: GameRoom): {dx:number; dy:number;} {
 
     if (this.ball.y <= (this.player1.y + this.player1.height / 2) || this.ball.y <= (this.player1.y - this.player1.height / 2)) {
       let hitZone = this.ball.y - this.player1.y
