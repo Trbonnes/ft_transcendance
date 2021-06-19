@@ -42,7 +42,7 @@ export default class GameScene extends Phaser.Scene {
         this.input.setDefaultCursor('none') // Not forget to this.input.setDefaultCursor('default') when stopping the scene
         
         console.log('player num: ', this.player)
-        console.log('room id: ', this.room)
+        console.log('client side room id: ', this.room)
 
         let scoreBoard = this.add.text(config.width / 2, 50, this.score.left.toString() + "  |  " + this.score.right.toString()).setOrigin(0.5, 0.5).setTint(0x00ff00).setFontSize(60).setFontStyle('Bold')
 
@@ -58,7 +58,7 @@ export default class GameScene extends Phaser.Scene {
 
         this.ball = new Ball(this)
 
-        this.socket!.emit('JoinGame')
+        this.socket!.emit('JoinGame', this.room)
         
         this.socket!.on('BallMove', (data: {x:number, y:number}) => {
             this.ball!.ball.x = data.x
@@ -100,11 +100,11 @@ export default class GameScene extends Phaser.Scene {
 
         while (this.input.mousePointer.y > this.myBar!.bar.y) {
             this.myBar!.updatePosition(1)
-            this.socket!.emit('MoveBar', this.myBar!.bar.y)
+            this.socket!.emit('MoveBar', {id: this.room, y: this.myBar!.bar.y})
         }
         while (this.input.mousePointer.y < this.myBar!.bar.y) {
             this.myBar!.updatePosition(-1)
-            this.socket!.emit('MoveBar', this.myBar!.bar.y)
+            this.socket!.emit('MoveBar', {id: this.room, y: this.myBar!.bar.y})
         }
 
         while (this.opponentUpdateY! > this.opponentBar!.bar.y) {

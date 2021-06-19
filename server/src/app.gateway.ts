@@ -16,6 +16,7 @@ export class GameGateway {
   private rooms: Map<string, GameState>
 
   constructor(private appService: AppService) {
+    this.rooms = new Map<string, GameState>()
   }
 
   @WebSocketServer()
@@ -26,6 +27,7 @@ export class GameGateway {
   handleConnection(client: Socket, ...args: any[]) {
     console.log('WS Connect', { id: client.id })
     let joined = false
+    console.log('room number: ', this.rooms.size)
     if (!this.rooms.size) {
       this.createGame(client)
       joined = true
@@ -51,6 +53,7 @@ export class GameGateway {
 
   createGame(client: Socket) {
     let room = new GameState(client)
+    room.client0 = client
     this.rooms.set(room.id, room)
     client.join(room.id)
   }
@@ -58,6 +61,7 @@ export class GameGateway {
   joinGame(client: Socket, id: string) {
     this.rooms.get(id).client1 = client
     client.join(id)
+    console.log('server side id: ', id)
     this.rooms.get(id).client0.emit('OpponentFound', {player: 0, room: id})
     this.rooms.get(id).client1.emit('OpponentFound', {player: 1, room: id})
   }
@@ -105,11 +109,11 @@ export class GameGateway {
     @ConnectedSocket() client: Socket,
   ) {
     //console.log('Emit', client.id, 'MoveBar', data)
-    if (this.rooms.get(data.id).client0 == client) {
+    if (this.rooms.get(data.id).client0.id == client.id) {
       this.rooms.get(data.id).player0.y = data.y
       this.rooms.get(data.id).client1.emit('OpponentMove', data.y)
     }
-    else if (this.rooms.get(data.id).client1 == client) {
+    else if (this.rooms.get(data.id).client1.id == client.id) {
       this.rooms.get(data.id).player1.y = data.y
       this.rooms.get(data.id).client0.emit('OpponentMove', data.y)
     }
