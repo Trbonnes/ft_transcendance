@@ -119,16 +119,13 @@ export class GameGateway {
     while (this.rooms.get(gameRoomId).player0.score != 6 && this.rooms.get(gameRoomId).player1.score != 6) {
       console.log('score0: ', this.rooms.get(gameRoomId).player0.score)
       console.log('score1: ', this.rooms.get(gameRoomId).player1.score)
-      let goal = this.handleBall(this.rooms.get(gameRoomId))
-      if (goal == 0)
-        this.rooms.get(gameRoomId).player0.score++
-      else
-        this.rooms.get(gameRoomId).player1.score++
+      let score = this.handleBall(this.rooms.get(gameRoomId))
+      this.rooms.get(gameRoomId).player0.score = score.p0
+      this.rooms.get(gameRoomId).player1.score = score.p1
     }
   }
 
-  handleBall(gameRoom: GameRoom): number {
-    //gameRoom.goal = false
+  handleBall(gameRoom: GameRoom): {p0:number, p1:number} {
     let delta = {
       dx : 0,
       dy : 0
@@ -146,20 +143,28 @@ export class GameGateway {
     while (!gameRoom.goal) {
       gameRoom.ball.x += delta.dx
       gameRoom.ball.y += delta.dy
-      gameRoom.client0.emit('BallMove', gameRoom.ball)
-      gameRoom.client1.emit('BallMove', gameRoom.ball)
+      this.server.to(gameRoom.id).emit('BallMove', gameRoom.ball)
       if (gameRoom.ball.y >= 1080 || gameRoom.ball.y <= 0)
         delta.dy = this.hitWall(delta.dy)
-      if (gameRoom.ball.x <= gameRoom.player0.x)
+      if (gameRoom.ball.x <= gameRoom.player0.x) {
         delta = this.hitLeftBar(delta, gameRoom)
-      if (gameRoom.ball.x >= gameRoom.player1.x)
+        if (delta.dx == 0 && delta.dy == 0) {
+          gameRoom.goal = true
+          gameRoom.player1.score += 1
+        }
+      }
+      if (gameRoom.ball.x >= gameRoom.player1.x) {
         delta = this.hitRightBar(delta, gameRoom)
+        if (delta.dx == 0 && delta.dy == 0) {
+          gameRoom.goal = true
+          gameRoom.player0.score += 1
+        }
+      }
     }
 
-    gameRoom.client0.emit('Goal', {scoreP0: gameRoom.player0.score, scoreP1: gameRoom.player1.score})
-    gameRoom.client1.emit('Goal', {scoreP0: gameRoom.player0.score, scoreP1: gameRoom.player1.score})
+    this.server.to(gameRoom.id).emit('Goal', {scoreP0: gameRoom.player0.score, scoreP1: gameRoom.player1.score})
 
-    return 
+    return {p0: gameRoom.player0.score, p1: gameRoom.player1.score}
   }
 
   hitWall(dy: number): number {
@@ -172,15 +177,15 @@ export class GameGateway {
     return dy
   }
 
-  hitLeftBar(delta: {dx:number, dy:number}, gameRoom: GameRoom): {dx:number; dy:number;} {
+  hitLeftBar(delta: {dx:number, dy:number}, gameRoom: GameRoom): {dx:number, dy:number} {
 
-    if (this.ball.y <= (this.player0.y + this.player0.height / 2) || this.ball.y <= (this.player0.y - this.player0.height / 2)) {
-      let hitZone = this.ball.y - this.player0.y
+    if (gameRoom.ball.y <= (gameRoom.player0.y + gameRoom.player0.height / 2) || gameRoom.ball.y <= (gameRoom.player0.y - gameRoom.player0.height / 2)) {
+      let hitZone = gameRoom.ball.y - gameRoom.player0.y
       if (hitZone < 0) { // Ball hit bar above center
-        delta.dy = hitZone / (this.player0.height / 2)
+        delta.dy = hitZone / (gameRoom.player0.height / 2)
       }
       else if (hitZone > 0) { // Ball hit bar below center
-        delta.dy = hitZone / (this.player0.height / 2)
+        delta.dy = hitZone / (gameRoom.player0.height / 2)
       }
       else 
         delta.dy = 0
@@ -191,8 +196,6 @@ export class GameGateway {
     else {
       delta.dx = 0
       delta.dy = 0
-      this.goal = true
-      this.player1.score += 1
     }
 
     return delta
@@ -200,13 +203,13 @@ export class GameGateway {
 
   hitRightBar(delta: {dx:number, dy:number}, gameRoom: GameRoom): {dx:number; dy:number;} {
 
-    if (this.ball.y <= (this.player1.y + this.player1.height / 2) || this.ball.y <= (this.player1.y - this.player1.height / 2)) {
-      let hitZone = this.ball.y - this.player1.y
+    if (gameRoom.ball.y <= (gameRoom.player1.y + gameRoom.player1.height / 2) || gameRoom.ball.y <= (gameRoom.player1.y - gameRoom.player1.height / 2)) {
+      let hitZone = gameRoom.ball.y - gameRoom.player1.y
       if (hitZone < 0) { // Ball hit bar above center
-        delta.dy = hitZone / (this.player1.height / 2)
+        delta.dy = hitZone / (gameRoom.player1.height / 2)
       }
       else if (hitZone > 0) { // Ball hit bar below center
-        delta.dy = hitZone / (this.player1.height / 2)
+        delta.dy = hitZone / (gameRoom.player1.height / 2)
       }
       else 
         delta.dy = 0
@@ -217,8 +220,6 @@ export class GameGateway {
     else {
       delta.dx = 0
       delta.dy = 0
-      this.goal = true
-      this.player0.score += 1
     }
 
     return delta
