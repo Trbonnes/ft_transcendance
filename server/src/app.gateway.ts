@@ -2,7 +2,7 @@ import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSo
 import { Logger } from '@nestjs/common'
 import { Socket, Server } from 'socket.io'
 import { AppService } from './app.service'
-import GameRoom from './GameRoom.class'
+import GameState from './GameState.class'
 
 
 
@@ -13,7 +13,7 @@ import GameRoom from './GameRoom.class'
   }
 })
 export class GameGateway {
-  private rooms: Map<string, GameRoom>
+  private rooms: Map<string, GameState>
 
   constructor(private appService: AppService) {
   }
@@ -27,42 +27,42 @@ export class GameGateway {
     console.log('WS Connect', { id: client.id })
     let joined = false
     if (!this.rooms.size) {
-      this.createRoom(client)
+      this.createGame(client)
       joined = true
     }
     else {
       try{
-        this.rooms.forEach((room: GameRoom, id: string) => {
-          if (!room.client1) {
-            this.joinRoom(client, id)
+        this.rooms.forEach((game: GameState, id: string) => {
+          if (!game.client1) {
+            this.joinGame(client, id)
             throw 'BreakException'
           }
         })
       } catch (e) { joined = true }
       if (!joined)
-        this.createRoom(client)
+        this.createGame(client)
     }
   }
 
   handleDisconnect(client: Socket, ...args: any[]) {
-    this.leaveRoom(client)
+    this.leaveGame(client)
     console.log(client.id, 'disconnected')
   }
 
-  createRoom(client: Socket) {
-    let room = new GameRoom(client)
+  createGame(client: Socket) {
+    let room = new GameState(client)
     this.rooms.set(room.id, room)
     client.join(room.id)
   }
 
-  joinRoom(client: Socket, id: string) {
+  joinGame(client: Socket, id: string) {
     this.rooms.get(id).client1 = client
     client.join(id)
     this.rooms.get(id).client0.emit('OpponentFound', {player: 0, room: id})
     this.rooms.get(id).client1.emit('OpponentFound', {player: 1, room: id})
   }
 
-  leaveRoom(client: Socket) {
+  leaveGame(client: Socket) {
     let room = this.server.sockets.adapter.sids.get(client.id)
     let clients = this.server.sockets.adapter.rooms.get(room.values()[0])
     this.server.to(room.values()[0]).emit('OpponentDisconnected')
@@ -125,46 +125,46 @@ export class GameGateway {
     }
   }
 
-  handleBall(gameRoom: GameRoom): {p0:number, p1:number} {
+  handleBall(gameState: GameState): {p0:number, p1:number} {
     let delta = {
       dx : 0,
       dy : 0
     }
 
-    if (gameRoom.player0.score > gameRoom.player1.score)
+    if (gameState.player0.score > gameState.player1.score)
       delta.dx = 0.5
-    else if (gameRoom.player1.score > gameRoom.player0.score)
+    else if (gameState.player1.score > gameState.player0.score)
       delta.dx = -0.5
     else if (Math.random() >= 0.5)
       delta.dx = 0.2
     else
       delta.dx = -0.2
 
-    while (!gameRoom.goal) {
-      gameRoom.ball.x += delta.dx
-      gameRoom.ball.y += delta.dy
-      this.server.to(gameRoom.id).emit('BallMove', gameRoom.ball)
-      if (gameRoom.ball.y >= 1080 || gameRoom.ball.y <= 0)
+    while (!gameState.goal) {
+      gameState.ball.x += delta.dx
+      gameState.ball.y += delta.dy
+      this.server.to(gameState.id).emit('BallMove', gameState.ball)
+      if (gameState.ball.y >= 1080 || gameState.ball.y <= 0)
         delta.dy = this.hitWall(delta.dy)
-      if (gameRoom.ball.x <= gameRoom.player0.x) {
-        delta = this.hitLeftBar(delta, gameRoom)
+      if (gameState.ball.x <= gameState.player0.x) {
+        delta = this.hitLeftBar(delta, gameState)
         if (delta.dx == 0 && delta.dy == 0) {
-          gameRoom.goal = true
-          gameRoom.player1.score += 1
+          gameState.goal = true
+          gameState.player1.score += 1
         }
       }
-      if (gameRoom.ball.x >= gameRoom.player1.x) {
-        delta = this.hitRightBar(delta, gameRoom)
+      if (gameState.ball.x >= gameState.player1.x) {
+        delta = this.hitRightBar(delta, gameState)
         if (delta.dx == 0 && delta.dy == 0) {
-          gameRoom.goal = true
-          gameRoom.player0.score += 1
+          gameState.goal = true
+          gameState.player0.score += 1
         }
       }
     }
 
-    this.server.to(gameRoom.id).emit('Goal', {scoreP0: gameRoom.player0.score, scoreP1: gameRoom.player1.score})
+    this.server.to(gameState.id).emit('Goal', {scoreP0: gameState.player0.score, scoreP1: gameState.player1.score})
 
-    return {p0: gameRoom.player0.score, p1: gameRoom.player1.score}
+    return {p0: gameState.player0.score, p1: gameState.player1.score}
   }
 
   hitWall(dy: number): number {
@@ -177,15 +177,15 @@ export class GameGateway {
     return dy
   }
 
-  hitLeftBar(delta: {dx:number, dy:number}, gameRoom: GameRoom): {dx:number, dy:number} {
+  hitLeftBar(delta: {dx:number, dy:number}, gameState: GameState): {dx:number, dy:number} {
 
-    if (gameRoom.ball.y <= (gameRoom.player0.y + gameRoom.player0.height / 2) || gameRoom.ball.y <= (gameRoom.player0.y - gameRoom.player0.height / 2)) {
-      let hitZone = gameRoom.ball.y - gameRoom.player0.y
+    if (gameState.ball.y <= (gameState.player0.y + gameState.player0.height / 2) || gameState.ball.y <= (gameState.player0.y - gameState.player0.height / 2)) {
+      let hitZone = gameState.ball.y - gameState.player0.y
       if (hitZone < 0) { // Ball hit bar above center
-        delta.dy = hitZone / (gameRoom.player0.height / 2)
+        delta.dy = hitZone / (gameState.player0.height / 2)
       }
       else if (hitZone > 0) { // Ball hit bar below center
-        delta.dy = hitZone / (gameRoom.player0.height / 2)
+        delta.dy = hitZone / (gameState.player0.height / 2)
       }
       else 
         delta.dy = 0
@@ -201,15 +201,15 @@ export class GameGateway {
     return delta
   }
 
-  hitRightBar(delta: {dx:number, dy:number}, gameRoom: GameRoom): {dx:number; dy:number;} {
+  hitRightBar(delta: {dx:number, dy:number}, gameState: GameState): {dx:number; dy:number;} {
 
-    if (gameRoom.ball.y <= (gameRoom.player1.y + gameRoom.player1.height / 2) || gameRoom.ball.y <= (gameRoom.player1.y - gameRoom.player1.height / 2)) {
-      let hitZone = gameRoom.ball.y - gameRoom.player1.y
+    if (gameState.ball.y <= (gameState.player1.y + gameState.player1.height / 2) || gameState.ball.y <= (gameState.player1.y - gameState.player1.height / 2)) {
+      let hitZone = gameState.ball.y - gameState.player1.y
       if (hitZone < 0) { // Ball hit bar above center
-        delta.dy = hitZone / (gameRoom.player1.height / 2)
+        delta.dy = hitZone / (gameState.player1.height / 2)
       }
       else if (hitZone > 0) { // Ball hit bar below center
-        delta.dy = hitZone / (gameRoom.player1.height / 2)
+        delta.dy = hitZone / (gameState.player1.height / 2)
       }
       else 
         delta.dy = 0

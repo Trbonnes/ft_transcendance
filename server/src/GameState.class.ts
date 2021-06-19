@@ -1,7 +1,7 @@
 import io, { Socket, Server } from 'socket.io'
 import {v4 as uuidv4} from 'uuid'
 
-export default class GameRoom {
+export default class GameState {
     public id: string
     public client0: Socket //= undefined
     public client1: Socket //= undefined
