@@ -1,6 +1,6 @@
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common'
-import { Socket, Server } from 'socket.io'
+import { Socket, Server, Namespace } from 'socket.io'
 import { AppService } from './app.service'
 import GameState from './GameState.class'
 
@@ -20,9 +20,7 @@ export class GameGateway {
   }
 
   @WebSocketServer()
-  private server: Server
-
-  BreakException
+  private server: Namespace
   
   handleConnection(client: Socket, ...args: any[]) {
     console.log('WS Connect', { id: client.id })
@@ -67,8 +65,11 @@ export class GameGateway {
   }
 
   leaveGame(client: Socket) {
-    let room = this.server.sockets.adapter.sids.get(client.id)
-    let clients = this.server.sockets.adapter.rooms.get(room.values()[0])
+    console.log(this.server.adapter.sids)
+    console.log((this.server.adapter.sids as unknown).constructor)
+    console.log((this.server.adapter.sids as any).prototype)
+    let room = this.server.adapter.sids.get(client.id)
+    let clients = this.server.adapter.rooms.get(room.values()[0])
     this.server.to(room.values()[0]).emit('OpponentDisconnected')
     clients.values()[0].leave(room.values()[0])
     clients.values()[1].leave(room.values()[0])
@@ -120,7 +121,7 @@ export class GameGateway {
   }
 
   handleGame(gameRoomId: string) {
-    while (this.rooms.get(gameRoomId).player0.score != 6 && this.rooms.get(gameRoomId).player1.score != 6) {
+    if (this.rooms.get(gameRoomId).player0.score != 6 && this.rooms.get(gameRoomId).player1.score != 6) {
       console.log('score0: ', this.rooms.get(gameRoomId).player0.score)
       console.log('score1: ', this.rooms.get(gameRoomId).player1.score)
       let score = this.handleBall(this.rooms.get(gameRoomId))
