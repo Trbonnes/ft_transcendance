@@ -11,7 +11,6 @@
 
 <style>
 #top {
-  height: 10vh;
   width: 80vw;
 }
 #side {

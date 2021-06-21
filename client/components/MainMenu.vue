@@ -1,6 +1,6 @@
 <template>
 	<div class="container  flex flex-row items-center justify-around text-gray-500">
-		<font-awesome-icon icon="bolt"/>
+	    <font-awesome-icon icon="bolt"/>
 		<font-awesome-icon icon="scroll"/>
 		<font-awesome-icon icon="play"/>
 		<font-awesome-icon icon="user"/>
@@ -23,4 +23,4 @@ export default {
 	transition: all 0.4s;
 	@apply transform hover:scale-125
 }
-</style>
+</style	>
