@@ -10,7 +10,7 @@ async function bootstrap() {
       }
   })
   app.enableCors()
-  app.useWebSocketAdapter(new SocketIOAdapter(app, []))
+  app.useWebSocketAdapter(new SocketIOAdapter(app, ['http://localhost']))
   //app.setGlobalPrefix('/api')
   await app.listen(3000)
 }

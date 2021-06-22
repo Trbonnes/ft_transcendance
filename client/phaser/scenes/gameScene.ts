@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import io from 'socket.io-client'
+import { io, Socket } from 'socket.io-client'
 import { config } from '../phaserconfig'
 import { scenesList, activeScene, setActiveScene } from '../sceneManager'
 
@@ -9,7 +9,7 @@ import Ball from '../objects/BallObject'
 
 
 export default class GameScene extends Phaser.Scene {
-    private socket?: any
+    private socket?: Socket
     private room?: string
     private player?: number
     private myBar?: PongBar
@@ -26,7 +26,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     init(data: {
-        socket: any
+        socket: Socket
         player: number
         room: string
     }) {

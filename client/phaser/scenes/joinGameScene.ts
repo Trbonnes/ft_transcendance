@@ -1,11 +1,11 @@
 import Phaser from 'phaser'
-import io, { Socket } from 'socket.io-client'
+import { io, Socket } from 'socket.io-client'
 import os from 'os'
 import { config } from '../phaserconfig'
 import { scenesList, activeScene, setActiveScene } from '../sceneManager'
 
 export default class JoinGameScene extends Phaser.Scene {
-    private socket?: any
+    private socket?: Socket
 
     constructor() {
         super('JoinGameScene')
