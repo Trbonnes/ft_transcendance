@@ -14,9 +14,11 @@ import GameState from './GameState.class'
 })
 export class GameGateway {
   private rooms: Map<string, GameState>
+  private clients: Map<string, string>
 
   constructor(private appService: AppService) {
     this.rooms = new Map<string, GameState>()
+    this.clients = new Map<string, string>()
   }
 
   @WebSocketServer()
@@ -25,7 +27,6 @@ export class GameGateway {
   handleConnection(client: Socket, ...args: any[]) {
     console.log('WS Connect', { id: client.id })
     let joined = false
-    console.log('room number: ', this.rooms.size)
     if (!this.rooms.size) {
       this.createGame(client)
       joined = true
@@ -42,40 +43,46 @@ export class GameGateway {
       if (!joined)
         this.createGame(client)
     }
+    console.log('room number: ', this.rooms.size)
   }
 
   handleDisconnect(client: Socket, ...args: any[]) {
-    this.leaveGame(client)
     console.log(client.id, 'disconnected')
+    this.leaveGame(client)
   }
 
   createGame(client: Socket) {
     let room = new GameState(client)
     room.client0 = client
     this.rooms.set(room.id, room)
+    console.log("create room ", room.id)
     client.join(room.id)
+    this.clients.set(client.id, room.id)
   }
 
   joinGame(client: Socket, id: string) {
+    this.clients.set(client.id, id)
     this.rooms.get(id).client1 = client
     client.join(id)
-    console.log('server side id: ', id)
+    console.log("join room ", id)
     this.rooms.get(id).client0.emit('OpponentFound', {player: 0, room: id})
     this.rooms.get(id).client1.emit('OpponentFound', {player: 1, room: id})
   }
 
-  leaveGame(client: Socket) {
-    console.log(this.server.adapter.sids)
-    console.log((this.server.adapter.sids as unknown).constructor)
-    console.log((this.server.adapter.sids as any).prototype)
-    let room = this.server.adapter.sids.get(client.id)
-    let clients = this.server.adapter.rooms.get(room.values()[0])
-    this.server.to(room.values()[0]).emit('OpponentDisconnected')
-    clients.values()[0].leave(room.values()[0])
-    clients.values()[1].leave(room.values()[0])
+  leaveGame(client: Socket) { //maybe need to use the db for this
+    let serverSideClient: [string, string]
+    for (serverSideClient of this.clients) {
+      if (serverSideClient[0] == client.id)
+        this.server.to(serverSideClient[1]).emit('OpponentDisconnected')
+    }
+    client.leave(serverSideClient[1])
     client.disconnect()
     for (let gameRoom of this.rooms.keys()) {
-      if (gameRoom == room.values()[0])
+      if (gameRoom == serverSideClient[1])
+        // this.rooms.get(gameRoom).client0.leave(serverSideClient[1])
+        // this.rooms.get(gameRoom).client1.leave(serverSideClient[1])
+        // this.rooms.get(gameRoom).client0.disconnect()
+        // this.rooms.get(gameRoom).client1.disconnect()
         this.rooms.delete(gameRoom)
     }
   }
