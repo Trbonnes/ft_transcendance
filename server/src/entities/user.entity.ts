@@ -59,6 +59,7 @@ export class User {
 	public games: Game[]
 
 	@ManyToMany(() => Friendship, friendship => friendship.users)
+	@JoinTable()
 	public friendships: Friendship[]
 
 	@OneToMany(() => UserInChatRoom, userInChatRoom => userInChatRoom.user)
