@@ -162,30 +162,34 @@ export class GameGateway {
       gameState.delta.dx = -0.2
 
     while (!gameState.goal) {
-      gameState.ball.x += gameState.delta.dx
-      gameState.ball.y += gameState.delta.dy
-      this.server.to(gameState.id).emit('BallMove', gameState.ball)
-      if (gameState.ball.y >= 1080 || gameState.ball.y <= 0)
-        gameState.delta.dy = this.hitWall(gameState.delta.dy)
-      if (gameState.ball.x <= gameState.player0.x) {
-        gameState.delta = this.hitLeftBar(gameState.delta, gameState)
-        if (gameState.delta.dx == 0 && gameState.delta.dy == 0) {
-          gameState.goal = true
-          gameState.player1.score += 1
-        }
-      }
-      if (gameState.ball.x >= gameState.player1.x) {
-        gameState.delta = this.hitRightBar(gameState.delta, gameState)
-        if (gameState.delta.dx == 0 && gameState.delta.dy == 0) {
-          gameState.goal = true
-          gameState.player0.score += 1
-        }
-      }
+      setTimeout(this.refreshBallFrame, 16, gameState)
     }
 
     console.log("Goal")
     this.server.to(gameState.id).emit('Goal', {scoreP0: gameState.player0.score, scoreP1: gameState.player1.score})
     return new Promise(score => {gameState.player0.score, gameState.player1.score})
+  }
+
+  refreshBallFrame(gameState: GameState) {
+    gameState.ball.x += gameState.delta.dx
+    gameState.ball.y += gameState.delta.dy
+    this.server.to(gameState.id).emit('BallMove', gameState.ball)
+    if (gameState.ball.y >= 1080 || gameState.ball.y <= 0)
+      gameState.delta.dy = this.hitWall(gameState.delta.dy)
+    if (gameState.ball.x <= gameState.player0.x) {
+      gameState.delta = this.hitLeftBar(gameState.delta, gameState)
+      if (gameState.delta.dx == 0 && gameState.delta.dy == 0) {
+        gameState.goal = true
+        gameState.player1.score += 1
+      }
+    }
+    if (gameState.ball.x >= gameState.player1.x) {
+      gameState.delta = this.hitRightBar(gameState.delta, gameState)
+      if (gameState.delta.dx == 0 && gameState.delta.dy == 0) {
+        gameState.goal = true
+        gameState.player0.score += 1
+      }
+    }
   }
 
   hitWall(dy: number): number {

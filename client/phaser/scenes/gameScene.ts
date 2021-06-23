@@ -6,16 +6,25 @@ import { scenesList, activeScene, setActiveScene } from '../sceneManager'
 import Button from '../objects/ButtonObject'
 import PongBar from '../objects/PongBar'
 import Ball from '../objects/BallObject'
-import GameState from '../objects/GameState.class'
 
 
 export default class GameScene extends Phaser.Scene {
-    private gameState?: GameState
+    private socket?: Socket
+    private room?: string
     private player?: number
     private myBar?: PongBar
     private opponentBar?: PongBar
+    private opponentUpdateY?: number
     private ball?: Ball
-
+    private ballUpdate = {
+        x: 0,
+        y: 0,
+        speed: 0
+    }
+    private score = {
+        left: 0,
+        right: 0
+    }
 
     constructor() {
         super('GameScene')
@@ -26,8 +35,9 @@ export default class GameScene extends Phaser.Scene {
         player: number
         room: string
     }) {
-        this.gameState = new GameState(data.socket, data.room, data.player)
-        this.player = this.player
+        this.socket = data.socket
+        this.player = data.player
+        this.room = data.room
     }
 
     preload() {}
@@ -37,68 +47,78 @@ export default class GameScene extends Phaser.Scene {
         this.input.setDefaultCursor('none') // Not forget to this.input.setDefaultCursor('default') when stopping the scene
         
         //console.log('player num: ', this.player)
-        //console.log('client side room id: ', this.gameState!.id)
+        //console.log('client side room id: ', this.room)
 
-        let scoreBoard: Phaser.GameObjects.Text
+        let scoreBoard = this.add.text(config.width / 2, 50, this.score.left.toString() + "  |  " + this.score.right.toString()).setOrigin(0.5, 0.5).setTint(0x00ff00).setFontSize(60).setFontStyle('Bold')
 
-        if (this.player == 0) {
+        if(this.player == 0) {
             this.myBar = new PongBar(this)
             this.opponentBar = new PongBar(this, 1)
-            scoreBoard = this.add.text(config.width / 2, 50, this.gameState!.me.score.toString() + "  |  " + this.gameState!.opponent.score.toString()).setOrigin(0.5, 0.5).setTint(0x00ff00).setFontSize(60).setFontStyle('Bold')
         }
         else {
             this.myBar = new PongBar(this, 1)
             this.opponentBar = new PongBar(this)
-            scoreBoard = this.add.text(config.width / 2, 50, this.gameState!.opponent.score.toString() + "  |  " + this.gameState!.me.score.toString()).setOrigin(0.5, 0.5).setTint(0x00ff00).setFontSize(60).setFontStyle('Bold')
         }
+        this.opponentUpdateY = this.opponentBar!.bar.y
 
         this.ball = new Ball(this)
 
-        this.gameState!.client.emit('JoinGame', this.gameState!.id)
+        this.socket!.emit('JoinGame', this.room)
         
-        this.gameState!.client.on('MoveBall', (data: {x:number, y:number}) => {
-            this.ball!.ball.x = data.x
-            this.ball!.ball.y = data.y
+        this.socket!.on('BallMove', (data: {x:number, y:number}) => {
+            this.ballUpdate.x = data.x
+            this.ballUpdate.y = data.y
         })
 
-        this.gameState!.client.on('OpponentMove', (data: number) => {
-            this.gameState!.opponent.y = data
+        this.socket!.on('OpponentMove', (data: number) => {
+            this.opponentUpdateY = data
         })
 
-        this.gameState!.client.on('Goal', (data: {scoreP0: number, scoreP1: number}) => {
-            scoreBoard.setText(data.scoreP0.toString() + "  |  " + data.scoreP1.toString())
+        this.socket!.on('Goal', (data: {scoreP0: number, scoreP1: number}) => {
+            this.score.left = data.scoreP0
+            this.score.right = data.scoreP1
+            scoreBoard.setText(this.score.left.toString() + "  |  " + this.score.right.toString())
 
-            this.ball!.destroy()
-            this.ball = new Ball(this)
-        }) 
-
-        this.gameState!.client.on('OpponentDisconnected', () => {
             this.ball!.destroy()
             this.myBar!.destroy()
             this.opponentBar!.destroy()
-            this.gameState!.client.disconnect()
+            if(this.player == 0) {
+                this.myBar = new PongBar(this)
+                this.opponentBar = new PongBar(this, 1)
+            }
+            else {
+                this.myBar = new PongBar(this, 1)
+                this.opponentBar = new PongBar(this)
+            }
+            this.opponentUpdateY = this.opponentBar!.bar.y
+            this.ball = new Ball(this)
+        }) 
+
+        this.socket!.on('OpponentDisconnected', () => {
+            this.ball!.destroy()
+            this.myBar!.destroy()
+            this.opponentBar!.destroy()
+            this.socket!.disconnect()
             this.scene.run(scenesList.JoinGameScene)
             this.scene.stop(this)
         })
     }
 
-    update(time: number, delta: number) {
-
-        console.log(delta)
+    update(/*time, delta*/) {
 
         while (this.input.mousePointer.y > this.myBar!.bar.y) {
             this.myBar!.updatePosition(1)
-            this.gameState!.client.emit('MoveBar', {id: this.gameState!.id, y: this.myBar!.bar.y})
+            this.socket!.emit('MoveBar', {id: this.room, y: this.myBar!.bar.y})
         }
         while (this.input.mousePointer.y < this.myBar!.bar.y) {
             this.myBar!.updatePosition(-1)
-            this.gameState!.client.emit('MoveBar', {id: this.gameState!.id, y: this.myBar!.bar.y})
+            this.socket!.emit('MoveBar', {id: this.room, y: this.myBar!.bar.y})
         }
 
-        while (this.gameState!.opponent.y! > this.opponentBar!.bar.y) {
+        while (this.opponentUpdateY! > this.opponentBar!.bar.y) {
             this.opponentBar!.updatePosition(1)
         }
-        while (this.gameState!.opponent.y! < this.opponentBar!.bar.y) {
+        while (this.opponentUpdateY! < this.opponentBar!.bar.y) {
             this.opponentBar!.updatePosition(-1)
         }
 
