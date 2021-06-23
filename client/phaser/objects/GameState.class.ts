@@ -1,18 +1,16 @@
-import io, { Socket, Server } from 'socket.io'
-import {v4 as uuidv4} from 'uuid'
+import { io, Socket } from 'socket.io-client'
 
 export default class GameState {
     public id: string
-    public client0: Socket //= undefined
-    public client1: Socket //= undefined
-    public player0: {
+    public client: Socket 
+    public me: {
       x: number
       y: number
       height: number
       score: number
       ready: boolean
     }
-    public player1: {
+    public opponent: {
       x: number
       y: number
       height: number
@@ -29,25 +27,35 @@ export default class GameState {
     }
     public goal: boolean //= false
 
-    constructor(client: Socket) {
+    constructor(client: Socket, id: string, position: number) {
 
-        this.id = uuidv4()
-        this.client0 = client
-        this.client1 = undefined
-        this.player0 = {
+        this.id = id
+        this.client = client
+
+        let player0 = {
             x: 79.6,
             y: 540,
             height: (1920 * 0.1),
             score: 0,
             ready: false
         }
-        this.player1 = {
+        let player1 = {
             x: 1840.4,
             y: 540,
             height: (1920 * 0.1),
             score: 0,
             ready: false
         }
+
+        if (position == 0) {
+          this.me = player0
+          this.opponent = player1
+        }
+        else {
+          this.me = player1
+          this.opponent = player0
+        }
+
         this.ball = {
             x: (1920 / 2),
             y: (1080 / 2)
