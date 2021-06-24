@@ -200,14 +200,16 @@ export class GameGateway {
   
     if (this.rooms.get(gameId).ball.x <= this.rooms.get(gameId).player0.x) {
       this.rooms.get(gameId).delta = this.hitLeftBar(this.rooms.get(gameId).delta,this.rooms.get(gameId))
-      if (this.rooms.get(gameId).delta.dx == 0 && this.rooms.get(gameId).delta.dy == 0) {
+      if (this.rooms.get(gameId).delta.dx == 0
+        && this.rooms.get(gameId).delta.dy == 0) {
         this.rooms.get(gameId).goal = 1
       }
     }
 
     if (this.rooms.get(gameId).ball.x >= this.rooms.get(gameId).player1.x) {
       this.rooms.get(gameId).delta = this.hitRightBar(this.rooms.get(gameId).delta, this.rooms.get(gameId))
-      if (this.rooms.get(gameId).delta.dx == 0 && this.rooms.get(gameId).delta.dy == 0) {
+      if (this.rooms.get(gameId).delta.dx == 0
+        && this.rooms.get(gameId).delta.dy == 0) {
         this.rooms.get(gameId).goal = 0
       }
     }
