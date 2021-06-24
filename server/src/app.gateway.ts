@@ -1,5 +1,4 @@
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
-import { Logger } from '@nestjs/common'
 import { Socket, Server, Namespace } from 'socket.io'
 import { AppService } from './app.service'
 import GameState from './GameState.class'
@@ -32,17 +31,21 @@ export class GameGateway {
       joined = true
     }
     else {
-      try{
-        this.rooms.forEach((game: GameState, id: string) => {
-          if (!game.client1) {
-            this.joinGame(client, id)
-            throw 'BreakException'
+      try {
+        this.rooms.forEach(
+          (game: GameState, id: string) => {
+            if (!game.client1) {
+              this.joinGame(client, id)
+              throw 'BreakException'
+            }
           }
-        })
+        )
       } catch (e) { joined = true }
+
       if (!joined)
         this.createGame(client)
     }
+
     console.log('room number: ', this.rooms.size)
   }
 
@@ -65,18 +68,23 @@ export class GameGateway {
     this.rooms.get(id).client1 = client
     client.join(id)
     console.log("join room ", id)
-    this.rooms.get(id).client0.emit('OpponentFound', {player: 0, room: id})
-    this.rooms.get(id).client1.emit('OpponentFound', {player: 1, room: id})
+    this.rooms.get(id).client0
+      .emit('OpponentFound', {player: 0, room: id})
+    this.rooms.get(id).client1
+      .emit('OpponentFound', {player: 1, room: id})
   }
 
   leaveGame(client: Socket) { //maybe need to use the db for this
     let serverSideClient: [string, string]
     for (serverSideClient of this.clients) {
       if (serverSideClient[0] == client.id)
-        this.server.to(serverSideClient[1]).emit('OpponentDisconnected')
+        this.server.to(serverSideClient[1])
+          .emit('OpponentDisconnected')
     }
+
     client.leave(serverSideClient[1])
     client.disconnect()
+
     for (let gameRoom of this.rooms.keys()) {
       if (gameRoom == serverSideClient[1])
         this.rooms.delete(gameRoom)
@@ -100,8 +108,14 @@ export class GameGateway {
         }
       }
 
-      console.log('Join', client.id, this.rooms.get(gameRoomId).player0.ready, this.rooms.get(gameRoomId).player1.ready)
-      if (this.rooms.get(gameRoomId).player0.ready && this.rooms.get(gameRoomId).player1.ready) {
+      console.log('Join',
+        client.id,
+        this.rooms.get(gameRoomId).player0.ready,
+        this.rooms.get(gameRoomId).player1.ready
+      )
+
+      if (this.rooms.get(gameRoomId).player0.ready
+        && this.rooms.get(gameRoomId).player1.ready) {
         console.log('Game Start')
         this.handleGame(gameRoomId)
       }
@@ -112,7 +126,6 @@ export class GameGateway {
     @MessageBody() data: {id: string, y: number},
     @ConnectedSocket() client: Socket,
   ) {
-    //console.log('Emit', client.id, 'MoveBar', data)
     if (this.rooms.get(data.id).client0.id == client.id) {
       this.rooms.get(data.id).player0.y = data.y
       this.rooms.get(data.id).client1.emit('OpponentMove', data.y)
@@ -136,63 +149,62 @@ export class GameGateway {
       this.rooms.get(gameId).player1.score++
 
     console.log("Goal")
-    this.server.to(this.rooms.get(gameId).id).emit('Goal', {scoreP0: this.rooms.get(gameId).player0.score, scoreP1: this.rooms.get(gameId).player1.score})
+    this.server.to(this.rooms.get(gameId).id)
+      .emit('Goal', {
+        scoreP0: this.rooms.get(gameId).player0.score,
+        scoreP1: this.rooms.get(gameId).player1.score
+      })
     
     this.handleGame(gameId)
   }
 
   async handleGame(gameId: string) {
     console.log('handleGame')
-    if (this.rooms.get(gameId).player0.score != 6 && this.rooms.get(gameId).player1.score != 6) {
+    if (this.rooms.get(gameId).player0.score != 6
+      && this.rooms.get(gameId).player1.score != 6) {
       console.log('score0: ', this.rooms.get(gameId).player0.score)
       console.log('score1: ', this.rooms.get(gameId).player1.score)
-      this.rooms.get(gameId).goal = -1
-      this.rooms.get(gameId).ball = {
-          x: (1920 / 2),
-          y: (1080 / 2)
-      }
-      this.rooms.get(gameId).player0.x = 79.6
-      this.rooms.get(gameId).player0.y = 540
-      this.rooms.get(gameId).player1.x = 1840.4
-      this.rooms.get(gameId).player1.y = 540
-      
+
+      this.rooms.get(gameId).resetPosition()
+
       this.handleBall(gameId)
     }
   }
 
   async handleBall(gameId: string) {
-    this.rooms.get(gameId).delta = {
-      dx : 0,
-      dy : 0
-    }
-
-    console.log('handleball')
     if (this.rooms.get(gameId).player0.score > this.rooms.get(gameId).player1.score)
       this.rooms.get(gameId).delta.dx = 5
     else if (this.rooms.get(gameId).player1.score > this.rooms.get(gameId).player0.score)
       this.rooms.get(gameId).delta.dx = -5
+    
     else if (Math.random() >= 0.5)
       this.rooms.get(gameId).delta.dx = 5
     else
       this.rooms.get(gameId).delta.dx = -5
 
     this.waitForGoal(gameId)
-  
   }
 
   refreshBallFrame(gameId: string) {
-    this.rooms.get(gameId).goal = -1
-    this.rooms.get(gameId).ball.x += this.rooms.get(gameId).delta.dx
-    this.rooms.get(gameId).ball.y += this.rooms.get(gameId).delta.dy
-    this.server.to(this.rooms.get(gameId).id).emit('BallMove', this.rooms.get(gameId).ball)
-    if (this.rooms.get(gameId).ball.y >= 1080 || this.rooms.get(gameId).ball.y <= 0)
+    this.rooms.get(gameId)
+      .ball.x += this.rooms.get(gameId).delta.dx
+    this.rooms.get(gameId)
+      .ball.y += this.rooms.get(gameId).delta.dy
+
+    this.server.to(this.rooms.get(gameId).id)
+      .emit('BallMove', this.rooms.get(gameId).ball)
+
+    if (this.rooms.get(gameId).ball.y >= 1080
+      || this.rooms.get(gameId).ball.y <= 0)
       this.rooms.get(gameId).delta.dy = this.hitWall(this.rooms.get(gameId).delta.dy)
+  
     if (this.rooms.get(gameId).ball.x <= this.rooms.get(gameId).player0.x) {
-      this.rooms.get(gameId).delta = this.hitLeftBar(this.rooms.get(gameId).delta, this.rooms.get(gameId))
+      this.rooms.get(gameId).delta = this.hitLeftBar(this.rooms.get(gameId).delta,this.rooms.get(gameId))
       if (this.rooms.get(gameId).delta.dx == 0 && this.rooms.get(gameId).delta.dy == 0) {
         this.rooms.get(gameId).goal = 1
       }
     }
+
     if (this.rooms.get(gameId).ball.x >= this.rooms.get(gameId).player1.x) {
       this.rooms.get(gameId).delta = this.hitRightBar(this.rooms.get(gameId).delta, this.rooms.get(gameId))
       if (this.rooms.get(gameId).delta.dx == 0 && this.rooms.get(gameId).delta.dy == 0) {
@@ -215,7 +227,8 @@ export class GameGateway {
 
   hitLeftBar(delta: {dx:number, dy:number}, gameState: GameState): {dx:number, dy:number} {
 
-    if (gameState.ball.y <= (gameState.player0.y + gameState.player0.height / 2) || gameState.ball.y <= (gameState.player0.y - gameState.player0.height / 2)) {
+    if (gameState.ball.y <= (gameState.player0.y + gameState.player0.height / 2)
+      || gameState.ball.y <= (gameState.player0.y - gameState.player0.height / 2)) {
       let hitZone = gameState.ball.y - gameState.player0.y
       if (hitZone < 0) { // Ball hit bar above center
         delta.dy = hitZone / (gameState.player0.height / 2)
@@ -239,7 +252,8 @@ export class GameGateway {
 
   hitRightBar(delta: {dx:number, dy:number}, gameState: GameState): {dx:number; dy:number;} {
 
-    if (gameState.ball.y <= (gameState.player1.y + gameState.player1.height / 2) || gameState.ball.y <= (gameState.player1.y - gameState.player1.height / 2)) {
+    if (gameState.ball.y <= (gameState.player1.y + gameState.player1.height / 2)
+      || gameState.ball.y <= (gameState.player1.y - gameState.player1.height / 2)) {
       let hitZone = gameState.ball.y - gameState.player1.y
       if (hitZone < 0) { // Ball hit bar above center
         delta.dy = hitZone / (gameState.player1.height / 2)

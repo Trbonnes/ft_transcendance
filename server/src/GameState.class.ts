@@ -53,5 +53,22 @@ export default class GameState {
             y: (1080 / 2)
         }
     }
+
+    resetPosition() {
+      this.goal = -1
+      this.ball = {
+          x: (1920 / 2),
+          y: (1080 / 2)
+      }
+      this.delta = {
+        dx : 0,
+        dy : 0
+      }
+      
+      this.player0.x = 79.6
+      this.player0.y = 540
+      this.player1.x = 1840.4
+      this.player1.y = 540
+    }
     
 }
