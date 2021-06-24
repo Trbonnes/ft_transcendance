@@ -79,10 +79,6 @@ export class GameGateway {
     client.disconnect()
     for (let gameRoom of this.rooms.keys()) {
       if (gameRoom == serverSideClient[1])
-        // this.rooms.get(gameRoom).client0.leave(serverSideClient[1])
-        // this.rooms.get(gameRoom).client1.leave(serverSideClient[1])
-        // this.rooms.get(gameRoom).client0.disconnect()
-        // this.rooms.get(gameRoom).client1.disconnect()
         this.rooms.delete(gameRoom)
     }
   }
@@ -127,69 +123,73 @@ export class GameGateway {
     }
   }
 
-  async handleGame(gameRoomId: string) {
-    while (this.rooms.get(gameRoomId).player0.score != 6 && this.rooms.get(gameRoomId).player1.score != 6) {
-      console.log('score0: ', this.rooms.get(gameRoomId).player0.score)
-      console.log('score1: ', this.rooms.get(gameRoomId).player1.score)
-      let score = await this.handleBall(this.rooms.get(gameRoomId))
-      this.rooms.get(gameRoomId).player0.score = score.p0
-      this.rooms.get(gameRoomId).player1.score = score.p1
+  waitForGoal(gameId: string) {
+    while (this.refreshBallFrame(gameId) == -1) {
+      setTimeout( () => {
+          this.waitForGoal(gameId);
+      }, 16);
+      return;
+    }
+    if (this.rooms.get(gameId).goal == 0)
+      this.rooms.get(gameId).player0.score++
+    if (this.rooms.get(gameId).goal == 1)
+      this.rooms.get(gameId).player1.score++
+
+    console.log("Goal")
+    this.server.to(this.rooms.get(gameId).id).emit('Goal', {scoreP0: this.rooms.get(gameId).player0.score, scoreP1: this.rooms.get(gameId).player1.score})  
+
+    this.handleGame(gameId)
+  }
+
+  async handleGame(gameId: string) {
+    if (this.rooms.get(gameId).player0.score != 6 && this.rooms.get(gameId).player1.score != 6) {
+      console.log('score0: ', this.rooms.get(gameId).player0.score)
+      console.log('score1: ', this.rooms.get(gameId).player1.score)
+      this.handleBall(gameId)
     }
   }
 
-  // async waitClient(gameState: GameState) {
-  //   let p0Response: boolean = false
-  //   let p1Response: boolean = false
-  //   this.server.to(gameState.id).emit('BallMove', gameState.ball)
-
-  //   return
-  // }
-
-  async handleBall(gameState: GameState): Promise<{ p0: number; p1: number; }> {
-    gameState.delta = {
+  async handleBall(gameId: string) {
+    this.rooms.get(gameId).delta = {
       dx : 0,
       dy : 0
     }
 
     console.log('handleball')
-    if (gameState.player0.score > gameState.player1.score)
-      gameState.delta.dx = 0.5
-    else if (gameState.player1.score > gameState.player0.score)
-      gameState.delta.dx = -0.5
+    if (this.rooms.get(gameId).player0.score > this.rooms.get(gameId).player1.score)
+      this.rooms.get(gameId).delta.dx = 2
+    else if (this.rooms.get(gameId).player1.score > this.rooms.get(gameId).player0.score)
+      this.rooms.get(gameId).delta.dx = -2
     else if (Math.random() >= 0.5)
-      gameState.delta.dx = 0.2
+      this.rooms.get(gameId).delta.dx = 2
     else
-      gameState.delta.dx = -0.2
+      this.rooms.get(gameId).delta.dx = -2
 
-    while (!gameState.goal) {
-      setTimeout(this.refreshBallFrame, 16, gameState)
-    }
-
-    console.log("Goal")
-    this.server.to(gameState.id).emit('Goal', {scoreP0: gameState.player0.score, scoreP1: gameState.player1.score})
-    return new Promise(score => {gameState.player0.score, gameState.player1.score})
+    this.waitForGoal(gameId)
+  
   }
 
-  refreshBallFrame(gameState: GameState) {
-    gameState.ball.x += gameState.delta.dx
-    gameState.ball.y += gameState.delta.dy
-    this.server.to(gameState.id).emit('BallMove', gameState.ball)
-    if (gameState.ball.y >= 1080 || gameState.ball.y <= 0)
-      gameState.delta.dy = this.hitWall(gameState.delta.dy)
-    if (gameState.ball.x <= gameState.player0.x) {
-      gameState.delta = this.hitLeftBar(gameState.delta, gameState)
-      if (gameState.delta.dx == 0 && gameState.delta.dy == 0) {
-        gameState.goal = true
-        gameState.player1.score += 1
+  refreshBallFrame(gameId: string) {
+    this.rooms.get(gameId).goal = -1
+    this.rooms.get(gameId).ball.x += this.rooms.get(gameId).delta.dx
+    this.rooms.get(gameId).ball.y += this.rooms.get(gameId).delta.dy
+    this.server.to(this.rooms.get(gameId).id).emit('BallMove', this.rooms.get(gameId).ball)
+    if (this.rooms.get(gameId).ball.y >= 1080 || this.rooms.get(gameId).ball.y <= 0)
+      this.rooms.get(gameId).delta.dy = this.hitWall(this.rooms.get(gameId).delta.dy)
+    if (this.rooms.get(gameId).ball.x <= this.rooms.get(gameId).player0.x) {
+      this.rooms.get(gameId).delta = this.hitLeftBar(this.rooms.get(gameId).delta, this.rooms.get(gameId))
+      if (this.rooms.get(gameId).delta.dx == 0 && this.rooms.get(gameId).delta.dy == 0) {
+        this.rooms.get(gameId).goal = 1
       }
     }
-    if (gameState.ball.x >= gameState.player1.x) {
-      gameState.delta = this.hitRightBar(gameState.delta, gameState)
-      if (gameState.delta.dx == 0 && gameState.delta.dy == 0) {
-        gameState.goal = true
-        gameState.player0.score += 1
+    if (this.rooms.get(gameId).ball.x >= this.rooms.get(gameId).player1.x) {
+      this.rooms.get(gameId).delta = this.hitRightBar(this.rooms.get(gameId).delta, this.rooms.get(gameId))
+      if (this.rooms.get(gameId).delta.dx == 0 && this.rooms.get(gameId).delta.dy == 0) {
+        this.rooms.get(gameId).goal = 0
       }
     }
+
+    return this.rooms.get(gameId).goal
   }
 
   hitWall(dy: number): number {
@@ -216,7 +216,7 @@ export class GameGateway {
         delta.dy = 0
 
       delta.dx = Math.abs(delta.dx)
-      delta.dx += 0.02
+      delta.dx += 1
     }
     else {
       delta.dx = 0
@@ -240,7 +240,7 @@ export class GameGateway {
         delta.dy = 0
 
       delta.dx = -Math.abs(delta.dx)
-      delta.dx -= 0.02
+      delta.dx -= 1
     }
     else {
       delta.dx = 0

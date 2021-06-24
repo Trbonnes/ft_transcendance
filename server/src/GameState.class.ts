@@ -27,7 +27,7 @@ export default class GameState {
       dx : 0,
       dy : 0
     }
-    public goal: boolean //= false
+    public goal: number = -1
 
     constructor(client: Socket) {
 
@@ -52,7 +52,6 @@ export default class GameState {
             x: (1920 / 2),
             y: (1080 / 2)
         }
-        this.goal = false
     }
     
 }

@@ -66,8 +66,8 @@ export default class GameScene extends Phaser.Scene {
         this.socket!.emit('JoinGame', this.room)
         
         this.socket!.on('BallMove', (data: {x:number, y:number}) => {
-            this.ballUpdate.x = data.x
-            this.ballUpdate.y = data.y
+            this.ball!.ball.x = data.x
+            this.ball!.ball.y = data.y
         })
 
         this.socket!.on('OpponentMove', (data: number) => {
@@ -121,6 +121,5 @@ export default class GameScene extends Phaser.Scene {
         while (this.opponentUpdateY! < this.opponentBar!.bar.y) {
             this.opponentBar!.updatePosition(-1)
         }
-
     }
 }
