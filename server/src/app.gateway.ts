@@ -136,15 +136,21 @@ export class GameGateway {
       this.rooms.get(gameId).player1.score++
 
     console.log("Goal")
-    this.server.to(this.rooms.get(gameId).id).emit('Goal', {scoreP0: this.rooms.get(gameId).player0.score, scoreP1: this.rooms.get(gameId).player1.score})  
-
+    this.server.to(this.rooms.get(gameId).id).emit('Goal', {scoreP0: this.rooms.get(gameId).player0.score, scoreP1: this.rooms.get(gameId).player1.score})
+    
     this.handleGame(gameId)
   }
 
   async handleGame(gameId: string) {
+    console.log('handleGame')
     if (this.rooms.get(gameId).player0.score != 6 && this.rooms.get(gameId).player1.score != 6) {
       console.log('score0: ', this.rooms.get(gameId).player0.score)
       console.log('score1: ', this.rooms.get(gameId).player1.score)
+      this.rooms.get(gameId).goal = -1
+      this.rooms.get(gameId).ball = {
+          x: (1920 / 2),
+          y: (1080 / 2)
+      }
       this.handleBall(gameId)
     }
   }
@@ -157,13 +163,13 @@ export class GameGateway {
 
     console.log('handleball')
     if (this.rooms.get(gameId).player0.score > this.rooms.get(gameId).player1.score)
-      this.rooms.get(gameId).delta.dx = 2
+      this.rooms.get(gameId).delta.dx = 5
     else if (this.rooms.get(gameId).player1.score > this.rooms.get(gameId).player0.score)
-      this.rooms.get(gameId).delta.dx = -2
+      this.rooms.get(gameId).delta.dx = -5
     else if (Math.random() >= 0.5)
-      this.rooms.get(gameId).delta.dx = 2
+      this.rooms.get(gameId).delta.dx = 5
     else
-      this.rooms.get(gameId).delta.dx = -2
+      this.rooms.get(gameId).delta.dx = -5
 
     this.waitForGoal(gameId)
   
@@ -216,7 +222,7 @@ export class GameGateway {
         delta.dy = 0
 
       delta.dx = Math.abs(delta.dx)
-      delta.dx += 1
+      delta.dx += 2
     }
     else {
       delta.dx = 0
@@ -240,7 +246,7 @@ export class GameGateway {
         delta.dy = 0
 
       delta.dx = -Math.abs(delta.dx)
-      delta.dx -= 1
+      delta.dx -= 2
     }
     else {
       delta.dx = 0
