@@ -151,6 +151,11 @@ export class GameGateway {
           x: (1920 / 2),
           y: (1080 / 2)
       }
+      this.rooms.get(gameId).player0.x = 79.6
+      this.rooms.get(gameId).player0.y = 540
+      this.rooms.get(gameId).player1.x = 1840.4
+      this.rooms.get(gameId).player1.y = 540
+      
       this.handleBall(gameId)
     }
   }
