@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {User} from '../entities/user.entity';
+import { User } from '../entities/user.entity';
 import { Logger } from '@nestjs/common';
 
 @Injectable()
@@ -47,7 +47,6 @@ export class UsersService {
   async remove(id: string) {
 	try {
 		const user = await this.usersRepository.findOneOrFail(id);
-		Logger.log(user)
 		this.usersRepository.remove(user);
 		return user
 	} catch (err) {
