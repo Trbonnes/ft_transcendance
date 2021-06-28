@@ -138,7 +138,7 @@ export function setup(_options: {}): Phaser.Game {
 					.setDisplaySize(config.width, config.height)
 
 			//this.scene.run(scenesList.MenuScene)
-			this.scene.run(scenesList.JoinGameScene)
+			this.scene.run(scenesList.MenuScene)
     }
 
 		update(/*time, delta*/) {}
