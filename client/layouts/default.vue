@@ -16,9 +16,9 @@
 #side {
   width: 20vw;
   height: 100vh;
-  background-color: rgb(143, 143, 143);
   position: fixed;
   right: 0;
   top: 0;
+  @apply shadow
 }
 </style>

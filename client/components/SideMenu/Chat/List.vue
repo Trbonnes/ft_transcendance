@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex flex-row w-10/12 text-2xl p-2 m-5 shadow" @click="$emit('select', c.id)" v-for="c in conversations">
+        <div class="flex flex-row w-10/12 text-2xl p-2 m-5 shadow cursor-pointer" @click="$emit('select', c.id)" v-for="c in conversations">
             <font-awesome-icon v-if='c.members.length > 1' icon="users"/>
             <font-awesome-icon v-else icon="user"/>
             <div v-if="c.members.length > 1">
@@ -21,7 +21,7 @@ export default Vue.extend({
                     {id : "1234", members: ["boB"]},
                     {id : "1235", members: ["boB", "MIreille"], title: "La guilde des meilleurs"},
                     {id : "1236", members: ["boB", "Celine", "Napoleon", "Andre", "Jack Sparrow", "Neils Amstrong", "Al Capone"]},
-                    {id : "1237", members: ["boB", "Alphonse"]},
+                    {id : "1237", members: ["boB", "Alphonse", "vroum vroum"]},
                     {id : "1238", members: ["boB"]},
             ]
         }

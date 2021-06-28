@@ -1,6 +1,5 @@
 <template >
     <div>
-        <h1>Here comes the chat</h1>
        <component :is="comp.component" v-bind="comp.props" @select="showConversation" @exit="showList"/> 
     </div>
 </template>
@@ -11,20 +10,20 @@ export default Vue.extend({
         return {
            comp: {
                component : 'side-menu-chat-list',
-               props : null
-            } 
+               props : { id : "" }
+            }
         }
     },
     methods: {
-        showConversation(id : string)
+        showConversation(convoid : string)
         {
             this.comp.component = 'side-menu-chat-single'
-            this.comp.props = { id : id }
+            this.comp.props = { id : convoid }
         },
         showList(id : string)
         {
             this.comp.component = 'side-menu-chat-list'
-            this.comp.props = null 
+            this.comp.props.id = "" 
         }
     },
 })
