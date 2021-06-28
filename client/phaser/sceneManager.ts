@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import MenuScene from './scenes/menuScene'
+import LayoutScene from './scenes/layoutScene'
 import GameScene from './scenes/gameScene'
 import JoinGameScene from './scenes/joinGameScene'
 import SearchingOpponentScene from './scenes/searchingOpponentScene'
@@ -9,6 +10,7 @@ import TournamentScene from './scenes/tournamentScene'
 export const scenesList = {
     HomeScene: 'HomeScene',
     MenuScene: 'MenuScene',
+    LayoutScene: 'LayoutScene',
     GameScene: 'GameScene',
     JoinGameScene: 'JoinGameScene',
     SearchingOpponentScene: 'SearchingOpponentScene',
@@ -23,7 +25,9 @@ export function setActiveScene(scene: string) {
 
 export function sceneLoader(Scene: Phaser.Scene) {
     //GAME SCENES LOADER
+    console.log('tritan ile tro for')
     Scene.scene.add(scenesList.MenuScene, MenuScene, false)
+    Scene.scene.add(scenesList.LayoutScene, LayoutScene, false)
     Scene.scene.add(scenesList.GameScene, GameScene, false)
     Scene.scene.add(scenesList.JoinGameScene, JoinGameScene, false)
     Scene.scene.add(scenesList.SearchingOpponentScene, SearchingOpponentScene, false)
