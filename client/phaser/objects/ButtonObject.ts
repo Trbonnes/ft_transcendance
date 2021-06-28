@@ -13,6 +13,7 @@ export default class Button extends Phaser.GameObjects.GameObject {
 		y: number,
 		text: string,
 		effect: Function,
+		asset: string = "button.png",
 		shadow = true
 	) {
 		super(scene, 'button')
@@ -20,18 +21,16 @@ export default class Button extends Phaser.GameObjects.GameObject {
 		this.effect = effect
 
 		if (shadow) {
-			this.shadow = scene.add
-				.image(x + 10, y + 10, 'btn')
+			this.shadow = scene.add.image(x + 10, y + 10, asset)
 				.setTint(0x000000)
 			this.shadow.alpha = 0.6
 		}
 
-		this.btn = scene.add.image(x, y, 'btn')
+		this.btn = scene.add.image(x, y, asset)
 			.setInteractive({ useHandCursor: true })
 		this.text = scene.add.text(x, y, text)
-			.setFontSize(50)
-			.setStroke('black', 3)
-			.setTint(0x000000)
+			.setFontSize(40)
+			.setTint(0xffffff)
 			.setOrigin(0.5, 0.5)
             
 		this.btn.on('pointerover', () => {

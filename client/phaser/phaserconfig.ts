@@ -134,7 +134,7 @@ export function setup(_options: {}): Phaser.Game {
 			// const me = userStore.user;
 
 			this.add
-					.image(config.width / 2, config.height / 2, 'backgroundTest')
+					.image(config.width / 2, config.height / 2, "global_background.png")
 					.setDisplaySize(config.width, config.height)
 
 			//this.scene.run(scenesList.MenuScene)

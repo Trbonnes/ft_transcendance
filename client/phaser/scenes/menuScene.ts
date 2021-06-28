@@ -20,27 +20,33 @@ export default class MenuScene extends Phaser.Scene {
     create() {
         setActiveScene(scenesList.MenuScene);
 
-        this.menu.push(new Button(this, config.width / 2 - 300, 400, "Classic Game",
+        this.add.text(config.width / 2, 120, "Wanna play  some Pong ?")
+			.setFontSize(50)
+			.setStroke('black', 3)
+			.setTint(0x000000)
+			.setOrigin(0.5, 0.5)
+
+        this.menu.push(new Button(this, config.width / 2 - 300, 400, "Classic",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinGameScene)
+            Scene.scene.run(scenesList.LayoutScene)
             Scene.scene.stop(scenesList.MenuScene)
         }))
 
-        this.menu.push(new Button(this, config.width / 2 + 300, 400, "Borderless Game",
+        this.menu.push(new Button(this, config.width / 2 + 300, 400, "Borderless",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinGameScene)
+            Scene.scene.run(scenesList.LayoutScene)
             Scene.scene.stop(scenesList.MenuScene)
         }))
 
         this.menu.push(new Button(this, config.width / 2 - 300, 800, "Spectate",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinGameScene)
+            Scene.scene.run(scenesList.LayoutScene)
             Scene.scene.stop(scenesList.MenuScene)
         }))
 
-        this.menu.push(new Button(this, config.width / 2 + 300, 800, "Play with\na friend",
+        this.menu.push(new Button(this, config.width / 2 + 300, 800, "  With\na friend",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinGameScene)
+            Scene.scene.run(scenesList.LayoutScene)
             Scene.scene.stop(scenesList.MenuScene)
         }))
     }

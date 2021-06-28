@@ -19,6 +19,9 @@ export default class JoinGameScene extends Phaser.Scene {
 
     create() {
         setActiveScene(scenesList.JoinGameScene)
+
+        this.add.video(config.width / 2, config.height / 2, 'loading.webm').play(true).setLoop()
+
         console.log(os.hostname())
         this.socket = io("http://" + os.hostname() + ":3000/game", {
             transportOptions: {

@@ -1,8 +1,7 @@
 {
     "global" : {
-        "background": "global_background",
-        "button": "button.png",
-        "loading": "loading.gif"
+        "background": "global_background.png",
+        "button": "button.png"
     },
     "classical" : {
         "background": "classical_background.png",
@@ -13,8 +12,8 @@
     },
     "maya" : {
         "background": "maya_background.png",
-        "leftBar": "maya_bar.png",
-        "rightBar": "maya_bar.png",
+        "leftBar": "maya_leftbar.png",
+        "rightBar": "maya_rightbar.png",
         "ball": "maya_ball.png" ,
         "layout": "maya_layout.png"
     },
@@ -26,9 +25,9 @@
         "layout": "miku_layout.png"
     },
     "football" : {
-        "background": "football_background.png",
-        "leftBar": "football_bar.png",
-        "rightBar": "football_bar.png",
+        "background": "football_background.jpg",
+        "leftBar": "football_leftbar.png",
+        "rightBar": "football_rightbar.png",
         "ball": "football_ball.png" ,
         "layout": "football_layout.png"
     }
