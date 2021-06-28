@@ -216,7 +216,6 @@ export class GameGateway {
   }
 
   hitWall(dy: number): number {
-
     if(dy > 0)
       dy = -Math.abs(dy)
     else
@@ -228,7 +227,7 @@ export class GameGateway {
   hitLeftBar(delta: {dx:number, dy:number}, gameState: GameState): {dx:number, dy:number} {
 
     if (gameState.ball.y <= (gameState.player0.y + gameState.player0.height / 2)
-      || gameState.ball.y <= (gameState.player0.y - gameState.player0.height / 2)) {
+      && gameState.ball.y >= (gameState.player0.y - gameState.player0.height / 2)) {
       let hitZone = gameState.ball.y - gameState.player0.y
       if (hitZone < 0) { // Ball hit bar above center
         delta.dy = hitZone / (gameState.player0.height / 2)
@@ -253,7 +252,7 @@ export class GameGateway {
   hitRightBar(delta: {dx:number, dy:number}, gameState: GameState): {dx:number; dy:number;} {
 
     if (gameState.ball.y <= (gameState.player1.y + gameState.player1.height / 2)
-      || gameState.ball.y <= (gameState.player1.y - gameState.player1.height / 2)) {
+      && gameState.ball.y >= (gameState.player1.y - gameState.player1.height / 2)) {
       let hitZone = gameState.ball.y - gameState.player1.y
       if (hitZone < 0) { // Ball hit bar above center
         delta.dy = hitZone / (gameState.player1.height / 2)
