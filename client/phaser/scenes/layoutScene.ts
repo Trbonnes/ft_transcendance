@@ -28,25 +28,25 @@ export default class LayoutScene extends Phaser.Scene {
 
         this.menu.push(new Button(this, config.width / 2 - 300, 400, "",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinGameScene, { data: "classical" })
+            Scene.scene.run(scenesList.JoinGameScene, { layout: "classical" })
             Scene.scene.stop(scenesList.LayoutScene)
         }, "classical_layout.png"))
 
         this.menu.push(new Button(this, config.width / 2 + 300, 400, "",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinGameScene, { data: "maya" })
+            Scene.scene.run(scenesList.JoinGameScene, { layout: "maya" })
             Scene.scene.stop(scenesList.LayoutScene)
         }, "maya_layout.png"))
 
         this.menu.push(new Button(this, config.width / 2 - 300, 800, "",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinGameScene, { data: "miku" })
+            Scene.scene.run(scenesList.JoinGameScene, { layout: "miku" })
             Scene.scene.stop(scenesList.LayoutScene)
         }, "miku_layout.png"))
 
         this.menu.push(new Button(this, config.width / 2 + 300, 800, "",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinGameScene, { data: "football" })
+            Scene.scene.run(scenesList.JoinGameScene, { layout: "football" })
             Scene.scene.stop(scenesList.LayoutScene)
         }, "football_layout.png"))
     }

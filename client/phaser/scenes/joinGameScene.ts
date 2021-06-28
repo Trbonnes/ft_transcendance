@@ -12,8 +12,8 @@ export default class JoinGameScene extends Phaser.Scene {
         super('JoinGameScene')
     }
 
-    init(data: string) {
-        this.layoutType = data
+    init(data: { layout: string }) {
+        this.layoutType = data.layout
     }
 
     preload() {
@@ -22,6 +22,8 @@ export default class JoinGameScene extends Phaser.Scene {
 
     create() {
         setActiveScene(scenesList.JoinGameScene)
+
+        console.log(this.layoutType)
 
         this.add.text(config.width / 2, 120, "Waiting for opponent...")
 			.setFontSize(50)

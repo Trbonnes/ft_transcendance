@@ -5,8 +5,8 @@
     },
     "classical" : {
         "background": "classical_background.png",
-        "leftBar": "classical_bar.png",
-        "rightBar": "classical_bar.png",
+        "leftBar": "classical_leftbar.png",
+        "rightBar": "classical_rightbar.png",
         "ball": "classical_ball.png" ,
         "layout": "classical_layout.png"
     },
@@ -19,13 +19,13 @@
     },
     "miku" : {
         "background": "miku_background.png",
-        "leftBar": "miku_bar.png",
-        "rightBar": "miku_bar.png",
+        "leftBar": "miku_leftbar.png",
+        "rightBar": "miku_rightbar.png",
         "ball": "miku_ball.png" ,
         "layout": "miku_layout.png"
     },
     "football" : {
-        "background": "football_background.jpg",
+        "background": "football_background.png",
         "leftBar": "football_leftbar.png",
         "rightBar": "football_rightbar.png",
         "ball": "football_ball.png" ,

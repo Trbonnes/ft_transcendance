@@ -37,14 +37,14 @@ export default class GameState {
         this.player0 = {
             x: 79.6,
             y: 540,
-            height: (1920 * 0.1),
+            height: 128,
             score: 0,
             ready: false
         }
         this.player1 = {
             x: 1840.4,
             y: 540,
-            height: (1920 * 0.1),
+            height: 128,
             score: 0,
             ready: false
         }

@@ -49,22 +49,26 @@ export default class GameScene extends Phaser.Scene {
         setActiveScene(scenesList.GameScene)
         this.input.setDefaultCursor('none') // Not forget to this.input.setDefaultCursor('default') when stopping the scene
         
+        this.add
+        .image(config.width / 2, config.height / 2, this.layoutType + "_background.png")
+        .setDisplaySize(config.width, config.height)
+
         //console.log('player num: ', this.player)
         //console.log('client side room id: ', this.room)
 
         let scoreBoard = this.add.text(config.width / 2, 50, this.score.left.toString() + "  |  " + this.score.right.toString()).setOrigin(0.5, 0.5).setTint(0x00ff00).setFontSize(60).setFontStyle('Bold')
 
         if(this.player == 0) {
-            this.myBar = new PongBar(this)
-            this.opponentBar = new PongBar(this, 1)
+            this.myBar = new PongBar(this, this.layoutType!)
+            this.opponentBar = new PongBar(this, this.layoutType!, 1)
         }
         else {
-            this.myBar = new PongBar(this, 1)
-            this.opponentBar = new PongBar(this)
+            this.myBar = new PongBar(this, this.layoutType!, 1)
+            this.opponentBar = new PongBar(this, this.layoutType!)
         }
         this.opponentUpdateY = this.opponentBar!.bar.y
 
-        this.ball = new Ball(this)
+        this.ball = new Ball(this, this.layoutType!)
 
         this.socket!.emit('JoinGame', this.room)
         
@@ -86,16 +90,16 @@ export default class GameScene extends Phaser.Scene {
             this.myBar!.destroy()
             this.opponentBar!.destroy()
             if(this.player == 0) {
-                this.myBar = new PongBar(this)
-                this.opponentBar = new PongBar(this, 1)
+                this.myBar = new PongBar(this, this.layoutType!)
+                this.opponentBar = new PongBar(this, this.layoutType!, 1)
             }
             else {
-                this.myBar = new PongBar(this, 1)
-                this.opponentBar = new PongBar(this)
+                this.myBar = new PongBar(this, this.layoutType!, 1)
+                this.opponentBar = new PongBar(this, this.layoutType!)
             }
             this.opponentUpdateY = this.opponentBar!.bar.y
-            this.ball = new Ball(this)
-        }) 
+            this.ball = new Ball(this, this.layoutType!)
+        })
 
         this.socket!.on('OpponentDisconnected', () => {
             this.ball!.destroy()
