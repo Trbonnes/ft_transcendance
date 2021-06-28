@@ -9,6 +9,7 @@ import Ball from '../objects/BallObject'
 
 
 export default class GameScene extends Phaser.Scene {
+    private layoutType?: string
     private socket?: Socket
     private room?: string
     private player?: number
@@ -34,10 +35,12 @@ export default class GameScene extends Phaser.Scene {
         socket: Socket
         player: number
         room: string
+        layoutType: string
     }) {
         this.socket = data.socket
         this.player = data.player
         this.room = data.room
+        this.layoutType = data.layoutType
     }
 
     preload() {}

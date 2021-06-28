@@ -20,27 +20,33 @@ export default class LayoutScene extends Phaser.Scene {
     create() {
         setActiveScene(scenesList.LayoutScene);
 
+        this.add.text(config.width / 2, 120, "Choose a skin for your game:")
+			.setFontSize(50)
+			.setStroke('black', 3)
+			.setTint(0x000000)
+			.setOrigin(0.5, 0.5)
+
         this.menu.push(new Button(this, config.width / 2 - 300, 400, "",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinGameScene)
+            Scene.scene.run(scenesList.JoinGameScene, { data: "classical" })
             Scene.scene.stop(scenesList.LayoutScene)
         }, "classical_layout.png"))
 
         this.menu.push(new Button(this, config.width / 2 + 300, 400, "",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinGameScene)
+            Scene.scene.run(scenesList.JoinGameScene, { data: "maya" })
             Scene.scene.stop(scenesList.LayoutScene)
         }, "maya_layout.png"))
 
         this.menu.push(new Button(this, config.width / 2 - 300, 800, "",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinGameScene)
+            Scene.scene.run(scenesList.JoinGameScene, { data: "miku" })
             Scene.scene.stop(scenesList.LayoutScene)
         }, "miku_layout.png"))
 
         this.menu.push(new Button(this, config.width / 2 + 300, 800, "",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinGameScene)
+            Scene.scene.run(scenesList.JoinGameScene, { data: "football" })
             Scene.scene.stop(scenesList.LayoutScene)
         }, "football_layout.png"))
     }

@@ -6,12 +6,15 @@ import { scenesList, activeScene, setActiveScene } from '../sceneManager'
 
 export default class JoinGameScene extends Phaser.Scene {
     private socket?: Socket
+    private layoutType?: string
 
     constructor() {
         super('JoinGameScene')
     }
 
-    init() {}
+    init(data: string) {
+        this.layoutType = data
+    }
 
     preload() {
         //console.log('join scene')
@@ -19,6 +22,12 @@ export default class JoinGameScene extends Phaser.Scene {
 
     create() {
         setActiveScene(scenesList.JoinGameScene)
+
+        this.add.text(config.width / 2, 120, "Waiting for opponent...")
+			.setFontSize(50)
+			.setStroke('black', 3)
+			.setTint(0x000000)
+			.setOrigin(0.5, 0.5)
 
         this.add.video(config.width / 2, config.height / 2, 'loading.webm').play(true).setLoop()
 
@@ -33,7 +42,7 @@ export default class JoinGameScene extends Phaser.Scene {
         },)
 
         this.socket.on('OpponentFound', (response: {player: number, room: string}) => {
-            this.scene.run(scenesList.GameScene,  { socket: this.socket, player: response.player, room: response.room})
+            this.scene.run(scenesList.GameScene,  { socket: this.socket, player: response.player, room: response.room, layoutType: this.layoutType})
             this.scene.stop(this)
         })
     }
