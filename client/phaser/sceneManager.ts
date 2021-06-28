@@ -19,7 +19,6 @@ export function setActiveScene(scene: string) {
 
 export function sceneLoader(Scene: Phaser.Scene) {
     //GAME SCENES LOADER
-    console.log('tritan ile tro for')
     Scene.scene.add(scenesList.MenuScene, MenuScene, false)
     Scene.scene.add(scenesList.LayoutScene, LayoutScene, false)
     Scene.scene.add(scenesList.GameScene, GameScene, false)
