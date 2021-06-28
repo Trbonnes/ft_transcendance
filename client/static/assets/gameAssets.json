@@ -1,4 +1,9 @@
 {
+    "global" : {
+        "background": "global_background",
+        "button": "button.png",
+        "loading": "loading.gif"
+    },
     "classical" : {
         "background": "classical_background.png",
         "leftBar": "classical_bar.png",
