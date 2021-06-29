@@ -14,4 +14,5 @@ export function assetLoader(Scene: Phaser.Scene) {
     }
   }
   Scene.load.video("loading.webm", "loading.webm")
+  Scene.load.video("confetti.webm", "confetti.webm")
 }

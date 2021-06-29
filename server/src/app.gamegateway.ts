@@ -167,6 +167,14 @@ export class GameGateway {
 
       this.handleBall(gameId)
     }
+    else {
+      console.log('End')
+      this.server.to(this.rooms.get(gameId).id)
+        .emit('End', {
+          scoreP0: this.rooms.get(gameId).player0.score,
+          scoreP1: this.rooms.get(gameId).player1.score
+        })
+      }
   }
 
   async handleBall(gameId: string) {
