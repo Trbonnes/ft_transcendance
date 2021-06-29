@@ -106,12 +106,12 @@ export default class GameScene extends Phaser.Scene {
             this.myBar!.destroy()
             this.opponentBar!.destroy()
             this.socket!.disconnect()
+            this.input.setDefaultCursor('default')
             this.scene.run(scenesList.GameResultsScene, {win: 1, score: this.score })
             this.scene.stop(this)
         })
 
         this.socket!.on('End', (data: {scoreP0: number, scoreP1: number}) => {
-            console.log('client end')
             this.score.left = data.scoreP0
             this.score.right = data.scoreP1
             scoreBoard.setText(this.score.left.toString() + "  |  " + this.score.right.toString())
@@ -120,6 +120,7 @@ export default class GameScene extends Phaser.Scene {
             this.myBar!.destroy()
             this.opponentBar!.destroy()
             this.socket!.disconnect()
+            this.input.setDefaultCursor('default')
             if (this.player == 0 && this.score.left > this.score.right 
                 || this.player == 1 && this.score.left < this.score.right)
                 this.scene.run(scenesList.GameResultsScene, {win: 1, score: this.score })
