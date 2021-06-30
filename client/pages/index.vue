@@ -1,8 +1,7 @@
 <template>
 	<div class="container">
 		<div>
-			<img src='favicon.ico'>
-			<h1 class="title">transcendence</h1>
+			<h1 class="title">transcendence game</h1>
 			<div class="links">
 				<NuxtLink	to="/game"
 							class="button--green"
