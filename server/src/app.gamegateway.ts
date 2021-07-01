@@ -72,12 +72,12 @@ export class GameGateway {
       .emit('OpponentFound', {player: 1, room: id})
   }
 
-  leaveGame(client: Socket) { //maybe need to use the db for this
+  leaveGame(client: Socket) {
     let serverSideClient: [string, string]
     for (serverSideClient of this.clients) {
-      if (serverSideClient[0] == client.id)
-        this.server.to(serverSideClient[1])
-          .emit('OpponentDisconnected')
+      if (serverSideClient[0] == client.id) {
+        break
+      }
     }
 
     client.leave(serverSideClient[1])
@@ -85,7 +85,7 @@ export class GameGateway {
 
     for (let gameRoom of this.rooms.keys()) {
       if (gameRoom == serverSideClient[1])
-        this.rooms.delete(gameRoom)
+        this.rooms.get(gameRoom).disconnection = true
     }
   }
 
@@ -124,6 +124,9 @@ export class GameGateway {
     @MessageBody() data: {id: string, y: number},
     @ConnectedSocket() client: Socket,
   ) {
+    if (!this.rooms.get(data.id) || this.rooms.get(data.id).disconnection)
+      return 
+
     if (this.rooms.get(data.id).client0.id == client.id) {
       this.rooms.get(data.id).player0.y = data.y
       this.rooms.get(data.id).client1.emit('OpponentMove', data.y)
@@ -158,6 +161,14 @@ export class GameGateway {
 
   async handleGame(gameId: string) {
     console.log('handleGame')
+
+    if (this.rooms.get(gameId).disconnection) {
+      this.server.to(gameId)
+          .emit('OpponentDisconnected')
+      this.rooms.delete(gameId)
+      return 
+    }
+
     if (this.rooms.get(gameId).player0.score != 6
       && this.rooms.get(gameId).player1.score != 6) {
       console.log('score0: ', this.rooms.get(gameId).player0.score)
@@ -174,7 +185,8 @@ export class GameGateway {
           scoreP0: this.rooms.get(gameId).player0.score,
           scoreP1: this.rooms.get(gameId).player1.score
         })
-      }
+      this.rooms.delete(gameId)
+    }
   }
 
   async handleBall(gameId: string) {

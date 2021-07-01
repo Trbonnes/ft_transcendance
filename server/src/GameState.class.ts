@@ -28,6 +28,7 @@ export default class GameState {
       dy : 0
     }
     public goal: number = -1
+    public disconnection: boolean = false
 
     constructor(client: Socket) {
 

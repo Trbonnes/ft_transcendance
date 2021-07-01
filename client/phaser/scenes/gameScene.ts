@@ -52,9 +52,11 @@ export default class GameScene extends Phaser.Scene {
         this.add
         .image(config.width / 2, config.height / 2, this.layoutType + "_background.png")
         .setDisplaySize(config.width, config.height)
-
-        //console.log('player num: ', this.player)
-        //console.log('client side room id: ', this.room)
+        
+        this.score = {
+            left: 0,
+            right: 0
+        }
 
         let scoreBoard = this.add.text(config.width / 2, 50, this.score.left.toString() + "  |  " + this.score.right.toString()).setOrigin(0.5, 0.5).setTint(0x00ff00).setFontSize(60).setFontStyle('Bold')
 
@@ -105,9 +107,10 @@ export default class GameScene extends Phaser.Scene {
             this.ball!.destroy()
             this.myBar!.destroy()
             this.opponentBar!.destroy()
+            scoreBoard.destroy()
             this.socket!.disconnect()
             this.input.setDefaultCursor('default')
-            this.scene.run(scenesList.GameResultsScene, {win: 1, score: this.score })
+            this.scene.run(scenesList.GameResultsScene, {win: 2, score: this.score })
             this.scene.stop(this)
         })
 
@@ -119,6 +122,7 @@ export default class GameScene extends Phaser.Scene {
             this.ball!.destroy()
             this.myBar!.destroy()
             this.opponentBar!.destroy()
+            scoreBoard.destroy()
             this.socket!.disconnect()
             this.input.setDefaultCursor('default')
             if (this.player == 0 && this.score.left > this.score.right 
