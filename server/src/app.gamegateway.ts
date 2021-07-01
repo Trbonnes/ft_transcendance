@@ -23,7 +23,25 @@ export class GameGateway {
   
   handleConnection(client: Socket, ...args: any[]) {
     console.log('WS Connect', { id: client.id })
+    
+    let data = client.handshake
     let joined = false
+    
+    console.log(data.query['spectate'])
+    if (data.query['spectate']) {
+      for (let gameRoom of this.rooms.keys()) {
+        if (gameRoom == data.query['id']) {
+          client.join(data.query['id'])
+          joined = true
+        }
+      }
+      if (joined)
+        client.emit('Spectator Joined', {room: data.query['id']})
+      else
+        client.emit('Bad id')
+      return
+    }
+
     if (!this.rooms.size) {
       this.createGame(client)
       joined = true
