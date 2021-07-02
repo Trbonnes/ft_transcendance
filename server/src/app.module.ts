@@ -9,6 +9,8 @@ import { UsersModule } from './users/users.module';
 import { ChatGateway, GameGateway } from './app.gateway';
 import { AuthModule } from './auth/auth.module';
 import { FooModule } from './foo/foo.module';
+import { AuthService } from './auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
