@@ -69,8 +69,11 @@ export default class SpectateScene extends Phaser.Scene {
             this.ball!.ball.y = data.y
         })
 
-        this.socket!.on('OpponentMove', (data: number) => {
-            this.rightBarUpdate = data
+        this.socket!.on('SpectatorMove', (data: { side: number, y: number }) => {
+            if (data.side == 0)
+                this.leftBarUpdate = data.y
+            else
+                this.rightBarUpdate = data.y
         })
 
         this.socket!.on('Goal', (data: {scoreP0: number, scoreP1: number}) => {
@@ -95,7 +98,7 @@ export default class SpectateScene extends Phaser.Scene {
             scoreBoard.destroy()
             this.socket!.disconnect()
             this.input.setDefaultCursor('default')
-            this.scene.run(scenesList.GameResultsScene, {win: 2, score: this.score })
+            this.scene.run(scenesList.MenuScene)
             this.scene.stop(this)
         })
 
@@ -110,20 +113,18 @@ export default class SpectateScene extends Phaser.Scene {
             scoreBoard.destroy()
             this.socket!.disconnect()
             this.input.setDefaultCursor('default')
-            this.scene.run(scenesList.GameResultsScene, {win: 0, score: this.score })
+            this.scene.run(scenesList.MenuScene)
             this.scene.stop(this)
         })
     }
 
     update(/*time, delta*/) {
 
-        while (this.input.mousePointer.y > this.leftBar!.bar.y) {
+        while (this.leftBarUpdate! > this.leftBar!.bar.y) {
             this.leftBar!.updatePosition(1)
-            this.socket!.emit('MoveBar', {id: this.room, y: this.leftBar!.bar.y})
         }
-        while (this.input.mousePointer.y < this.leftBar!.bar.y) {
+        while (this.leftBarUpdate! < this.leftBar!.bar.y) {
             this.leftBar!.updatePosition(-1)
-            this.socket!.emit('MoveBar', {id: this.room, y: this.leftBar!.bar.y})
         }
 
         while (this.rightBarUpdate! > this.rightBar!.bar.y) {

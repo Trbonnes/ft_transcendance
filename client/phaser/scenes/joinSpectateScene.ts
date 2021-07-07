@@ -54,8 +54,8 @@ export default class JoinSpectateScene extends Phaser.Scene {
                 this.socket.on('Spectator Joined', (response: {room: string}) => {
                     console.log('sectator joining')
                     this.game.domContainer.style.pointerEvents = 'auto'
-                    // this.scene.run(scenesList.SpectateScene,  { socket: this.socket, room: response.room})
-                    // this.scene.stop(this)
+                    this.scene.run(scenesList.SpectateScene,  { socket: this.socket, room: response.room})
+                    this.scene.stop(this)
                 })
 
                 this.socket.on('Bad id', () => {

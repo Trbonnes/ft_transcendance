@@ -156,10 +156,12 @@ export class GameGateway {
     if (this.rooms.get(data.id).client0.id == client.id) {
       this.rooms.get(data.id).player0.y = data.y
       this.rooms.get(data.id).client1.emit('OpponentMove', data.y)
+      this.server.to(data.id).emit('SpectatorMove', { side: 0, y: data.y })
     }
     else if (this.rooms.get(data.id).client1.id == client.id) {
       this.rooms.get(data.id).player1.y = data.y
       this.rooms.get(data.id).client0.emit('OpponentMove', data.y)
+      this.server.to(data.id).emit('SpectatorMove', { side: 1, y: data.y })
     }
   }
 
