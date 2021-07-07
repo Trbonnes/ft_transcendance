@@ -26,7 +26,7 @@ export default class JoinSpectateScene extends Phaser.Scene {
     create() {
         setActiveScene(scenesList.JoinSpectateScene)
 
-        const joinInput = new Input(this, config.width / 2, 850, {})
+        const joinInput = new Input(this, config.width / 2, config.height / 2, {})
             .setPlaceholder('Enter Game ID')
             .setDisplaySize(560, 60)
             .setDisabled(false)
@@ -35,7 +35,7 @@ export default class JoinSpectateScene extends Phaser.Scene {
 
         console.log(joinInput.getNode())
 
-        new Button(this, config.width / 2, 500, "Join",
+        new Button(this, config.width / 2, 850, "Join",
         () => {
             console.log(joinInput.getValue())
             if (joinInput.getValue()) {

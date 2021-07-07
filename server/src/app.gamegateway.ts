@@ -100,13 +100,19 @@ export class GameGateway {
       }
     }
 
+    for (let gameRoom of this.rooms.keys()) {
+      if (gameRoom == serverSideClient[1]) {
+        if (client.id == this.rooms.get(gameRoom).client0.id || client.id == this.rooms.get(gameRoom).client1.id) {
+          this.rooms.get(gameRoom).disconnection = true
+          break
+        }
+        else
+          break
+      }
+    }
+
     client.leave(serverSideClient[1])
     client.disconnect()
-
-    for (let gameRoom of this.rooms.keys()) {
-      if (gameRoom == serverSideClient[1])
-        this.rooms.get(gameRoom).disconnection = true
-    }
   }
 
   @SubscribeMessage('JoinGame')

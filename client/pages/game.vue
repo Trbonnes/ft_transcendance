@@ -28,7 +28,7 @@ export default Vue.extend({
 }
 
 >>> input {
-	padding: 5px 15px;
+	//padding: 5px 15px;
 	font-size: 60;
 	pointer-events: auto;
 }
