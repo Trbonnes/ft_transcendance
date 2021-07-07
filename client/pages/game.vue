@@ -19,12 +19,20 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 #gameCtnr {
 	width: 100%;
 	height: 100%;
 	/* background: black; */
+}
+
+>>> input {
+	background-image: url(https://assets.labrute.prushka.fr/buttons/brute_button.png);
+	background-size: 100% 100%;
+	border: none;
+	padding: 5px 15px;
+	font-size: 15px;
 }
 
 </style>
