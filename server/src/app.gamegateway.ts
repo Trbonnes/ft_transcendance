@@ -27,16 +27,16 @@ export class GameGateway {
     let data = client.handshake
     let joined = false
     
-    console.log(data.query['spectate'])
+    console.log('spectate: ', data.query['spectate'])
     if (data.query['spectate']) {
       for (let gameRoom of this.rooms.keys()) {
-        if (gameRoom == data.query['id']) {
-          client.join(data.query['id'])
+        if (gameRoom == data.query['spectate']) {
+          client.join(data.query['spectate'])
           joined = true
         }
       }
       if (joined)
-        client.emit('Spectator Joined', {room: data.query['id']})
+        client.emit('Spectator Joined', {room: data.query['spectate']})
       else {
         client.emit('Bad id')
         client.disconnect()

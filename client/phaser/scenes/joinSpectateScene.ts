@@ -26,8 +26,8 @@ export default class JoinSpectateScene extends Phaser.Scene {
     create() {
         setActiveScene(scenesList.JoinSpectateScene)
 
-        const joinInput = new Input(this, config.width / 2, config.height / 2, {})
-            .setPlaceholder('Game ID')
+        const joinInput = new Input(this, config.width / 2, 850, {})
+            .setPlaceholder('Enter Game ID')
             .setDisplaySize(560, 60)
             .setDisabled(false)
 
@@ -35,7 +35,7 @@ export default class JoinSpectateScene extends Phaser.Scene {
 
         console.log(joinInput.getNode())
 
-        new Button(this, config.width / 2, 850, "Join",
+        new Button(this, config.width / 2, 500, "Join",
         () => {
             console.log(joinInput.getValue())
             if (joinInput.getValue()) {
@@ -48,7 +48,7 @@ export default class JoinSpectateScene extends Phaser.Scene {
                         },
                         transports: ['websockets'],
                     },
-                    query: { "spectate": "true", "id": joinInput.getValue() },
+                    query: { "spectate": joinInput.getValue() },
                 })
 
                 this.socket.on('Spectator Joined', (response: {room: string}) => {

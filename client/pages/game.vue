@@ -28,11 +28,8 @@ export default Vue.extend({
 }
 
 >>> input {
-	//background-image: url(https://assets.labrute.prushka.fr/buttons/brute_button.png);
-	//background-size: 100% 100%;
-	border: black;
-	//padding: 5px 15px;
-	font-size: 30px;
+	padding: 5px 15px;
+	font-size: 60;
 	pointer-events: auto;
 }
 

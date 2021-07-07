@@ -41,7 +41,7 @@ export default class JoinGameScene extends Phaser.Scene {
                 },
                 transports: ['websockets']
             },
-            query: { "spectate": "false", "id": "" },
+            query: { "spectate": "" },
         })
 
         this.socket.on('OpponentFound', (response: {player: number, room: string}) => {
