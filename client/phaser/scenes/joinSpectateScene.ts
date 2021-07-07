@@ -28,10 +28,16 @@ export default class JoinSpectateScene extends Phaser.Scene {
 
         const joinInput = new Input(this, config.width / 2, config.height / 2, {})
             .setPlaceholder('Game ID')
-            .setDisplaySize(520, 40)
+            .setDisplaySize(560, 60)
+            .setDisabled(false)
+
+        this.game.domContainer.style.pointerEvents = 'all'
+
+        console.log(joinInput.getNode())
 
         new Button(this, config.width / 2, 850, "Join",
-        (Scene: Phaser.Scene) => {
+        () => {
+            console.log(joinInput.getValue())
             if (joinInput.getValue()) {
 
                 console.log(os.hostname())
@@ -47,11 +53,13 @@ export default class JoinSpectateScene extends Phaser.Scene {
 
                 this.socket.on('Spectator Joined', (response: {room: string}) => {
                     console.log('sectator joining')
+                    this.game.domContainer.style.pointerEvents = 'auto'
                     // this.scene.run(scenesList.SpectateScene,  { socket: this.socket, room: response.room})
                     // this.scene.stop(this)
                 })
 
                 this.socket.on('Bad id', () => {
+                    this.socket = undefined
                     this.cameras.main.shake(400)
                     this.add.text(config.width / 2, 250, "BAD ID")
                         .setFontSize(65)

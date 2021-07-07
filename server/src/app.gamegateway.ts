@@ -37,8 +37,10 @@ export class GameGateway {
       }
       if (joined)
         client.emit('Spectator Joined', {room: data.query['id']})
-      else
+      else {
         client.emit('Bad id')
+        client.disconnect()
+      }
       return
     }
 

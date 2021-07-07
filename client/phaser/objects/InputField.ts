@@ -16,7 +16,7 @@ export default class Input extends Phaser.GameObjects.DOMElement {
 
 		if (shadow) {
 			this.shadow = scene.add
-				.image(x + 10, y + 10, 'menu_button')
+				.image(x + 10, y + 10, 'classical_leftbar')
 				.setTint(0x000000)
 			this.shadow.alpha = 0.6
 		}
