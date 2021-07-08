@@ -7,12 +7,15 @@ import Button from '../objects/ButtonObject'
 
 export default class LayoutScene extends Phaser.Scene {
     private menu: Button[] = []
+    private gameType: string = ""
 
     constructor() {
         super('LayoutScene')
     }
 
-    init() {}
+    init(data: { type: string }) {
+        this.gameType = data.type
+    }
 
     preload() {
     }
@@ -27,27 +30,27 @@ export default class LayoutScene extends Phaser.Scene {
 			.setOrigin(0.5, 0.5)
 
         this.menu.push(new Button(this, config.width / 2 - 300, 400, "",
-        function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinGameScene, { layout: "classical" })
-            Scene.scene.stop(scenesList.LayoutScene)
+        () => {
+            this.scene.run(this.gameType, { layout: "classical" })
+            this.scene.stop(scenesList.LayoutScene)
         }, "classical_layout.png"))
 
         this.menu.push(new Button(this, config.width / 2 + 300, 400, "",
-        function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinGameScene, { layout: "maya" })
-            Scene.scene.stop(scenesList.LayoutScene)
+        () => {
+            this.scene.run(this.gameType, { layout: "maya" })
+            this.scene.stop(scenesList.LayoutScene)
         }, "maya_layout.png"))
 
         this.menu.push(new Button(this, config.width / 2 - 300, 800, "",
-        function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinGameScene, { layout: "miku" })
-            Scene.scene.stop(scenesList.LayoutScene)
+        () => {
+            this.scene.run(this.gameType, { layout: "miku" })
+            this.scene.stop(scenesList.LayoutScene)
         }, "miku_layout.png"))
 
         this.menu.push(new Button(this, config.width / 2 + 300, 800, "",
-        function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinGameScene, { layout: "football" })
-            Scene.scene.stop(scenesList.LayoutScene)
+        () => {
+            this.scene.run(this.gameType, { layout: "football" })
+            this.scene.stop(scenesList.LayoutScene)
         }, "football_layout.png"))
     }
 

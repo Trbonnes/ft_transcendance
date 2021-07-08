@@ -28,13 +28,13 @@ export default class MenuScene extends Phaser.Scene {
 
         this.menu.push(new Button(this, config.width / 2 - 300, 400, "Classic",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.LayoutScene)
+            Scene.scene.run(scenesList.LayoutScene, { type: scenesList.JoinGameScene })
             Scene.scene.stop(scenesList.MenuScene)
         }))
 
         this.menu.push(new Button(this, config.width / 2 + 300, 400, "Borderless",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.LayoutScene)
+            Scene.scene.run(scenesList.LayoutScene, { type: scenesList.JoinBorderlesScene })
             Scene.scene.stop(scenesList.MenuScene)
         }))
 
@@ -48,7 +48,8 @@ export default class MenuScene extends Phaser.Scene {
         function(Scene: Phaser.Scene) {
             Scene.scene.run(scenesList.LayoutScene)
             Scene.scene.stop(scenesList.MenuScene)
-        }))
+        })
+        .setDisabled(true))
     }
 
     update(/*time, delta*/) {}
