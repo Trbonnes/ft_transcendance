@@ -65,27 +65,6 @@ export const config: Phaser.Types.Core.GameConfig & {
 		default: 'false',
 	},
 
-	/*
-	loader: {
-        baseURL: '',
-        path: 'http://xxx/assets/',
-        maxParallelDownloads: undefined,
-        crossOrigin: undefined,
-        responseType: '',
-        async: true,
-        user: '',
-        password: '',
-        timeout: undefined
-    },
-    */
-
-	/*
-    images: {
-        default: 'data:image/png;base64....',
-        missing: 'data:image/png;base64....'
-    },
-    */
-
 	dom: {
 		createContainer: true, // Should the game create a div element to act as a DOM Container? Only enable if you're using DOM Element objects. You must provide a parent object if you use this feature.
 		// behindCanvas: false,

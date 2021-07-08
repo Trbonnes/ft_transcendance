@@ -16,9 +16,7 @@ export default class JoinGameScene extends Phaser.Scene {
         this.layoutType = data.layout
     }
 
-    preload() {
-        //console.log('join scene')
-    }
+    preload() {}
 
     create() {
         setActiveScene(scenesList.JoinGameScene)

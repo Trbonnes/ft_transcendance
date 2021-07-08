@@ -14,8 +14,7 @@ export default class MenuScene extends Phaser.Scene {
 
     init() {}
 
-    preload() {
-    }
+    preload() {}
 
     create() {
         setActiveScene(scenesList.MenuScene);
@@ -46,7 +45,7 @@ export default class MenuScene extends Phaser.Scene {
 
         this.menu.push(new Button(this, config.width / 2 + 300, 800, "  With\na friend",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.LayoutScene)
+            Scene.scene.run(scenesList.LayoutScene, { type: scenesList.JoinGameScene })
             Scene.scene.stop(scenesList.MenuScene)
         })
         .setDisabled(true))

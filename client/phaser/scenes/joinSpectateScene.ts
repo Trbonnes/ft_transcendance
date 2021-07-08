@@ -19,9 +19,7 @@ export default class JoinSpectateScene extends Phaser.Scene {
         this.layoutType = data.layout
     }
 
-    preload() {
-        //console.log('join scene')
-    }
+    preload() {}
 
     create() {
         setActiveScene(scenesList.JoinSpectateScene)

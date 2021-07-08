@@ -17,9 +17,7 @@ export default class GameResultsScene extends Phaser.Scene {
         this.score = data.score
     }
 
-    preload() {
-        //console.log('join scene')
-    }
+    preload() {}
 
     create() {
         setActiveScene(scenesList.GameResultsScene)
