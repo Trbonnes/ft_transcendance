@@ -104,7 +104,8 @@ export class GameGateway {
 
     for (let gameRoom of this.rooms.keys()) {
       if (gameRoom == serverSideClient[1]) {
-        if (client.id == this.rooms.get(gameRoom).client0.id || client.id == this.rooms.get(gameRoom).client1.id) {
+        if (client.id == this.rooms.get(gameRoom).client0.id
+        || client.id == this.rooms.get(gameRoom).client1.id) {
           this.rooms.get(gameRoom).disconnection = true
           break
         }
@@ -143,10 +144,8 @@ export class GameGateway {
       )
 
       if (this.rooms.get(gameRoomId).player0.ready
-        && this.rooms.get(gameRoomId).player1.ready) {
-        console.log('Game Start')
+        && this.rooms.get(gameRoomId).player1.ready)
         this.handleGame(gameRoomId)
-      }
   }
 
   @SubscribeMessage('MoveBar')
@@ -162,6 +161,7 @@ export class GameGateway {
       this.rooms.get(data.id).client1.emit('OpponentMove', data.y)
       this.server.to(data.id).emit('SpectatorMove', { side: 0, y: data.y })
     }
+
     else if (this.rooms.get(data.id).client1.id == client.id) {
       this.rooms.get(data.id).player1.y = data.y
       this.rooms.get(data.id).client0.emit('OpponentMove', data.y)
@@ -181,7 +181,6 @@ export class GameGateway {
     if (this.rooms.get(gameId).goal == 1)
       this.rooms.get(gameId).player1.score++
 
-    console.log("Goal")
     this.server.to(this.rooms.get(gameId).id)
       .emit('Goal', {
         scoreP0: this.rooms.get(gameId).player0.score,
@@ -192,8 +191,6 @@ export class GameGateway {
   }
 
   async handleGame(gameId: string) {
-    console.log('handleGame')
-
     if (this.rooms.get(gameId).disconnection) {
       this.server.to(gameId)
           .emit('OpponentDisconnected')
@@ -203,15 +200,10 @@ export class GameGateway {
 
     if (this.rooms.get(gameId).player0.score != 6
       && this.rooms.get(gameId).player1.score != 6) {
-      console.log('score0: ', this.rooms.get(gameId).player0.score)
-      console.log('score1: ', this.rooms.get(gameId).player1.score)
-
       this.rooms.get(gameId).resetPosition()
-
       this.handleBall(gameId)
     }
     else {
-      console.log('End')
       this.server.to(this.rooms.get(gameId).id)
         .emit('End', {
           scoreP0: this.rooms.get(gameId).player0.score,
