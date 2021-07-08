@@ -35,9 +35,11 @@ export default class SpectateScene extends Phaser.Scene {
     init(data: {
         socket: Socket
         room: string
+        layoutType: string
     }) {
         this.socket = data.socket
         this.room = data.room
+        this.layoutType = data.layoutType
     }
 
     preload() {}

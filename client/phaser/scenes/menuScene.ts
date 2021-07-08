@@ -40,7 +40,7 @@ export default class MenuScene extends Phaser.Scene {
 
         this.menu.push(new Button(this, config.width / 2 - 300, 800, "Spectate",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.JoinSpectateScene)
+            Scene.scene.run(scenesList.LayoutScene, { type: scenesList.JoinSpectateScene })
             Scene.scene.stop(scenesList.MenuScene)
         }))
 
