@@ -244,9 +244,7 @@ export class GameGateway {
     this.server.to(this.rooms.get(gameId).id)
       .emit('BallMove', this.rooms.get(gameId).ball)
 
-    if (this.rooms.get(gameId).ball.y >= 1080
-      || this.rooms.get(gameId).ball.y <= 0)
-      this.rooms.get(gameId).delta.dy = this.hitWall(this.rooms.get(gameId).delta.dy)
+    this.hitWall(gameId)
   
     if (this.rooms.get(gameId).ball.x <= this.rooms.get(gameId).player0.x) {
       this.rooms.get(gameId).delta = this.hitLeftBar(this.rooms.get(gameId).delta,this.rooms.get(gameId))
@@ -267,13 +265,17 @@ export class GameGateway {
     return this.rooms.get(gameId).goal
   }
 
-  hitWall(dy: number): number {
-    if(dy > 0)
-      dy = -Math.abs(dy)
-    else
-      dy = Math.abs(dy)
+  hitWall(gameId: string) {
+    let dy = this.rooms.get(gameId).delta.dy
 
-    return dy
+    if (this.rooms.get(gameId).ball.y >= 1080
+      || this.rooms.get(gameId).ball.y <= 0) {
+
+      if(dy > 0)
+        this.rooms.get(gameId).delta.dy = -Math.abs(dy)
+      else
+        this.rooms.get(gameId).delta.dy = Math.abs(dy)
+    }
   }
 
   hitLeftBar(delta: {dx:number, dy:number}, gameState: GameState): {dx:number, dy:number} {
