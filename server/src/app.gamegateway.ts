@@ -10,16 +10,16 @@ import GameState from './GameState.class'
   }
 })
 export class GameGateway {
-  private rooms: Map<string, GameState>
-  private clients: Map<string, string>
+  protected rooms: Map<string, GameState>
+  protected clients: Map<string, string>
 
-  constructor(private appService: AppService) {
+  constructor(private AppService: AppService) {
     this.rooms = new Map<string, GameState>()
     this.clients = new Map<string, string>()
   }
 
   @WebSocketServer()
-  private server: Namespace
+  protected server: Namespace
   
   handleConnection(client: Socket, ...args: any[]) {
     console.log('WS Connect', { id: client.id })
