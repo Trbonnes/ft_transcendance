@@ -30,7 +30,9 @@ export class GameGateway {
     console.log('spectate: ', data.query['spectate'])
     if (data.query['spectate']) {
       for (let gameRoom of this.rooms.keys()) {
-        if (gameRoom == data.query['spectate']) {
+        if (gameRoom == data.query['spectate']
+        && this.rooms.get(gameRoom).client0
+        && this.rooms.get(gameRoom).client1) {
           client.join(data.query['spectate'])
           joined = true
         }
@@ -112,6 +114,8 @@ export class GameGateway {
     }
 
     client.leave(serverSideClient[1])
+    if (!this.rooms.get(serverSideClient[1])?.client1)
+      this.rooms.delete(serverSideClient[1])
     client.disconnect()
   }
 
