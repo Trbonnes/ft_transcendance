@@ -34,7 +34,7 @@ export default class MenuScene extends Phaser.Scene {
 
         this.menu.push(new Button(this, config.width / 2 + 300, 400, "Borderless",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.LayoutScene, { type: scenesList.JoinBorderlesScene })
+            Scene.scene.run(scenesList.LayoutScene, { type: scenesList.JoinBorderlessScene })
             Scene.scene.stop(scenesList.MenuScene)
         }))
 

@@ -4,12 +4,12 @@ import os from 'os'
 import { config } from '../phaserconfig'
 import { scenesList, activeScene, setActiveScene } from '../sceneManager'
 
-export default class JoinBorderlesScene extends Phaser.Scene {
+export default class JoinBorderlessScene extends Phaser.Scene {
     private socket?: Socket
     private layoutType?: string
 
     constructor() {
-        super('JoinBorderlesScene')
+        super('JoinBorderlessScene')
     }
 
     init(data: { layout: string }) {
