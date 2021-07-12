@@ -2,7 +2,6 @@ import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Ent
 import { Friendship } from './friendship.entity';
 import { Game } from './game.entity';
 import { UserInChatRoom } from './userInChatRoom.entity';
-import { UserInGuild } from './userInGuild.entity';
 
 @Entity()
 export class User {
@@ -20,13 +19,13 @@ export class User {
 	name: string
 	
 	@Column()
-	avatar: string // link to the image
+	avatar: string = "" // link to the image
 
     @Column()
-	isActive: boolean
+	isActive: boolean = false
 
 	@Column()
-	inGame: boolean
+	inGame: boolean = false
 
 	@Column()
 	guild: string = ""
@@ -35,19 +34,19 @@ export class User {
 	twoFactors: boolean = false
 
 	@Column()
-	victory: number
+	victory: number = 0
 
 	@Column()
-	defeat: number
+	defeat: number = 0
 
 	@Column()
-	ladder: number
+	ladder: number = 0
 
 	@Column()
-	wonTournaments: number
+	wonTournaments: number = 0
 
 	@Column()
-	isAdministrator: boolean
+	isAdministrator: boolean = false
 
 	@CreateDateColumn()
 	createdDate: Date
@@ -60,11 +59,8 @@ export class User {
 	public games: Game[]
 
 	@ManyToMany(() => Friendship, friendship => friendship.users)
+	@JoinTable()
 	public friendships: Friendship[]
-
-	@OneToOne(() => UserInGuild, userInGuild => userInGuild.user)
-	@JoinColumn()
-	public userInGuild: UserInGuild
 
 	@OneToMany(() => UserInChatRoom, userInChatRoom => userInChatRoom.user)
 	public userInChatRoom: UserInChatRoom[]
