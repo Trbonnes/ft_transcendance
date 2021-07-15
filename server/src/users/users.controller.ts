@@ -14,6 +14,7 @@ export class UsersController {
 	return this.usersService.create(createUserDto);
   }
 
+  // TO DO remove, probably shouldn't have this as an endpoint
   @Get()
   findAll() {
     return this.usersService.findAll();
