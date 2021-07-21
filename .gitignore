@@ -1,2 +1,3 @@
 database/
 node_modules/*
+database/vetur.config.js
