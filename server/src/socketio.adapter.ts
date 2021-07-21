@@ -10,7 +10,7 @@ import { Namespace, Server } from 'socket.io'
 export class SocketIOAdapter extends AbstractWsAdapter {
   constructor(
     appOrHttpServer?: INestApplicationContext | any,
-    private readonly corsOrigins = [],
+    private readonly corsOrigins: string | string[] |null = null,
   ) {
     super(appOrHttpServer)
   }
