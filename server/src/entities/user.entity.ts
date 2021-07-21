@@ -9,13 +9,13 @@ export class User {
     @PrimaryGeneratedColumn('uuid') // generates unique id for each user
 	id: string
 	
-	@Column()
+	@Column({ unique: true })
 	email: string
 
 	@Column()
 	password: string;
 
-    @Column()
+	@Column({ unique: true })
 	name: string
 	
 	@Column()
@@ -28,9 +28,6 @@ export class User {
 	inGame: boolean = false
 
 	@Column()
-	guild: string = ""
-
-	@Column()
 	twoFactors: boolean = false
 
 	@Column()
@@ -41,9 +38,6 @@ export class User {
 
 	@Column()
 	ladder: number = 0
-
-	@Column()
-	wonTournaments: number = 0
 
 	@Column()
 	isAdministrator: boolean = false
