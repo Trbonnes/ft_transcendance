@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Logger } from '@nestjs/common';
-
+import * as bcrypt from 'bcrypt-nodejs';
 @Injectable()
 export class UsersService {
   constructor(@InjectRepository(User) private usersRepository: Repository<User> ) {
@@ -13,8 +13,10 @@ export class UsersService {
   }
   async create(createUserDto: CreateUserDto): Promise<User> {
 	Logger.log(createUserDto)
+	// const hash = bcrypt.hashSync(createUserDto.password);
+	// createUserDto.password = hash;
 	const newUser = this.usersRepository.create(createUserDto)
-    return await this.usersRepository.save(newUser);  
+    return await this.usersRepository.save(newUser);
   }
 
   findAll(): Promise<User[]> {
@@ -30,6 +32,14 @@ export class UsersService {
 		// handle error
 		throw err;
 	}
+  }
+  async	findOnebyEmail(email: string): Promise<User> {
+	Logger.log(email)
+	Logger.log("in findOneByEmail");
+	const user = await this.usersRepository.findOne({ email });
+	if (user)
+		return user;
+	throw new HttpException("No user with this email", HttpStatus.NOT_FOUND);
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {

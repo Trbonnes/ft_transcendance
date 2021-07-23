@@ -12,6 +12,8 @@ import { FooModule } from './foo/foo.module';
 import { AuthService } from './auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { ChatModule } from './chat/chat.module';
+import { AuthController } from './auth/auth.controller';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -19,9 +21,15 @@ import { ChatModule } from './chat/chat.module';
 	UsersModule,
 	AuthModule,
 	FooModule,
-	ChatModule,
+  ConfigModule.forRoot({
+    validationSchema: Joi.object({
+      //...
+      JWT_SECRET: Joi.string().required(),
+      JWT_EXPIRATION_TIME: Joi.string().required(),
+    })
+  })
   ],
-  controllers: [AppController],
-  providers: [AppService, /*GameGateway,*/ChatGateway],
+  controllers: [AppController, AuthController],
+  providers: [AppService, /*GameGateway*/, ChatGateway],
 })
 export class AppModule {}
