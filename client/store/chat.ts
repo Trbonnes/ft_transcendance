@@ -3,7 +3,7 @@ import { Channel } from '~/utils/types'
 import Vuex from 'vuex'
 import * as createWebSocket from '~/store/plugins/websocket.js'
 
-@Module({namespaced : true})
+@Module({namespaced : true}) // since we're using a custom store this is important to make it namespaced, so we can use "chat/someAction" later
 export default class ChatModule extends VuexModule {
 
   channels: Channel[] = [ {id : "1", users :["Bob", "Sophie"], name: "", admin: "Bob", messages :[{sender : "Bob", content : "Hello"}]}];

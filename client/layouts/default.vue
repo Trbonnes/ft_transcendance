@@ -10,7 +10,8 @@
 
 <style>
 #side {
-    width : 50vw;
+    border: 4px solid red;
+    min-width : 50vw;
 }
 </style>
 
