@@ -1,5 +1,5 @@
 import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity, OneToMany, OneToOne, ManyToMany } from 'typeorm';
-import { UserInChannel } from './userInChatRoom.entity';
+import { User } from './user.entity'
 
 @Entity()
 export class Channel {
@@ -16,10 +16,6 @@ export class Channel {
 	  @UpdateDateColumn()
     lastUpdated: Date
 
-    @OneToMany(() => UserInChannel, userInChannel => userInChannel.chatRoom)
-    public usersInChatRoom: UserInChannel[]
-
-    public get owner(): UserInChannel | null {
-        return this.usersInChatRoom.find(userInChannel => userInChannel.isOwner)
-    }
+    @ManyToMany(() => User, user => user.channels)
+    members : User[]
 }

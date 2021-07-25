@@ -1,7 +1,7 @@
 import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity, OneToMany, ManyToMany, OneToOne, JoinTable, JoinColumn } from 'typeorm';
 import { Friendship } from './friendship.entity';
 import { Game } from './game.entity';
-import { UserInChatRoom } from './userInChatRoom.entity';
+import { Channel } from './channel.entity';
 
 @Entity()
 export class User {
@@ -17,11 +17,10 @@ export class User {
 
 	@Column({ unique: true })
 	name: string
-	
 	@Column()
 	avatar: string = "" // link to the image
 
-    @Column()
+  @Column()
 	isActive: boolean = false
 
 	@Column()
@@ -56,7 +55,8 @@ export class User {
 	@JoinTable()
 	public friendships: Friendship[]
 
-	@OneToMany(() => UserInChatRoom, userInChatRoom => userInChatRoom.user)
-	public userInChatRoom: UserInChatRoom[]
+	@ManyToMany(() => Channel, channel => channel.members)
+	@JoinTable()
+	public channels: Channel[]
 	
 }
