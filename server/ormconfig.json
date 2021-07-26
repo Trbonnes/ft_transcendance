@@ -1,15 +1,15 @@
 {
     "type": "postgres",
 
-    "host": "postgres",
-    "port": "5432",
+    "host": "localhost",
+    "port": "5000",
     "username": "admin",
     "password": "admin",
     "database": "postgres",
 
-    "entities": ["./dist/entities/**/*.{ts,js}"],
+    "entities": ["dist/entities/*.{ts,js}"],
       "autoLoadEntities": true,
-    "migrations": ["./dist/migration/*.{ts,js}"],
+    "migrations": ["dist/migration/*.{ts,js}"],
     "migrationsTableName": "migration",
     "migrationsRun": true,
 

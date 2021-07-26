@@ -8,7 +8,6 @@ import { configService } from './config/config.service';
 import { UsersModule } from './users/users.module';
 import { ChatGateway } from './app.chatgateway';
 import { AuthModule } from './auth/auth.module';
-import { FooModule } from './foo/foo.module';
 import { AuthController } from './auth/auth.controller';
 
 @Module({
@@ -16,7 +15,6 @@ import { AuthController } from './auth/auth.controller';
 	TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
 	UsersModule,
 	AuthModule,
-	FooModule,
   ConfigModule.forRoot({
     validationSchema: Joi.object({
       //...
