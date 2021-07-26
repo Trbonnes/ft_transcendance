@@ -4,12 +4,12 @@ import os from 'os'
 import { config } from '../phaserconfig'
 import { scenesList, activeScene, setActiveScene } from '../sceneManager'
 
-export default class JoinGameScene extends Phaser.Scene {
+export default class JoinBorderlessScene extends Phaser.Scene {
     private socket?: Socket
     private layoutType?: string
 
     constructor() {
-        super('JoinGameScene')
+        super('JoinBorderlessScene')
     }
 
     init(data: { layout: string }) {
@@ -32,7 +32,7 @@ export default class JoinGameScene extends Phaser.Scene {
         this.add.video(config.width / 2, config.height / 2, 'loading.webm').play(true).setLoop()
 
         console.log(os.hostname())
-        this.socket = io("http://" + os.hostname() + ":3000/game", {
+        this.socket = io("http://" + os.hostname() + ":3000/borderless", {
             transportOptions: {
                 cors : {
                     origin: '*'

@@ -10,20 +10,42 @@ import GameState from './GameState.class'
   }
 })
 export class GameGateway {
-  private rooms: Map<string, GameState>
-  private clients: Map<string, string>
+  protected rooms: Map<string, GameState>
+  protected clients: Map<string, string>
 
-  constructor(private appService: AppService) {
+  constructor(private AppService: AppService) {
     this.rooms = new Map<string, GameState>()
     this.clients = new Map<string, string>()
   }
 
   @WebSocketServer()
-  private server: Namespace
+  protected server: Namespace
   
   handleConnection(client: Socket, ...args: any[]) {
     console.log('WS Connect', { id: client.id })
+    
+    let data = client.handshake
     let joined = false
+    
+    console.log('spectate: ', data.query['spectate'])
+    if (data.query['spectate']) {
+      for (let gameRoom of this.rooms.keys()) {
+        if (gameRoom == data.query['spectate']
+        && this.rooms.get(gameRoom).client0
+        && this.rooms.get(gameRoom).client1) {
+          client.join(data.query['spectate'])
+          joined = true
+        }
+      }
+      if (joined)
+        client.emit('Spectator Joined', {room: data.query['spectate']})
+      else {
+        client.emit('Bad id')
+        client.disconnect()
+      }
+      return
+    }
+
     if (!this.rooms.size) {
       this.createGame(client)
       joined = true
@@ -72,21 +94,30 @@ export class GameGateway {
       .emit('OpponentFound', {player: 1, room: id})
   }
 
-  leaveGame(client: Socket) { //maybe need to use the db for this
+  leaveGame(client: Socket) {
     let serverSideClient: [string, string]
     for (serverSideClient of this.clients) {
-      if (serverSideClient[0] == client.id)
-        this.server.to(serverSideClient[1])
-          .emit('OpponentDisconnected')
+      if (serverSideClient[0] == client.id) {
+        break
+      }
+    }
+
+    for (let gameRoom of this.rooms.keys()) {
+      if (gameRoom == serverSideClient[1]) {
+        if (client.id == this.rooms.get(gameRoom).client0.id
+        || client.id == this.rooms.get(gameRoom).client1.id) {
+          this.rooms.get(gameRoom).disconnection = true
+          break
+        }
+        else
+          break
+      }
     }
 
     client.leave(serverSideClient[1])
+    if (!this.rooms.get(serverSideClient[1])?.client1)
+      this.rooms.delete(serverSideClient[1])
     client.disconnect()
-
-    for (let gameRoom of this.rooms.keys()) {
-      if (gameRoom == serverSideClient[1])
-        this.rooms.delete(gameRoom)
-    }
   }
 
   @SubscribeMessage('JoinGame')
@@ -113,10 +144,8 @@ export class GameGateway {
       )
 
       if (this.rooms.get(gameRoomId).player0.ready
-        && this.rooms.get(gameRoomId).player1.ready) {
-        console.log('Game Start')
+        && this.rooms.get(gameRoomId).player1.ready)
         this.handleGame(gameRoomId)
-      }
   }
 
   @SubscribeMessage('MoveBar')
@@ -124,13 +153,19 @@ export class GameGateway {
     @MessageBody() data: {id: string, y: number},
     @ConnectedSocket() client: Socket,
   ) {
+    if (!this.rooms.get(data.id) || this.rooms.get(data.id).disconnection)
+      return 
+
     if (this.rooms.get(data.id).client0.id == client.id) {
       this.rooms.get(data.id).player0.y = data.y
       this.rooms.get(data.id).client1.emit('OpponentMove', data.y)
+      this.server.to(data.id).emit('SpectatorMove', { side: 0, y: data.y })
     }
+
     else if (this.rooms.get(data.id).client1.id == client.id) {
       this.rooms.get(data.id).player1.y = data.y
       this.rooms.get(data.id).client0.emit('OpponentMove', data.y)
+      this.server.to(data.id).emit('SpectatorMove', { side: 1, y: data.y })
     }
   }
 
@@ -146,7 +181,6 @@ export class GameGateway {
     if (this.rooms.get(gameId).goal == 1)
       this.rooms.get(gameId).player1.score++
 
-    console.log("Goal")
     this.server.to(this.rooms.get(gameId).id)
       .emit('Goal', {
         scoreP0: this.rooms.get(gameId).player0.score,
@@ -157,15 +191,25 @@ export class GameGateway {
   }
 
   async handleGame(gameId: string) {
-    console.log('handleGame')
+    if (this.rooms.get(gameId).disconnection) {
+      this.server.to(gameId)
+          .emit('OpponentDisconnected')
+      this.rooms.delete(gameId)
+      return 
+    }
+
     if (this.rooms.get(gameId).player0.score != 6
       && this.rooms.get(gameId).player1.score != 6) {
-      console.log('score0: ', this.rooms.get(gameId).player0.score)
-      console.log('score1: ', this.rooms.get(gameId).player1.score)
-
       this.rooms.get(gameId).resetPosition()
-
       this.handleBall(gameId)
+    }
+    else {
+      this.server.to(this.rooms.get(gameId).id)
+        .emit('End', {
+          scoreP0: this.rooms.get(gameId).player0.score,
+          scoreP1: this.rooms.get(gameId).player1.score
+        })
+      this.rooms.delete(gameId)
     }
   }
 
@@ -192,9 +236,7 @@ export class GameGateway {
     this.server.to(this.rooms.get(gameId).id)
       .emit('BallMove', this.rooms.get(gameId).ball)
 
-    if (this.rooms.get(gameId).ball.y >= 1080
-      || this.rooms.get(gameId).ball.y <= 0)
-      this.rooms.get(gameId).delta.dy = this.hitWall(this.rooms.get(gameId).delta.dy)
+    this.hitWall(gameId)
   
     if (this.rooms.get(gameId).ball.x <= this.rooms.get(gameId).player0.x) {
       this.rooms.get(gameId).delta = this.hitLeftBar(this.rooms.get(gameId).delta,this.rooms.get(gameId))
@@ -215,20 +257,23 @@ export class GameGateway {
     return this.rooms.get(gameId).goal
   }
 
-  hitWall(dy: number): number {
+  hitWall(gameId: string) {
+    let dy = this.rooms.get(gameId).delta.dy
 
-    if(dy > 0)
-      dy = -Math.abs(dy)
-    else
-      dy = Math.abs(dy)
+    if (this.rooms.get(gameId).ball.y >= 1080
+      || this.rooms.get(gameId).ball.y <= 0) {
 
-    return dy
+      if(dy > 0)
+        this.rooms.get(gameId).delta.dy = -Math.abs(dy)
+      else
+        this.rooms.get(gameId).delta.dy = Math.abs(dy)
+    }
   }
 
   hitLeftBar(delta: {dx:number, dy:number}, gameState: GameState): {dx:number, dy:number} {
 
     if (gameState.ball.y <= (gameState.player0.y + gameState.player0.height / 2)
-      || gameState.ball.y <= (gameState.player0.y - gameState.player0.height / 2)) {
+      && gameState.ball.y >= (gameState.player0.y - gameState.player0.height / 2)) {
       let hitZone = gameState.ball.y - gameState.player0.y
       if (hitZone < 0) { // Ball hit bar above center
         delta.dy = hitZone / (gameState.player0.height / 2)
@@ -253,7 +298,7 @@ export class GameGateway {
   hitRightBar(delta: {dx:number, dy:number}, gameState: GameState): {dx:number; dy:number;} {
 
     if (gameState.ball.y <= (gameState.player1.y + gameState.player1.height / 2)
-      || gameState.ball.y <= (gameState.player1.y - gameState.player1.height / 2)) {
+      && gameState.ball.y >= (gameState.player1.y - gameState.player1.height / 2)) {
       let hitZone = gameState.ball.y - gameState.player1.y
       if (hitZone < 0) { // Ball hit bar above center
         delta.dy = hitZone / (gameState.player1.height / 2)

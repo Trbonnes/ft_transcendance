@@ -19,12 +19,17 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 #gameCtnr {
 	width: 100%;
 	height: 100%;
 	/* background: black; */
+}
+
+>>> input {
+	font-size: 60;
+	pointer-events: auto;
 }
 
 </style>
