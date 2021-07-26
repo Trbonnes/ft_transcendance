@@ -1,7 +1,7 @@
 import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity, OneToMany, ManyToMany, OneToOne, JoinTable, JoinColumn } from 'typeorm';
 import { Friendship } from './friendship.entity';
 import { Game } from './game.entity';
-import { UserInChatRoom } from './userInChatRoom.entity';
+import { Channel } from './channel.entity';
 
 @Entity()
 export class User {
@@ -9,26 +9,22 @@ export class User {
     @PrimaryGeneratedColumn('uuid') // generates unique id for each user
 	id: string
 	
-	@Column()
+	@Column({ unique: true })
 	email: string
 
 	@Column()
 	password: string;
 
-    @Column()
+	@Column({ unique: true })
 	name: string
-	
 	@Column()
 	avatar: string = "" // link to the image
 
-    @Column()
+  @Column()
 	isActive: boolean = false
 
 	@Column()
 	inGame: boolean = false
-
-	@Column()
-	guild: string = ""
 
 	@Column()
 	twoFactors: boolean = false
@@ -41,9 +37,6 @@ export class User {
 
 	@Column()
 	ladder: number = 0
-
-	@Column()
-	wonTournaments: number = 0
 
 	@Column()
 	isAdministrator: boolean = false
@@ -62,7 +55,8 @@ export class User {
 	@JoinTable()
 	public friendships: Friendship[]
 
-	@OneToMany(() => UserInChatRoom, userInChatRoom => userInChatRoom.user)
-	public userInChatRoom: UserInChatRoom[]
+	@ManyToMany(() => Channel, channel => channel.members)
+	@JoinTable()
+	public channels: Channel[]
 	
 }

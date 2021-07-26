@@ -1,6 +1,5 @@
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
 import { Socket, Server, Namespace } from 'socket.io'
-import { AppService } from './app.service'
 
 @WebSocketGateway({
   namespace: 'chat',
@@ -9,7 +8,7 @@ import { AppService } from './app.service'
   }
 })
 export class ChatGateway {
-  constructor(private appService: AppService) {}
+  constructor() {}
 
   @WebSocketServer()
   private server: Server
