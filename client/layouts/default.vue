@@ -1,17 +1,9 @@
 <template>
-  <div>
-    <nuxt/>
-    <SideMenu id="side"></SideMenu>
-  </div>
+    <Nuxt/>
 </template>
 
-<script lang="ts">
-</script>
+<script lang="ts"></script>
 
 <style>
-#side {
-    border: 4px solid red;
-    min-width : 50vw;
-}
 </style>
 

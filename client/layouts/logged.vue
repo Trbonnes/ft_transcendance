@@ -2,7 +2,7 @@
   <div>
     <main-menu id="top"></main-menu>
     <side-menu id="side"></side-menu>
-    <nuxt/>
+    <Nuxt/>
   </div>
 </template>
 
