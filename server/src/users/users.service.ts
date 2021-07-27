@@ -13,8 +13,8 @@ export class UsersService {
   }
   async create(createUserDto: CreateUserDto): Promise<User> {
 	Logger.log(createUserDto)
-	// const hash = bcrypt.hashSync(createUserDto.password);
-	// createUserDto.password = hash;
+	const hash = bcrypt.hashSync(createUserDto.password);
+	createUserDto.password = hash;
 	const newUser = this.usersRepository.create(createUserDto)
     return await this.usersRepository.save(newUser);
   }
