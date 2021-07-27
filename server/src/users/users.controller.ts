@@ -15,13 +15,12 @@ export class UsersController {
 	return this.usersService.create(createUserDto);
   }
 
-  // TO DO remove, probably shouldn't have this as an endpoint
-  @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.usersService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':email')
   findOne(@Param('email') email: string) {
     return this.usersService.findOnebyEmail(email);

@@ -4,6 +4,7 @@
     "@nestjs/passport": "^7.1.5",
     "@types/passport-jwt": "^3.0.5",
     "bcrypt-nodejs": "^0.0.3",
+    "passport-42": "^1.2.6",
     "passport-jwt": "^4.0.0",
     "typeorm": "^0.2.34"
   }

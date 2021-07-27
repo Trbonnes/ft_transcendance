@@ -12,8 +12,10 @@
 			<p class="mt-2 text-sm text-gray-600">Please sign with 42 Oauth</p>
 		</div>
 			<div>
-				<button type="submit" class="w-full flex justify-center bg-indigo-500 text-gray-100 p-4  rounded-full tracking-wide
-                                font-semibold  focus:outline-none focus:shadow-outline hover:bg-indigo-600 shadow-lg cursor-pointer transition ease-in duration-300">
+				<button type="submit" class="w-full flex justify-center bg-indigo-500 text-gray-100 p-4  
+											rounded-full tracking-wide
+                                			font-semibold  focus:outline-none focus:shadow-outline 
+											hover:bg-indigo-600 shadow-lg cursor-pointer transition ease-in duration-300">
                     Sign in
                 </button>
 			</div>
