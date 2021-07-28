@@ -10,8 +10,6 @@ export class CreateUserDto {
 
 	@IsNotEmpty()
 	name: string
-	
-	avatar: string // link to the image
 
 	// @IsNotEmpty({ message: `isAdministrator boolean required` })
 	isAdministrator: boolean

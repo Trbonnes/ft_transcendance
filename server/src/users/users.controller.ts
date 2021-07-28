@@ -9,19 +9,14 @@ import JwtAuthGuard from 'src/auth/jwt-auth.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  @UsePipes(ValidationPipe)
+  @Post('create')
+  //@UsePipes(ValidationPipe)
   create(@Body() createUserDto: CreateUserDto) {
+    console.log("I am here")
 	return this.usersService.create(createUserDto);
   }
 
-  // TO DO remove, probably shouldn't have this as an endpoint
   @UseGuards(JwtAuthGuard)
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
-  }
-
   @Get(':email')
   findOne(@Param('email') email: string) {
     return this.usersService.findOnebyEmail(email);
