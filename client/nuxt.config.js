@@ -37,14 +37,23 @@ export default {
     '@nuxtjs/fontawesome'
   ],
 
+  router: {
+	  middleware: ['auth']
+  },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+	'@nuxtjs/auth-next',
     '@nuxtjs/pwa',
     '@nuxtjs/proxy',
     'nuxt-socket-io'
   ],
+
+  auth: {
+	  //options
+  },
 
   fontawesome : {
     icons: {
