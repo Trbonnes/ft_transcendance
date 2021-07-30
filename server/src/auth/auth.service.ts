@@ -58,7 +58,6 @@ export class AuthService {
 
   async getUserFromCookie(token) {
     const id = this.getUserIdFromJwt(token);
-    console.log(id);
     const user = await this.usersService.findOnebyId(id);
     if (user)
       return user;

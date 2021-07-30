@@ -1,3 +1,5 @@
+import { Token } from "@nuxtjs/auth-next";
+
 export default {
   // Disable server-side rendering (https://go.nuxtjs.dev/ssr-mode)
   ssr: false,
@@ -48,11 +50,40 @@ export default {
 	'@nuxtjs/auth-next',
     '@nuxtjs/pwa',
     '@nuxtjs/proxy',
-    'nuxt-socket-io'
+    'nuxt-socket-io',
+    'cookie-universal-nuxt'
   ],
 
   auth: {
-	  //options
+    strategies: {
+    local: {
+      cookie: {
+        required: true,
+        name: 'XSRF-TOKEN',
+        options: {
+          expires: new Date(new Date().getTime()+20000000000).getTime(), //thats today + a year
+          maxAge: 31622400
+        }
+      },
+      token: {
+        property: '',
+        required: true,
+        type: "Bearer",
+      },
+      endpoints: {
+        login: { url: '/auth/log-in', method: 'post' },
+        logout: { url: '/auth/log-out', method: 'post' },
+        user: false
+        //user: {url: '/auth/user', method: 'post', prepertyName: ''},
+      },
+      redirect: {
+        login: '/login',
+        logout: '/login',
+        callback: '/login',
+        home: '/',
+      }
+    }
+  }
   },
 
   fontawesome : {
@@ -63,7 +94,8 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    // proxy: true
+    baseURL: 'http://localhost:3000',
+    withCredentials: true
   },
 
   // proxy: {
