@@ -58,8 +58,6 @@ export default {
     strategies: {
     local: {
       cookie: {
-        required: true,
-        name: 'XSRF-TOKEN',
         options: {
           expires: new Date(new Date().getTime()+20000000000).getTime(), //thats today + a year
           maxAge: 31622400
@@ -95,7 +93,7 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     baseURL: 'http://localhost:3000',
-    withCredentials: true
+    //credentials: true
   },
 
   // proxy: {
