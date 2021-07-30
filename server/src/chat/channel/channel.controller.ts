@@ -1,6 +1,7 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { ChannelService } from './channel.service';
 import { Channel } from '../../entities/channel.entity';
+import { CreateChannelDto } from './dto/create-channel.dto';
 
 @Controller('channel')
 export class ChannelController {
@@ -29,5 +30,10 @@ export class ChannelController {
   @Get('public/:page')
   getAllPublicPage() {
     return {};
+  }
+
+  @Post('create')
+  createChannel(@Body() channelDto: CreateChannelDto) {
+    return "This creates a channel let's go !!!!!";
   }
 }
