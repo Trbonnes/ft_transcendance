@@ -55,33 +55,7 @@ export default {
   ],
 
   auth: {
-    strategies: {
-    local: {
-      cookie: {
-        options: {
-          expires: new Date(new Date().getTime()+20000000000).getTime(), //thats today + a year
-          maxAge: 31622400
-        }
-      },
-      token: {
-        property: '',
-        required: true,
-        type: "Bearer",
-      },
-      endpoints: {
-        login: { url: '/auth/log-in', method: 'post' },
-        logout: { url: '/auth/log-out', method: 'post' },
-        user: false
-        //user: {url: '/auth/user', method: 'post', prepertyName: ''},
-      },
-      redirect: {
-        login: '/login',
-        logout: '/login',
-        callback: '/login',
-        home: '/',
-      }
-    }
-  }
+    // TBD
   },
 
   fontawesome : {
@@ -93,7 +67,6 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     baseURL: 'http://localhost:3000',
-    //credentials: true
   },
 
   // proxy: {
