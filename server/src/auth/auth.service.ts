@@ -19,6 +19,7 @@ export class AuthService {
     const token = this.jwtService.sign(payload);
     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`;
   }
+
   public getCookieForLogOut() {
     return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
   }
@@ -46,6 +47,22 @@ export class AuthService {
     } catch (error) {
       throw new HttpException('Wrong credentials provided', HttpStatus.BAD_REQUEST);
     }
+  }
+
+  public getUserIdFromJwt(token) {
+    const decoded : string | { [key:string] : string } = this.jwtService.decode(token);
+    const decodedString = JSON.stringify(decoded);
+    const userId = JSON.parse(decodedString).userId;
+    return userId;
+  }
+
+  async getUserFromCookie(token) {
+    const id = this.getUserIdFromJwt(token);
+    console.log(id);
+    const user = await this.usersService.findOnebyId(id);
+    if (user)
+      return user;
+    throw new HttpException("No user with this id", HttpStatus.NOT_FOUND);
   }
    
   private async verifyPassword(plainTextPassword: string, hashedPassword: string) {

@@ -33,6 +33,7 @@ export class UsersService {
 		throw err;
 	}
   }
+
   async	findOnebyEmail(email: string): Promise<User> {
 	Logger.log(email)
 	Logger.log("in findOneByEmail");
@@ -40,6 +41,15 @@ export class UsersService {
 	if (user)
 		return user;
 	throw new HttpException("No user with this email", HttpStatus.NOT_FOUND);
+  }
+
+  async	findOnebyId(id: string): Promise<User> {
+	Logger.log(id)
+	Logger.log("in findOneById");
+	const user = await this.usersRepository.findOne({ id });
+	if (user)
+		return user;
+	throw new HttpException("No user with this id", HttpStatus.NOT_FOUND);
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
