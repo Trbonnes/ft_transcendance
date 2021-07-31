@@ -7,7 +7,7 @@
 <script lang="ts">
 
 import Vue from 'vue'
-import { setup } from '../phaser/phaserconfig'
+import { setup } from '../../phaser/phaserconfig'
 
 export default Vue.extend({
 	data() {

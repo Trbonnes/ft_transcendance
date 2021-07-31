@@ -35,7 +35,6 @@ export default Vue.extend({
 	methods: {
 		userLogin() {
 			this.$auth.console.loginWith('fortytwo');
-			
 		}
 	}
 
