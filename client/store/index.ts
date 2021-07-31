@@ -5,11 +5,18 @@ import chat from '~/store/chat'
 
 Vue.use(Vuex)
 
-const store = () => new Vuex.Store({ // apparently the fact that it returns a function is super duper important 
-  plugins : [createWebSocket], // plugin for websocket interaction when mutations
-  modules : {
-    chat
-  }
-})
+const store = () =>
+  new Vuex.Store({
+    // apparently the fact that it returns a function is super duper important
+    //plugins: [createWebSocket], // plugin for websocket interaction when mutations
+    // modules: {
+    //   chat,
+    // },
+    actions: {
+      loadChat() {
+        this.registerModule('chat', chat)
+      },
+    },
+  })
 
 export default store
