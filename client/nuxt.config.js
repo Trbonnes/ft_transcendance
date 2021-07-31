@@ -1,4 +1,4 @@
-import { Token } from "@nuxtjs/auth-next";
+import { RefreshController, Token } from "@nuxtjs/auth-next";
 
 export default {
   // Disable server-side rendering (https://go.nuxtjs.dev/ssr-mode)
@@ -55,7 +55,43 @@ export default {
   ],
 
   auth: {
-    // TBD
+    localStorage: false,
+    strategies: {
+      fortytwo: {
+        scheme: 'oauth2',
+        endpoints: {
+          autorization: 'https://api.intra.42.fr/oauth/authorize'
+        },
+        grantType: 'authorization_code',
+        responseType: 'code',
+        redirectUri: process.env.FT_OAUTH_REDIRECT_URI,
+        clientId: process.env.FT_OAUTH_UID,
+        state: 'askdfj1239eo1234098rhj5fgoej'
+      },
+      jwtrefresh: {
+        scheme: 'refresh',
+        token: {
+          property: 'access_token',
+          required: true,
+          type: 'Bearer',
+          maxAge: 10000,
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          maxAge: 60 * 60 * 24 * 30
+        },
+        user: {
+          property: false,
+          autoFetch: true
+        },
+        endpoints: {
+          login: { url: 'auth/login', method: 'post'},
+          logout: false,
+          user: { url: 'auth/user', method: 'get'},
+          refresh: { url: 'auth/refresh', method: 'post' }
+        }
+      }
+    }
   },
 
   fontawesome : {
