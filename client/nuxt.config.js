@@ -68,7 +68,7 @@ export default {
         clientId: process.env.FT_OAUTH_UID,
         state: 'askdfj1239eo1234098rhj5fgoej'
       },
-      jwtrefresh: {
+      localrefresh: {
         scheme: 'refresh',
         token: {
           property: 'access_token',

@@ -12,7 +12,7 @@
 			login() {
 				const code = this.$route.query.code as string;
 				if (code !== '') {
-					this.$auth.loginWith('local', {
+					this.$auth.loginWith('localrefresh', {
 						data : {
 							code: code
 						}

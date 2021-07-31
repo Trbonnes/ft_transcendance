@@ -10,6 +10,7 @@ import Vue from 'vue'
 import { setup } from '../../phaser/phaserconfig'
 
 export default Vue.extend({
+	middleware: 'auth',
 	data() {
 		return { error: false, game: undefined as Phaser.Game | undefined }
 	},
