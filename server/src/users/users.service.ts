@@ -6,63 +6,73 @@ import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Logger } from '@nestjs/common';
 import * as bcrypt from 'bcrypt-nodejs';
+import { getManager } from 'typeorm';
+
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private usersRepository: Repository<User> ) {
-
-  }
+  constructor(
+    @InjectRepository(User) private usersRepository: Repository<User>,
+  ) {}
   async create(createUserDto: CreateUserDto): Promise<User> {
-	Logger.log(createUserDto)
-	// const hash = bcrypt.hashSync(createUserDto.password);
-	// createUserDto.password = hash;
-	const newUser = this.usersRepository.create(createUserDto)
+    Logger.log(createUserDto);
+    // const hash = bcrypt.hashSync(createUserDto.password);
+    // createUserDto.password = hash;
+    const newUser = this.usersRepository.create(createUserDto);
     return await this.usersRepository.save(newUser);
   }
 
   findAll(): Promise<User[]> {
-	return this.usersRepository.find(); // SELECT * from user
+    return this.usersRepository.find(); // SELECT * from user
     // return `This action returns all users`;
   }
 
   async findOne(id: string): Promise<User> {
-	try {
-		const user = await this.usersRepository.findOneOrFail(id);
-		return user;
-	} catch (err) {
-		// handle error
-		throw err;
-	}
+    try {
+      const user = await this.usersRepository.findOneOrFail(id);
+      return user;
+    } catch (err) {
+      // handle error
+      throw err;
+    }
   }
-  async	findOnebyEmail(email: string): Promise<User> {
-	Logger.log(email)
-	Logger.log("in findOneByEmail");
-	const user = await this.usersRepository.findOne({ email });
-	if (user)
-		return user;
-	throw new HttpException("No user with this email", HttpStatus.NOT_FOUND);
+  async findOnebyEmail(email: string): Promise<User> {
+    Logger.log(email);
+    Logger.log('in findOneByEmail');
+    const user = await this.usersRepository.findOne({ email });
+    if (user) return user;
+    throw new HttpException('No user with this email', HttpStatus.NOT_FOUND);
+  }
+
+  async searchByName(name: string): Promise<any> {
+    const manager = getManager();
+    const res = manager.query(
+      'select id, name leven from "user" order by levenshtein(($1), "user".name) limit 10',
+      [name],
+    );
+    return res;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-	try {
-		const user = await this.usersRepository.findOneOrFail({where: {id}});
-		// this.usersRepository.update(user, updateUserDto);
-		return this.usersRepository.save({...user, ...updateUserDto})
-		// return user;
-	} catch (err) {
-		// handle error
-		throw err;
-	}
+    try {
+      const user = await this.usersRepository.findOneOrFail({ where: { id } });
+      // this.usersRepository.update(user, updateUserDto);
+      return this.usersRepository.save({ ...user, ...updateUserDto });
+      // return user;
+    } catch (err) {
+      // handle error
+      throw err;
+    }
   }
 
   async remove(id: string) {
-	try {
-		const user = await this.usersRepository.findOneOrFail(id);
-		this.usersRepository.remove(user);
-		return user
-	} catch (err) {
-		return "hello"
-		// handle error
-		throw err;
-	}
+    try {
+      const user = await this.usersRepository.findOneOrFail(id);
+      this.usersRepository.remove(user);
+      return user;
+    } catch (err) {
+      return 'hello';
+      // handle error
+      throw err;
+    }
   }
 }

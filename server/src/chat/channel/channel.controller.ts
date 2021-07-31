@@ -34,6 +34,6 @@ export class ChannelController {
 
   @Post('create')
   createChannel(@Body() channelDto: CreateChannelDto) {
-    return "This creates a channel let's go !!!!!";
+    return this.channelService.createChannel(channelDto);
   }
 }

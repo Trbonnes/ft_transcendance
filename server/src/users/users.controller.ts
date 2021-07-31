@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UsePipes,
+  ValidationPipe,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -9,17 +20,16 @@ import JwtAuthGuard from 'src/auth/jwt-auth.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('create')
+  @Post('register')
   //@UsePipes(ValidationPipe)
-  create(@Body() createUserDto: CreateUserDto) {
-    console.log("I am here")
-	return this.usersService.create(createUserDto);
+  register(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get(':email')
-  findOne(@Param('email') email: string) {
-    return this.usersService.findOnebyEmail(email);
+  //  @UseGuards(JwtAuthGuard)
+  @Get('/search/:name')
+  searchByName(@Param('name') name: string) {
+    return this.usersService.searchByName(name);
   }
 
   @Patch(':id')
