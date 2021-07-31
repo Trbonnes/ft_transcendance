@@ -13,7 +13,7 @@ services:
       - "80:3000"
     environment:
       HOST: 0.0.0.0
-      FT_OAUTH_REDIRECT_URI: "http://localhost:3000/auth/login"
+      FT_OAUTH_REDIRECT_URI: "http://localhost:80/auth/42"
       FT_OAUTH_UID: "d73b8e0595edbca83bfbb2d40ae5d23cc10dc67454fc750da0619aff86c64b83"
   postgres: # https://medium.com/analytics-vidhya/getting-started-with-postgresql-using-docker-compose-34d6b808c47c
     image: postgres

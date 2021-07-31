@@ -60,7 +60,7 @@ export default {
       fortytwo: {
         scheme: 'oauth2',
         endpoints: {
-          autorization: 'https://api.intra.42.fr/oauth/authorize'
+          autorization: 'https://api.intra.42.fr/oauth/authorize',
         },
         grantType: 'authorization_code',
         responseType: 'code',
