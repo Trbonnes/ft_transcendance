@@ -14,6 +14,7 @@
                             font-semibold  focus:outline-none focus:shadow-outline hover:bg-indigo-600 shadow-lg cursor-pointer transition ease-in duration-300">
    	             Sign in with 42 !
             </button>
+			<button @click="displayState"> display </button>
 		</div>
 	</div>
 </div>
@@ -32,10 +33,15 @@ export default Vue.extend({
 //		}
 //	},
 
+	middleware: ['auth'],
+
 	methods: {
 		userLogin() {
-			console.log("userlogincalled");
 			this.$auth.loginWith("fortytwo");
+		},
+
+		displayState() {
+			console.log(this.$store.state);
 		}
 	}
 
