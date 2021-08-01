@@ -46,6 +46,7 @@
     "dotenv": "^10.0.0",
     "mysql": "^2.18.1",
     "mysql2": "^2.2.5",
+    "node-mailjet": "^3.3.4",
     "passport": "^0.4.1",
     "passport-42": "^1.2.6",
     "passport-jwt": "^4.0.0",

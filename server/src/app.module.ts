@@ -13,9 +13,6 @@ import { GameGateway } from './app.gamegateway';
 import { BorderlessGateway } from './app.borderlessgateway';
 import { ChatGateway } from './app.chatgateway';
 import { AuthController } from './auth/auth.controller';
-import { AuthModule } from './auth/auth.module';
-import { AuthModule } from './auth/auth.module';
-import { AuthController } from './auth/auth.controller';
 
 @Module({
   imports: [
@@ -30,7 +27,7 @@ import { AuthController } from './auth/auth.controller';
     })
   })
   ],
-  controllers: [AppController, AuthController],
+  controllers: [AppController],
   providers: [AppService, GameGateway, ChatGateway, BorderlessGateway],
 })
 export class AppModule {}

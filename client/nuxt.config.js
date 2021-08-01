@@ -74,11 +74,11 @@ export default {
           property: 'access_token',
           required: true,
           type: 'Bearer',
-          maxAge: 10000,
+          maxAge: 10800,
         },
         refreshToken: {
           property: 'refresh_token',
-          maxAge: 60 * 60 * 24 * 30
+          maxAge: 60 * 60 * 24 * 7
         },
         user: {
           property: false,

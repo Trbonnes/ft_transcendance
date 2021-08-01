@@ -34,7 +34,7 @@ export class User {
 	twoFactor: boolean
 
 	@Column({nullable: true})
-	twoFactorToken: string
+	twoFactorCode: string
 
 	@Column()
 	victory: number = 0

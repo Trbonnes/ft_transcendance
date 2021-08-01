@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Logger, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { response, Response } from 'express';
+import { Response } from 'express';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
@@ -26,7 +26,7 @@ export class AuthController {
 		let user = null;
 
 		if (code === '-1') {
-			user = await this.usersService.findByTwoFactor(twoFactorCode)
+			user = await this.usersService.findOneByTwoFactorCode(twoFactorCode)
 			if (!user)
 				throw new HttpException({
 					error: 'Two Factor Authentication code is invalid',
@@ -40,7 +40,7 @@ export class AuthController {
 					error: '42 User not found'
 				}, HttpStatus.BAD_REQUEST)
 			}
-			user = await this.authService.findUserFromFortyTwoLogin(fortyTwoUser.login);
+			user = await this.usersService.findOneByFortyTwoLogin(fortyTwoUser.login);
 			if (user === null) {
 				let userDto = new CreateUserDto()
 					.setEmail(fortyTwoUser.email)
@@ -55,21 +55,21 @@ export class AuthController {
 		if (user.twoFactor) {
 			if (!twoFactorCode) {
 				const token = randomBytes(6).toString('hex');
-				await this.usersService.setTwoFactorToken(user.id, token);
+				await this.usersService.setTwoFactorCode(user.id, token);
 				throw new HttpException({
 					error: 'Please enter the two factor code you received by email',
 					type: 'missing_twofactor'
 				}, HttpStatus.UNAUTHORIZED)
 			}
 			else {
-				if (twoFactorCode !== user.twoFactorToken) {
+				if (twoFactorCode !== user.twoFactorCode) {
 					throw new HttpException({
 						error: 'Your two factor authentication code is invalid',
 						type: 'missing_twofactor'
 					}, HttpStatus.UNAUTHORIZED)
 				}
 				else
-					await this.usersService.removeTwoFactorToken(user.id);
+					await this.usersService.removeTwoFactorCode(user.id);
 			}
 		}
 		const payload = {
