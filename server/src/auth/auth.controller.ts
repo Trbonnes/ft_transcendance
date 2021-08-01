@@ -6,9 +6,9 @@ import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { randomBytes } from 'crypto';
-import { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } from 'constants';
 import { jwtConstants } from './constants';
 import { RefreshDto } from './dto/refresh.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -111,7 +111,7 @@ export class AuthController {
 	@UseGuards(JwtAuthGuard)
 	@Get("/user")
 	async user(@Req() request, @Res() response: Response) {
-		const user = await this.userService.findOnebyId(request.user.id);
+		const user = await this.usersService.findOnebyId(request.user.id);
 		return response.status(200).json(user);
 	}
 
