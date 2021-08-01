@@ -34,6 +34,7 @@ export class AuthController {
 				},	HttpStatus.UNAUTHORIZED)
 		}
 		else {
+			console.log(code);
 			const fortyTwoUser = await this.authService.getFortyTwoUser(code);
 			if (!fortyTwoUser) {
 				throw new HttpException({
