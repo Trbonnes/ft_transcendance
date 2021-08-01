@@ -12,11 +12,15 @@ export class User {
 	@Column({ unique: true })
 	email: string
 
+	@Column({ unique: true})
+	login: string
+
 	@Column()
-	password: string;
+	firstName: string
 
 	@Column({ unique: true })
-	name: string
+	displayName: string
+
 	@Column()
 	avatar: string = "" // link to the image
 
