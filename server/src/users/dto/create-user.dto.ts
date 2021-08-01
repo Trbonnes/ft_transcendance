@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator"
+import { IsNotEmpty, IsOptional } from "class-validator"
 
 export class CreateUserDto {
 	
@@ -11,9 +11,13 @@ export class CreateUserDto {
 	@IsNotEmpty()
 	name: string
 	
+	@IsOptional()
 	avatar: string // link to the image
 
+	@IsOptional()
+	twoFactor: boolean
+
 	// @IsNotEmpty({ message: `isAdministrator boolean required` })
-	isAdministrator: boolean
+	//isAdministrator: boolean
 
 }

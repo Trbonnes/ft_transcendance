@@ -20,14 +20,17 @@ export class User {
 	@Column()
 	avatar: string = "" // link to the image
 
-  @Column()
+  	@Column()
 	isActive: boolean = false
 
 	@Column()
 	inGame: boolean = false
 
-	@Column()
-	twoFactors: boolean = false
+	@Column({default: false})
+	twoFactor: boolean
+
+	@Column({nullable: true})
+	twoFactorToken: string
 
 	@Column()
 	victory: number = 0
@@ -37,9 +40,6 @@ export class User {
 
 	@Column()
 	ladder: number = 0
-
-	@Column()
-	isAdministrator: boolean = false
 
 	@CreateDateColumn()
 	createdDate: Date
