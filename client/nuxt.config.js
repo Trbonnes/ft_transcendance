@@ -90,7 +90,31 @@ export default {
           user: { url: 'auth/user', method: 'get'},
           refresh: { url: 'auth/refresh', method: 'post' }
         }
+      },
+      testrefresh: {
+        scheme: 'refresh',
+        token: {
+          property: 'access_token',
+          required: true,
+          type: 'Bearer',
+          maxAge: 10800,
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          maxAge: 60 * 60 * 24 * 7
+        },
+        user: {
+          property: false,
+          autoFetch: true
+        },
+        endpoints: {
+          login: { url: 'auth/testuser', method: 'post'},
+          logout: false,
+          user: { url: 'auth/user', method: 'get'},
+          refresh: { url: 'auth/refresh', method: 'post' }
+        }
       }
+      
     }
   },
 

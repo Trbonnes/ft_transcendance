@@ -1,16 +1,22 @@
 <template>
-	<div>
-		<div v-if="twoFactorAuthentication === false">
-			<h1> Connecting... </h1>
-		</div>
-		<div v-else>
-			<h1> Please enter the two factor authentication code you received on your 42 email </h1>
-			<form @submit.prevent="login">
-				<input type="text" v-model="twoFactorCode">
-				<button type="submit">Sign in</button>
-			</form>
+<div class="relative min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 bg-gray-500 bg-no-repeat bg-cover relative items-center"
+	style="background-image: url(https://www.imaginarycloud.com/blog/content/images/2019/02/Pong.jpg);">
+	<div class="absolute bg-black opacity-60 inset-0 z-0"></div>
+	<div class="max-w-md w-full space-y-8 p-10 bg-white rounded-xl z-10">
+		<div class="text-center">
+			<div v-if="twoFactorAuthentication === false">
+				<h1> Connecting... </h1>
+			</div>
+			<div v-else>
+				<h1> Please enter the two factor authentication code you received on your 42 email </h1>
+				<form @submit.prevent="login">
+					<input type="text" v-model="twoFactorCode">
+					<button type="submit">Sign in</button>
+				</form>
+			</div>
 		</div>
 	</div>
+</div>
 </template>
 
 <script lang='ts'>

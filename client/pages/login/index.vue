@@ -8,13 +8,22 @@
 				Welcome to ft_transcendance!
 			</h2>
 			<p class="mt-2 text-sm text-gray-600">Please sign in to your account</p>
+			<p class="mt-2 text-sm text-gray-600"> For Test User: please check the box</p>
+			<input type="checkbox" class="mt-3" v-model="testSignIn">
 		</div>
-		<div>
+		<div v-if="testSignIn === false">
 			<button @click="userLogin" class="w-full flex justify-center bg-indigo-500 text-gray-100 p-4  rounded-full tracking-wide
                             font-semibold  focus:outline-none focus:shadow-outline hover:bg-indigo-600 shadow-lg cursor-pointer transition ease-in duration-300">
    	             Sign in with 42 !
             </button>
-			<button @click="displayState"> display </button>
+		</div>
+		<div v-else class="">
+				<label class="text-sm font-bold text-gray-700 tracking-wide">Test User Name</label>
+				<input class="w-full text-base py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500 mb-5"  type="text" v-model="testUserName" placeholder="Name">
+				<button @click="testUserLogin" class="w-full flex justify-center bg-indigo-500 text-gray-100 p-3 rounded-full tracking-wide
+                            font-semibold  focus:outline-none focus:shadow-outline hover:bg-indigo-600 shadow-lg cursor-pointer transition ease-in duration-300">
+   	             Sign in Test User
+            	</button>
 		</div>
 	</div>
 </div>
@@ -24,11 +33,26 @@
 import Vue from 'vue'
 
 export default Vue.extend({
+	data() {
+		return {
+			testSignIn: false,
+			testUserName: ''
+		}
+	},
+
 	middleware: 'auth',
 
 	methods: {
 		userLogin() {
 			this.$auth.loginWith("fortytwo");
+		},
+
+		testUserLogin() {
+			this.$auth.loginWith("testrefresh", {
+				params: {
+					user: this.testUserName
+				}
+			})
 		},
 
 		displayState() {
