@@ -1,9 +1,18 @@
 <template>
-  <div>
-    <h1>You are signed in!!</h1>
-    <button @click="userLogout">log out</button>
-    <button @click="consoleLogUser">getUser</button>
-  </div>
+    <div class="hero min-h-screen" style="background-image: url(&quot;https://images.unsplash.com/photo-1511067007398-7e4b90cfa4bc?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGluZyUyMHBvbmclMjB0YWJsZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80&quot;);">
+      <div class="hero-overlay bg-opacity-65"></div> 
+      <div class="text-center hero-content text-neutral-content">
+        <div class="max-w-md">
+          <h1 class="mb-5 text-5xl font-bold">
+                Ft_Transcendance Pong Game
+              </h1> 
+          <p class="mb-5">
+                Accept the Ft_Transcendance Challenge and Become the Best Pong Player!
+              </p> 
+          <button class="btn btn-primary">Join a Game</button>
+        </div>
+      </div>
+    </div>
 </template>
 
 <script lang="ts">

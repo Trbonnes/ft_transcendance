@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="navbar mb-2 shadow-lg bg-neutral text-neutral-content rounded-box">
+		<div class="navbar shadow-lg bg-neutral text-neutral-content">
 			<div class="flex-none px-2 mx-2">
 			    <span class="text-lg font-bold">
 	            Ft_Transcendance
@@ -8,14 +8,17 @@
 			</div> 
   		<div class="flex-1 px-2 mx-2">
     		<div class="items-stretch hidden lg:flex">
-    	  		<a class="btn btn-ghost btn-sm rounded-btn">
+    	  		<NuxtLink to='/' class="btn btn-ghost btn-sm rounded-btn">
     	          Home
-    	        </a> 
-    	  		<a class="btn btn-ghost btn-sm rounded-btn">
+    	        </NuxtLink> 
+    	  		<NuxtLink to='/game' class="btn btn-ghost btn-sm rounded-btn">
     	          Play
-    	        </a> 
+    	        </NuxtLink> 
     	  		<a class="btn btn-ghost btn-sm rounded-btn">
     	          Friends
+    	        </a>
+    	  		<a class="btn btn-ghost btn-sm rounded-btn">
+				  Leaderboard
     	        </a>
     		</div>
   		</div> 
@@ -27,13 +30,26 @@
     		</button>
   		</div>
 		<div class="flex-none">
-    		<div class="avatar">
+			<div class="dropdown dropdown-end">
+    		<div class="avatar" tabindex="0">
      			<div class="rounded-full w-10 h-10 m-1">
         		<img :src="loggedInUser.avatar">
       			</div>
     		</div>
+			<ul tabindex="0" class="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52">
+          		<li>
+           			<a>Profile</a>
+         		</li> 
+          		<li>
+            		<a>Settings</a>
+          		</li>
+          		<li>
+            		<a>Log Out</a>
+          		</li>
+        	</ul>
+			</div>
   		</div>
-	</div>
+		</div>
 	</div>
 </template>
 
