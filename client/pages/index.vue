@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-
+import createWebSocketPlugin from '~/store/plugins/websocket'
 export default Vue.extend({
   data() {
     return {
@@ -26,10 +26,8 @@ export default Vue.extend({
   methods: {
     submitName() {
       console.log('Submitting name : ' + this.message)
-      this.$store.dispatch('loadChat')
-      this.$store.dispatch('chat/init')
       console.log('ok boomer')
-      console.log(this.$nuxtSocket)
+      createWebSocketPlugin(this.$store)
     },
   },
 })

@@ -1,6 +1,5 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { Channel } from '~/utils/types'
-import createWebSocketPlugin from '~/store/plugins/websocket'
 import store from '~/store'
 
 @Module({ namespaced: true }) // since we're using a custom store this is important to make it namespaced, so we can use "chat/someAction" later
@@ -43,11 +42,5 @@ export default class ChatModule extends VuexModule {
   pushChannel(newChannel: Channel) {
     console.log('Mutation called')
     this.channels.push(newChannel)
-  }
-
-  @Action
-  init() {
-    console.log('Trying to intitialize the connection to the back end')
-    createWebSocketPlugin(store)
   }
 }
