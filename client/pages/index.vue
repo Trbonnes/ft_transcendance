@@ -2,7 +2,7 @@
 <div>
 	<h1> You are signed in!! </h1>
 	<button @click = "userLogout"> log out </button>
-	<button @click = "fetch"> getUser </button>
+	<button @click = "consoleLogUser"> getUser </button>
 </div>
 </template>
 
@@ -14,16 +14,15 @@ export default Vue.extend({
 	methods: {
 		async userLogout() {
 			try {
-				let response = await this.$auth.logout();
+				let response = await this.$auth.logout()
+				this.$router.replace('/login')
 			} catch (err) {
 				console.log(err);
 			}
 		},
 
-		async fetch() {
-			const user = await fetch('http://localhost:3000/auth/user',
-			{credentials: 'include'}
-			).then(res => res.json());
+		async consoleLogUser() {
+			console.log(this.$auth.user)
 		}
 	}
 

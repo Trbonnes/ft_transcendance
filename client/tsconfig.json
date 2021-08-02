@@ -28,7 +28,8 @@
       "@nuxt/types",
       "@nuxtjs/axios",
 	  "@nuxtjs/auth-next",
-      "@types/node"
+      "@types/node",
+      "@nuxtjs/toast"
     ]
   },
   "exclude": [
