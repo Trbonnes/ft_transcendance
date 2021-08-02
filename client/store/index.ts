@@ -12,6 +12,17 @@ const store = () =>
     // modules: {
     //   chat,
     // },
+
+    getters: {
+      isLoggedIn: (state: any) => {
+        return state.auth.loggedIn
+      },
+
+      loggedInUser: (state: any) => {
+        return state.auth.user
+      }
+    },
+
     actions: {
       loadChat() {
         this.registerModule('chat', chat)
