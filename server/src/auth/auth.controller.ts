@@ -116,4 +116,33 @@ export class AuthController {
 		return response.status(200).json(user);
 	}
 
+	@Post("/testuser")
+	async testUserLogin(@Req() request, @Res() response: Response) {
+		const testUser = `test_${request.query.user}`
+		let user = await this.usersService.findOneByFortyTwoLogin(testUser);
+		if (user === null) {
+			let userDto = new CreateUserDto()
+				.setEmail(`${testUser}@testuser.com`)
+				.setLogin(testUser)
+				.setDisplayName(testUser)
+				.setFirstName(testUser)
+				.setAvatar('https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Tabletennis.jpg/1200px-Tabletennis.jpg')
+
+			user = await this.usersService.create(userDto)
+		}
+		const payload = {
+			login: user.login,
+			id: user.id,
+		}
+		const access_token = await this.authService.generateToken(payload);
+		const refresh_token = await this.authService.generateToken(payload, {
+			expiresIn: `${60 * 60 * 24 * 7}s`
+		})
+		this.logger.log('Test user gets new access and refresh tokens');
+		return response.status(200).json({
+			access_token,
+			refresh_token,
+			expires_in: jwtConstants.expiresIn
+		})
+	}
 }
