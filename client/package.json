@@ -16,10 +16,14 @@
     "@babel/core": "^7.14.3",
     "@fortawesome/fontawesome-free": "^5.15.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@nuxtjs/auth-next": "5.0.0-1624817847.21691f1",
     "@nuxtjs/axios": "^5.13.1",
     "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/tailwindcss": "^4.1.1",
+    "@nuxtjs/toast": "^3.3.1",
+    "cookie-universal-nuxt": "^2.1.5",
     "core-js": "^3.9.1",
+    "daisyui": "^1.10.0",
     "nuxt": "^2.15.3",
     "nuxt-property-decorator": "^2.9.1",
     "nuxt-socket-io": "^1.1.18",
@@ -48,6 +52,8 @@
     "eslint-plugin-vue": "^7.7.0",
     "jest": "^26.6.3",
     "prettier": "^2.2.1",
+    "sass": "^1.35.1",
+    "sass-loader": "10",
     "ts-jest": "^26.5.4",
     "vue-jest": "^3.0.4"
   }

@@ -6,9 +6,13 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { configService } from './config/config.service';
 import { UsersModule } from './users/users.module';
-import { ChatGateway } from './app.chatgateway';
 import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
+import { AuthService } from './auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
+import { GameGateway } from './app.gamegateway';
+import { BorderlessGateway } from './app.borderlessgateway';
+import { ChatGateway } from './app.chatgateway';
 import { AuthController } from './auth/auth.controller';
 
 @Module({
@@ -25,7 +29,7 @@ import { AuthController } from './auth/auth.controller';
       }),
     }),
   ],
-  controllers: [AppController, AuthController],
-  providers: [AppService, /*GameGateway*/ ChatGateway],
+  controllers: [AppController],
+  providers: [AppService, GameGateway, ChatGateway, BorderlessGateway],
 })
 export class AppModule {}

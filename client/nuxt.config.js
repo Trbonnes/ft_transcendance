@@ -1,3 +1,5 @@
+import { RefreshController, Token } from "@nuxtjs/auth-next";
+
 export default {
   // Disable server-side rendering (https://go.nuxtjs.dev/ssr-mode)
   ssr: false,
@@ -37,14 +39,84 @@ export default {
     '@nuxtjs/fontawesome'
   ],
 
+  router: {
+	  //middleware: ['auth']
+  },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+	'@nuxtjs/auth-next',
     '@nuxtjs/pwa',
     '@nuxtjs/proxy',
-    'nuxt-socket-io'
+    'nuxt-socket-io',
+    'cookie-universal-nuxt'
   ],
+
+  auth: {
+    localStorage: false,
+    strategies: {
+      fortytwo: {
+        scheme: 'oauth2',
+        endpoints: {
+          authorization: 'https://api.intra.42.fr/oauth/authorize',
+        },
+        grantType: 'authorization_code',
+        responseType: 'code',
+        redirectUri: process.env.FT_OAUTH_REDIRECT_URI,
+        clientId: process.env.FT_OAUTH_UID,
+        state: 'askdfj1239eo1234098rhj5fgoej'
+      },
+      localrefresh: {
+        scheme: 'refresh',
+        token: {
+          property: 'access_token',
+          required: true,
+          type: 'Bearer',
+          maxAge: 10800,
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          maxAge: 60 * 60 * 24 * 7
+        },
+        user: {
+          property: false,
+          autoFetch: true
+        },
+        endpoints: {
+          login: { url: 'auth/login', method: 'post'},
+          logout: false,
+          user: { url: 'auth/user', method: 'get'},
+          refresh: { url: 'auth/refresh', method: 'post' }
+        }
+      },
+      testrefresh: {
+        scheme: 'refresh',
+        token: {
+          property: 'access_token',
+          required: true,
+          type: 'Bearer',
+          maxAge: 10800,
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          maxAge: 60 * 60 * 24 * 7
+        },
+        user: {
+          property: false,
+          autoFetch: true
+        },
+        endpoints: {
+          login: { url: 'auth/testuser', method: 'post'},
+          logout: false,
+          user: { url: 'auth/user', method: 'get'},
+          refresh: { url: 'auth/refresh', method: 'post' }
+        }
+      }
+      
+    }
+  },
 
   fontawesome : {
     icons: {
@@ -54,7 +126,7 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    // proxy: true
+    baseURL: 'http://localhost:3000',
   },
 
   // proxy: {

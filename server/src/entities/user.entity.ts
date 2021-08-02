@@ -12,22 +12,29 @@ export class User {
 	@Column({ unique: true })
 	email: string
 
+	@Column({ unique: true})
+	login: string
+
 	@Column()
-	password: string;
+	firstName: string
 
 	@Column({ unique: true })
-	name: string
+	displayName: string
+
 	@Column()
 	avatar: string = "" // link to the image
 
-  @Column()
+  	@Column()
 	isActive: boolean = false
 
 	@Column()
 	inGame: boolean = false
 
-	@Column()
-	twoFactors: boolean = false
+	@Column({default: false})
+	twoFactor: boolean
+
+	@Column({nullable: true})
+	twoFactorCode: string
 
 	@Column()
 	victory: number = 0
@@ -37,9 +44,6 @@ export class User {
 
 	@Column()
 	ladder: number = 0
-
-	@Column()
-	isAdministrator: boolean = false
 
 	@CreateDateColumn()
 	createdDate: Date
