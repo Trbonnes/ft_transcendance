@@ -25,7 +25,7 @@ export class AuthController {
 		const twoFactorCode = body.twoFactorCode;
 		let user = null;
 
-		if (code === '-1') {
+		if (code === 'twoFactorAuthenticationActivated') {
 			user = await this.usersService.findOneByTwoFactorCode(twoFactorCode)
 			if (!user)
 				throw new HttpException({
