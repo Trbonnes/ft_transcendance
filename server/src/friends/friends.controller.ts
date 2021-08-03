@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Post, Req, UseGuards } from '@nestjs/com
 import { request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { FriendRequest } from 'src/entities/friend-request.entity';
+import { User } from 'src/entities/user.entity';
 import { AcceptFriendRequestDto } from './dto/accept-request.dto';
 import { FriendRequestDto } from './dto/friend-request.dto';
 import { RemoveFriendDto } from './dto/remove-friend.dto';
@@ -21,7 +22,7 @@ export class FriendsController {
 	// Send a friend request
 	@Post('requests')
 	@UseGuards(JwtAuthGuard)
-	sendFriendRequest(@Req request, @Body() friendRequest: FriendRequestDto): Promise<FriendRequest> {
+	sendFriendRequest(@Req() request, @Body() friendRequest: FriendRequestDto): Promise<FriendRequest> {
 		return this.friendsService.sendFriendRequest(request.user.id, friendRequest.receipient)
 	}
 
@@ -29,7 +30,7 @@ export class FriendsController {
 	@Post('accept')
 	@UseGuards(JwtAuthGuard)
 	acceptFriendRequest(@Req() request, @Body() acceptFriendRequest: AcceptFriendRequestDto): Promise<User> {
-		return this.friendsService.acceptFriendRequest(request.user.id, acceptRequest.sender);
+		return this.friendsService.acceptFriendRequest(request.user.id, acceptFriendRequest.sender);
 	}
 
 	// Remove a friend
