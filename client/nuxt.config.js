@@ -118,6 +118,11 @@ export default {
     }
   },
 
+  toast: {
+    position: 'bottom-right',
+    duration: '5000',
+  },
+
   fontawesome : {
     icons: {
       solid: true
