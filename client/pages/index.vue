@@ -3,14 +3,19 @@
     <h1>You are signed in!!</h1>
     <button @click="userLogout">log out</button>
     <button @click="consoleLogUser">getUser</button>
+    <SideMenu id="side"></SideMenu>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import createWebSocketPlugin from '~/store/plugins/websocket'
 
 export default Vue.extend({
   middleware: 'auth',
+  mounted() {
+    createWebSocketPlugin(this.$store)
+  },
   methods: {
     async userLogout() {
       try {
@@ -28,4 +33,12 @@ export default Vue.extend({
 })
 </script>
 
-<style></style>
+<style>
+#side {
+  position: fixed;
+  width: 30vw;
+  right: 0;
+  top: 0;
+  height: 100vh;
+}
+</style>
