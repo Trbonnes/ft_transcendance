@@ -14,6 +14,7 @@ import { GameGateway } from './app.gamegateway';
 import { BorderlessGateway } from './app.borderlessgateway';
 import { ChatGateway } from './app.chatgateway';
 import { AuthController } from './auth/auth.controller';
+import { FriendsModule } from './friends/friends.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AuthController } from './auth/auth.controller';
         JWT_EXPIRATION_TIME: Joi.string().required(),
       }),
     }),
+    FriendsModule,
   ],
   controllers: [AppController],
   providers: [AppService, GameGateway, ChatGateway, BorderlessGateway],

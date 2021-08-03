@@ -1,7 +1,8 @@
 import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity, OneToMany, ManyToMany, OneToOne, JoinTable, JoinColumn } from 'typeorm';
-import { Friendship } from './friendship.entity';
+import { Friendship } from './friend-request.entity';
 import { Game } from './game.entity';
 import { Channel } from './channel.entity';
+import { FriendRequest } from './friend-request.entity';
 
 @Entity()
 export class User {
@@ -55,9 +56,9 @@ export class User {
 	@JoinTable()
 	public games: Game[]
 
-	@ManyToMany(() => Friendship, friendship => friendship.users)
+	@ManyToMany(() => User, user => user.friends)
 	@JoinTable()
-	public friendships: Friendship[]
+	public friends: User[]
 
 	@ManyToMany(() => Channel, channel => channel.members)
 	@JoinTable()

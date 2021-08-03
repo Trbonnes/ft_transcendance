@@ -92,15 +92,16 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    try {
       const user = await this.usersRepository.findOneOrFail({ where: { id } });
       // this.usersRepository.update(user, updateUserDto);
-      return this.usersRepository.save({ ...user, ...updateUserDto });
-      // return user;
-    } catch (err) {
-      // handle error
-      throw err;
-    }
+      return this.usersRepository.save({ ...user, ...updateUserDto })
+        .catch(() => {
+          throw new HttpException({
+            message: [
+              `This display name is already taken. Please choose another one.`
+            ]
+          }, HttpStatus.BAD_REQUEST)
+        })
   }
 
   async remove(id: string) {
