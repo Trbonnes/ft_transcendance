@@ -150,4 +150,31 @@ export class UsersService {
     user.twoFactorCode = '';
     return this.usersRepository.save(user);
   }
+
+  // add friend
+  async addFriend(sender: User, receipient: User): Promise<User | undefined> {
+    const alreadyFriends = sender.friends.map(friend => friend.id).indexOf(sender.id) !== -1
+    if (!alreadyFriends) {
+      sender.friends.push(receipient)
+    }
+    return !alreadyFriends ? this.usersRepository.save(sender) : undefined
+  }
+
+  // remove friend
+  async removeFriend(userId: string, friendId: string) {
+    const friend1 = await this.usersRepository.findOne(userId, {relations: ['friends']})
+    const friend = await this.usersRepository.findOne(friendId, {relations: ['friends']})
+
+    const user = friend1.friends.filter(fd => fd.id === friend.id || fd.id === friend1.id).length > 0? friend1: friend;
+    const otherUser = friend1.friends.filter(fd => fd.id === friend.id || fd.id === friend1.id).length === 0? friend1: friend;
+    const index = user.friends.map(fd => fd.id).indexOf(otherUser.id);
+
+    if (index === -1)
+      throw new HttpException({
+        error: `This user is not in your friends' list`
+      }, HttpStatus.BAD_REQUEST)
+    user.friends.splice(index, 1)
+    return this.usersRepository.save(user)
+  }
+
 }
