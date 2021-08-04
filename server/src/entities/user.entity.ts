@@ -1,5 +1,4 @@
 import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity, OneToMany, ManyToMany, OneToOne, JoinTable, JoinColumn } from 'typeorm';
-import { Friendship } from './friend-request.entity';
 import { Game } from './game.entity';
 import { Channel } from './channel.entity';
 import { FriendRequest } from './friend-request.entity';
