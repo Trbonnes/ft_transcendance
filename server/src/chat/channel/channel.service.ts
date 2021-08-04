@@ -20,13 +20,15 @@ export class ChannelService {
     return await this.channelRepositery.save(newChannel);
   }
 
-  async getAllChannels() {
+  async getAllChannels(): Promise<Channel[]> {
     let data: Channel[];
     try {
       data = await this.channelRepositery.find();
     } catch (err) {
       throw err;
     }
+    console.log('Returning the data');
+    console.log(data);
     return data;
   }
 }

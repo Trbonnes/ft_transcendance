@@ -1,4 +1,4 @@
-import { RefreshController, Token } from "@nuxtjs/auth-next";
+import { RefreshController, Token } from '@nuxtjs/auth-next'
 
 export default {
   // Disable server-side rendering (https://go.nuxtjs.dev/ssr-mode)
@@ -21,12 +21,10 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-    '~layouts/global.css'
-  ],
+  css: ['~layouts/global.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['~/plugins/axios-accessor'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -36,22 +34,22 @@ export default {
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
     '@nuxtjs/tailwindcss',
-    '@nuxtjs/fontawesome'
+    '@nuxtjs/fontawesome',
   ],
 
   router: {
-	  //middleware: ['auth']
+    //middleware: ['auth']
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-	'@nuxtjs/auth-next',
+    '@nuxtjs/auth-next',
     '@nuxtjs/pwa',
     '@nuxtjs/proxy',
     'nuxt-socket-io',
-    'cookie-universal-nuxt'
+    'cookie-universal-nuxt',
   ],
 
   auth: {
@@ -66,7 +64,7 @@ export default {
         responseType: 'code',
         redirectUri: process.env.FT_OAUTH_REDIRECT_URI,
         clientId: process.env.FT_OAUTH_UID,
-        state: 'askdfj1239eo1234098rhj5fgoej'
+        state: 'askdfj1239eo1234098rhj5fgoej',
       },
       localrefresh: {
         scheme: 'refresh',
@@ -78,18 +76,18 @@ export default {
         },
         refreshToken: {
           property: 'refresh_token',
-          maxAge: 60 * 60 * 24 * 7
+          maxAge: 60 * 60 * 24 * 7,
         },
         user: {
           property: false,
-          autoFetch: true
+          autoFetch: true,
         },
         endpoints: {
-          login: { url: 'auth/login', method: 'post'},
+          login: { url: 'auth/login', method: 'post' },
           logout: false,
-          user: { url: 'auth/user', method: 'get'},
-          refresh: { url: 'auth/refresh', method: 'post' }
-        }
+          user: { url: 'auth/user', method: 'get' },
+          refresh: { url: 'auth/refresh', method: 'post' },
+        },
       },
       testrefresh: {
         scheme: 'refresh',
@@ -101,27 +99,26 @@ export default {
         },
         refreshToken: {
           property: 'refresh_token',
-          maxAge: 60 * 60 * 24 * 7
+          maxAge: 60 * 60 * 24 * 7,
         },
         user: {
           property: false,
-          autoFetch: true
+          autoFetch: true,
         },
         endpoints: {
-          login: { url: 'auth/testuser', method: 'post'},
+          login: { url: 'auth/testuser', method: 'post' },
           logout: false,
-          user: { url: 'auth/user', method: 'get'},
-          refresh: { url: 'auth/refresh', method: 'post' }
-        }
-      }
-      
-    }
+          user: { url: 'auth/user', method: 'get' },
+          refresh: { url: 'auth/refresh', method: 'post' },
+        },
+      },
+    },
   },
 
-  fontawesome : {
+  fontawesome: {
     icons: {
-      solid: true
-    }
+      solid: true,
+    },
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios

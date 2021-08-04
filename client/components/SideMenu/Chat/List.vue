@@ -24,29 +24,27 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
-import { Channel } from '~/utils/types'
+import { CreateChannelDto } from '~/utils/types/channel'
 
 export default Vue.extend({
   data() {
     return {
-      channels: [] as Channel[],
+      channels: this.$store.getters['channel/all'],
     }
   },
-  created() {
-    this.channels = this.$store.getters['chat/getAll']
+  mounted() {
+    this.$store.dispatch('channel/fetchAll')
   },
   methods: {
     createChannel() {
-      console.log(this.$store)
-      console.log('Click to create a channel')
-      let c: Channel = {
-        id: '2',
-        users: ['Zeubi', 'Triste'],
-        name: '',
-        admin: 'Bob',
-        messages: [{ sender: 'Bob', content: 'Hello' }],
+      const data: CreateChannelDto = {
+        owner: 'bob@yopmail.com',
+        users: ['bob', 'miranda'],
       }
-      this.$store.dispatch('chat/createChannel', c)
+      this.$store.dispatch('channel/create', data)
+      this.$store.dispatch('channel/fetchAll')
+      console.log(this.$store.state.channel.channelList)
+      console.log('Just before this ')
     },
   },
 })

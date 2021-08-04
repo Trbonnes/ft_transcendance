@@ -33,7 +33,7 @@ import Vue from 'vue'
 export default Vue.extend({
   data() {
     return {
-      comp: 'side-menu-online-friends',
+      comp: 'side-menu-chat',
     }
   },
 })
