@@ -1,6 +1,8 @@
 import { IsNotEmpty } from 'class-validator';
 
 export class CreateChannelDto {
-  users: string[]; // list of ids
-  owner: string; // id of admin
+  @IsNotEmpty()
+  channelName: string;
+  isPrivate: boolean;
+  channelPassword: string;
 }

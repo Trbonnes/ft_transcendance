@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { ChannelService } from './channel.service';
 import { Channel } from '../../entities/channel.entity';
 import { CreateChannelDto } from './dto/create-channel.dto';
@@ -21,6 +29,15 @@ export class ChannelController {
 
   @Post('create')
   createChannel(@Body() channelDto: CreateChannelDto) {
-    return this.channelService.createChannel(channelDto);
+    if (channelDto.isPrivate == true && channelDto.channelPassword == '')
+      return new HttpException(
+        'Channel password malformed',
+        HttpStatus.BAD_REQUEST,
+      );
+
+    // try {
+    const data = this.channelService.createChannel(channelDto);
+    // } catch (error) {}
+    return data;
   }
 }

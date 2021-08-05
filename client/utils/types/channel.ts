@@ -9,8 +9,10 @@ interface Channel {
 }
 
 interface CreateChannelDto {
-  users: string[] // list of ids
-  owner: string // id of admin
+  // no owner specified, will be deduced from the JWT auth token
+  name: string
+  isPublic: boolean
+  password: string
 }
 
 export { Channel, CreateChannelDto }

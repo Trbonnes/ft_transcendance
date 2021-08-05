@@ -14,7 +14,13 @@ export class Channel {
   id: string;
 
   @Column()
-  password: string = ''; //if not set channel is public
+  isPublic: boolean = true;
+
+  @Column({ unique: true })
+  name: string = '';
+
+  @Column()
+  password: string = '';
 
   @CreateDateColumn()
   createdDate: Date;

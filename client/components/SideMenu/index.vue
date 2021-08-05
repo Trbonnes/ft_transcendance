@@ -25,6 +25,12 @@
       >
         <font-awesome-icon icon="comment" />
       </div>
+      <div
+        class="cursor-pointer transform hover:scale-125"
+        @click="comp = 'side-menu-channel'"
+      >
+        <font-awesome-icon icon="hashtag" />
+      </div>
     </div>
   </div>
 </template>
@@ -33,7 +39,7 @@ import Vue from 'vue'
 export default Vue.extend({
   data() {
     return {
-      comp: 'side-menu-chat',
+      comp: 'side-menu-channel',
     }
   },
 })

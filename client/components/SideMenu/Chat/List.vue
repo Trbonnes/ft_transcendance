@@ -26,26 +26,5 @@
 import Vue from 'vue'
 import { CreateChannelDto } from '~/utils/types/channel'
 
-export default Vue.extend({
-  data() {
-    return {
-      channels: this.$store.getters['channel/all'],
-    }
-  },
-  mounted() {
-    this.$store.dispatch('channel/fetchAll')
-  },
-  methods: {
-    createChannel() {
-      const data: CreateChannelDto = {
-        owner: 'bob@yopmail.com',
-        users: ['bob', 'miranda'],
-      }
-      this.$store.dispatch('channel/create', data)
-      this.$store.dispatch('channel/fetchAll')
-      console.log(this.$store.state.channel.channelList)
-      console.log('Just before this ')
-    },
-  },
-})
+export default Vue.extend({})
 </script>
