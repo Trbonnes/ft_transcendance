@@ -35,13 +35,8 @@ export class UsersService {
   }
 
   async findOne(id: string): Promise<User> {
-    try {
-      const user = await this.usersRepository.findOneOrFail(id);
-      return user;
-    } catch (err) {
-      // handle error
-      throw err;
-    }
+    const user = await this.usersRepository.findOneOrFail(id);
+    return user;
   }
 
   async findOnebyEmail(email: string): Promise<User> {
@@ -73,6 +68,15 @@ export class UsersService {
     Logger.log(twoFactorCode);
     Logger.log('in findOneByTwoFactorCode');
     const user = await this.usersRepository.findOne({ twoFactorCode });
+    if (user) {
+      return user;
+    } else {
+      return null;
+    }
+  }
+
+  async findOneByDisplayName(displayName: string): Promise<User | null> {
+    const user = await this.usersRepository.findOne({ displayName });
     if (user) {
       return user;
     } else {

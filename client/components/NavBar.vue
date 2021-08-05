@@ -38,7 +38,7 @@
     		</div>
 			<ul tabindex="0" class="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52">
           		<li>
-           			<a>Profile</a>
+           			<NuxtLink :to="`/users/${this.loggedInUser.login}`">Profile</NuxtLink>
          		</li> 
           		<li>
             		<a>Settings</a>
