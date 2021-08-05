@@ -43,7 +43,7 @@ export class User {
 	defeat: number = 0
 
 	@Column()
-	ladder: number = 0
+	level: number = 0
 
 	@CreateDateColumn()
 	createdDate: Date
