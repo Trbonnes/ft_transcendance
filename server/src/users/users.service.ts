@@ -136,7 +136,7 @@ export class UsersService {
           ],
           Subject: 'ft_transcendance Two Factor',
           TextPart:
-            'Hello ${user.displayName}, here is your two factor authentication code: ${token}',
+            `Hello ${user.displayName}, here is your two factor authentication code: ${token}`,
         },
       ],
     });

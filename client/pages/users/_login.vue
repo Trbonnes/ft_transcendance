@@ -25,8 +25,8 @@
 							</div>
 					</div>
       							<div class="flex justify-center">
-        							<button class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">Button</button>
-        								<button class="ml-4 inline-flex text-gray-700 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg">Button</button>
+        							<button v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id" class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">Challenge</button>
+        								<button v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id" class="ml-4 inline-flex text-gray-700 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg">Add as friend</button>
       							</div>
     				</div>
   			</div>

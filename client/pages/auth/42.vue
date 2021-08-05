@@ -7,7 +7,7 @@
 			<div v-if="twoFactorAuthentication === false">
 				<h1> Connecting... </h1>
 			</div>
-			<div v-else>
+			<div v-else class="text-gray-500">
 				<h1> Please enter the two factor authentication code you received on your 42 email </h1>
 				<form @submit.prevent="login">
 					<input type="text" v-model="twoFactorCode">

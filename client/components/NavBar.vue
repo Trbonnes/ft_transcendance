@@ -41,10 +41,10 @@
            			<NuxtLink :to="`/users/${this.loggedInUser.login}`">Profile</NuxtLink>
          		</li> 
           		<li>
-            		<a>Settings</a>
+            		<NuxtLink to="/settings">Settings</NuxtLink>
           		</li>
           		<li>
-            		<a>Log Out</a>
+            		<a @click="logOut">Log Out</a>
           		</li>
         	</ul>
 			</div>
@@ -56,12 +56,20 @@
 <script lang="ts">
 import Vue from 'vue'
 import {mapGetters} from "vuex"
+import {Component, Getter} from "nuxt-property-decorator"
 
-	export default Vue.extend ({
-		computed: {
-			...mapGetters(['isLoggedIn', 'loggedInUser']),
-		},
-	})
+	@Component
+	export default class Navigation extends Vue {
+		@Getter
+		public isLoggedIn!: boolean
+
+		@Getter
+		public loggedInUser!: any
+
+		logOut() {
+			this.$auth.logout()
+		}
+	}
 </script>
 
 <style lang="scss" scoped>

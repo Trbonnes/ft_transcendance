@@ -7,7 +7,6 @@ export class UpdateUserDto {
 	display_name:string
 
 	@IsOptional()
-	@IsString()
 	twoFactor: boolean
 
 	@IsOptional()
