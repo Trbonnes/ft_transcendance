@@ -4,25 +4,23 @@ import { $axios } from '~/utils/api'
 
 @Module({ namespaced: true }) // since we're using a custom store this is important to make it namespaced, so we can use "chat/someAction" later
 export default class ChannelModule extends VuexModule {
-  private channelList: Channel[] = []
+  public channelList: Channel[] = []
 
   @Action
   async fetchAll() {
     console.log('Fetching all the channels')
+    let data: Channel[]
     try {
-      console.log($axios)
-      const data = await $axios.$get<Channel[]>('/channel/all')
+      data = await $axios.$get<Channel[]>('/channel/all')
+      this.context.commit('setChannelList', data)
     } catch (error: any) {
-      console.log(error)
+      // TODO proper error handling
     }
-    console.log('Data fetched')
-    // this.context.commit('setChannelList', data)
   }
 
   @Action
-  async create(channel: CreateChannelDto) {
-    const data = await $axios.$post<Channel>('/channel/create', channel)
-    // this.context.commit('pushChannel', data)
+  create(channel: CreateChannelDto) {
+    return $axios.$post<Channel>('/channel/create', channel)
   }
 
   @Mutation

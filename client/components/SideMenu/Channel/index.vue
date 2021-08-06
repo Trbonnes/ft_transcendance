@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="card bordered">
+    <div v-for="c in channels" class="card bordered">
       <div class="card-body">
-        <h1>here is an element</h1>
+        <h1>{{c.name}}</h1>
       </div>
     </div>
     <a href="#create-channel" class="btn btn-primary">Create a channel</a>
@@ -53,40 +53,53 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Channel, CreateChannelDto } from '~/utils/types/channel'
 export default Vue.extend({
   data() {
     return {
-      channels: this.$store.getters['channel/all'],
+      channels: this.$store.state.channel.channelList,
       isPrivate: false as boolean,
       channelName: '' as string,
       channelPassword: '' as string,
       errors: [] as string[],
     }
   },
+  fetch()
+  {
+      this.$store.dispatch('channel/fetchAll')
+  },
   mounted() {
-    this.$store.dispatch('channel/fetchAll')
+    console.log("MOunted aaaaaaaaaaaaaaaa")
+    console.log(this.$store.state.channel.channelList)
   },
   methods: {
-    checkForm(e) {
+      checkForm(e : any) {
       e.preventDefault()
       this.errors = []
-      if (this.channelName == '')
+      if (this.channelName === '')
         this.errors.push('Channel name cannot be empty')
-      if (this.isPrivate && this.channelPassword == "")
+      if (this.isPrivate && this.channelPassword === "")
         this.errors.push('Channel password cannot be empty')
+
+      this.createChannel()
     },
     createChannel() {
-      /* const data: CreateChannelDto = { */
-      /*   owner: 'bob@yopmail.com', */
-      /*   users: ['bob', 'miranda'], */
-      /* } */
-      /* this.$store.dispatch('channel/create', data) */
-      /* this.$store.dispatch('channel/fetchAll') */
-      /* console.log(this.$store.state.channel.channelList) */
-      /* console.log('Just before this ') */
-      this.isPrivate = false
-      this.channelName = ''
-      this.channelPassword = ''
+      const data: CreateChannelDto = {
+        isPublic : !this.isPrivate,
+        channelPassword : this.channelPassword,
+        channelName : this.channelName,
+      }
+      this.$store.dispatch('channel/create', data).then((channel : Channel) =>
+      {
+        this.$store.dispatch('channel/fetchAll')
+        this.isPrivate = false
+        this.channelName = ''
+        this.channelPassword = ''
+        this.$router.back()
+      }).catch((error : any) => {
+          console.log("There is an error")
+          console.log(error)
+      })
     },
   },
 })

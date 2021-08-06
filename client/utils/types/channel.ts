@@ -1,8 +1,9 @@
 interface Channel {
   id: string
-  owner: string // id of admin
   password: string
-  users: string[] // list of ids
+  name: string
+  isPublic: boolean
+  isSticky: boolean
   createdDate: Date
   lastUpdated: Date
   members: any[]
@@ -10,9 +11,9 @@ interface Channel {
 
 interface CreateChannelDto {
   // no owner specified, will be deduced from the JWT auth token
-  name: string
+  channelName: string
   isPublic: boolean
-  password: string
+  channelPassword: string
 }
 
 export { Channel, CreateChannelDto }
