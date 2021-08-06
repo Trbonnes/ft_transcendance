@@ -3,6 +3,6 @@ import { IsNotEmpty } from 'class-validator';
 export class CreateChannelDto {
   @IsNotEmpty()
   channelName: string;
-  isPrivate: boolean;
+  isPublic: boolean;
   channelPassword: string;
 }

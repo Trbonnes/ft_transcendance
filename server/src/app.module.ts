@@ -12,7 +12,7 @@ import { AuthService } from './auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { GameGateway } from './app.gamegateway';
 import { BorderlessGateway } from './app.borderlessgateway';
-import { ChatGateway } from './app.chatgateway';
+import { ChatGateway } from './chat/app.chatgateway';
 import { AuthController } from './auth/auth.controller';
 
 @Module({

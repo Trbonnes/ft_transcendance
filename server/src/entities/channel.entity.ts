@@ -16,6 +16,9 @@ export class Channel {
   @Column()
   isPublic: boolean = true;
 
+  @Column()
+  isSticky: boolean = false;
+
   @Column({ unique: true })
   name: string = '';
 

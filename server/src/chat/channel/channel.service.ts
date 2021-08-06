@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Channel } from '../../entities/channel.entity';
 import { CreateChannelDto } from './dto/create-channel.dto';
+import { getManager } from 'typeorm';
 
 @Injectable()
 export class ChannelService {
@@ -13,11 +14,12 @@ export class ChannelService {
   async createChannel(channelDto: CreateChannelDto): Promise<Channel> {
     let newChannel: Channel = new Channel();
 
-    newChannel.members = [];
-    newChannel.password = '';
-    newChannel.createdDate = new Date();
-    //const channel = this.channelRepositery.create(channelDto);
-    return await this.channelRepositery.save(newChannel);
+    newChannel.isPublic = channelDto.isPublic;
+    newChannel.name = channelDto.channelName;
+    // TODO should we only update password if the channel is private ?
+    newChannel.password = channelDto.channelPassword;
+
+    return this.channelRepositery.save(newChannel);
   }
 
   async getAllChannels(): Promise<Channel[]> {
@@ -30,5 +32,14 @@ export class ChannelService {
     console.log('Returning the data');
     console.log(data);
     return data;
+  }
+
+  async searchByName(name: string): Promise<any> {
+    const manager = getManager();
+    const res = manager.query(
+      'select *, levenshtein(($1), "channel".name) as leven from "channel" order by leven limit 10',
+      [name],
+    );
+    return res;
   }
 }

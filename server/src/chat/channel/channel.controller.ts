@@ -6,6 +6,8 @@ import {
   Param,
   HttpException,
   HttpStatus,
+  UseFilters,
+  BadRequestException,
 } from '@nestjs/common';
 import { ChannelService } from './channel.service';
 import { Channel } from '../../entities/channel.entity';
@@ -27,17 +29,35 @@ export class ChannelController {
     return {};
   }
 
+  @Get('search/:name')
+  async searchChannelByName(@Param('name') name: string) {
+    return await this.channelService.searchByName(name);
+  }
+
   @Post('create')
-  createChannel(@Body() channelDto: CreateChannelDto) {
-    if (channelDto.isPrivate == true && channelDto.channelPassword == '')
+  async createChannel(@Body() channelDto: CreateChannelDto) {
+    if (channelDto.isPublic == false && channelDto.channelPassword == '')
       return new HttpException(
         'Channel password malformed',
         HttpStatus.BAD_REQUEST,
       );
+    if (channelDto.channelName == '')
+      return new HttpException(
+        'Channel name cannot be empty',
+        HttpStatus.BAD_REQUEST,
+      );
 
-    // try {
-    const data = this.channelService.createChannel(channelDto);
-    // } catch (error) {}
+    let data: Channel;
+    try {
+      data = await this.channelService.createChannel(channelDto);
+    } catch (error) {
+      if (error && error.code == '23505')
+        return new HttpException(
+          'Channel already exists',
+          HttpStatus.BAD_REQUEST,
+        );
+      throw error;
+    }
     return data;
   }
 }
