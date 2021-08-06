@@ -30,6 +30,6 @@ import { AuthController } from './auth/auth.controller';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, GameGateway, ChatGateway, BorderlessGateway],
+  providers: [AppService, GameGateway, BorderlessGateway],
 })
 export class AppModule {}
