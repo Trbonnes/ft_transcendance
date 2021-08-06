@@ -1,10 +1,12 @@
 import {
   PrimaryGeneratedColumn,
   Column,
+  JoinColumn,
   UpdateDateColumn,
   CreateDateColumn,
   Entity,
   ManyToMany,
+  OneToOne,
 } from 'typeorm';
 import { User } from './user.entity';
 
@@ -30,6 +32,10 @@ export class Channel {
 
   @UpdateDateColumn()
   lastUpdated: Date;
+
+  @OneToOne(() => User)
+  @JoinColumn()
+  owner: User;
 
   @ManyToMany(() => User, (user) => user.channels)
   members: User[];
