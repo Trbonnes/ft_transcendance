@@ -27,6 +27,10 @@ export class ChannelService {
     return this.channelRepositery.save(newChannel);
   }
 
+  getById(channelId: string) {
+    return this.channelRepositery.findOne({ id: channelId });
+  }
+
   async getAllChannels(): Promise<Channel[]> {
     let data: Channel[];
     try {
@@ -34,8 +38,6 @@ export class ChannelService {
     } catch (err) {
       throw err;
     }
-    console.log('Returning the data');
-    console.log(data);
     return data;
   }
 

@@ -27,6 +27,7 @@ export class ChannelController {
   }
 
   // Returns a specific channe information
+  // TODO maybe hide password ? You dumbass
   @Get(':id')
   getOne() {
     return {};
