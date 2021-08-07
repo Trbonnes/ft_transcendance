@@ -7,6 +7,7 @@ import {
   Entity,
   ManyToMany,
   OneToOne,
+  ManyToOne,
 } from 'typeorm';
 import { User } from './user.entity';
 
@@ -33,7 +34,7 @@ export class Channel {
   @UpdateDateColumn()
   lastUpdated: Date;
 
-  @OneToOne(() => User)
+  @ManyToOne(() => User)
   @JoinColumn()
   owner: User;
 
