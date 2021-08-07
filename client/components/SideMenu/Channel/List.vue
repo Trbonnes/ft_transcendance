@@ -1,7 +1,7 @@
 
 <template>
   <div>
-    <div v-for="c in channels" class="card bordered">
+    <div v-for="c in $store.state.channel.channelList" class="card bordered">
       <div class="card-body cursor-pointer" @click="$emit('select', c.id)">
         <h1>{{c.name}}</h1>
       </div>
@@ -58,7 +58,6 @@ import { Channel, CreateChannelDto } from '~/utils/types/channel'
 export default Vue.extend({
   data() {
     return {
-      channels: this.$store.state.channel.channelList,
       isPrivate: false as boolean,
       channelName: '' as string,
       channelPassword: '' as string,
@@ -70,7 +69,6 @@ export default Vue.extend({
       this.$store.dispatch('channel/fetchAll')
   },
   mounted() {
-    console.log("MOunted aaaaaaaaaaaaaaaa")
     console.log(this.$store.state.channel.channelList)
   },
   methods: {

@@ -18,18 +18,22 @@ export default Vue.extend({
       comp: {
         component: 'side-menu-channel-list',
         props: { id: '' },
+        socket: null,
       },
     }
+  },
+  mounted() {
+    this.socket = getSocket()
   },
   methods: {
     showConversation(channelId: string) {
       this.comp.component = 'side-menu-channel-single'
       this.comp.props = { id: channelId }
-      const socket = getSocket()
-      socket.emit('joinChannel', channelId)
+      this.socket.emit('joinChannel', this.comp.props.id)
     },
     showList(id: string) {
       this.comp.component = 'side-menu-channel-list'
+      this.socket.emit('leaveChannel', this.comp.props.id)
       this.comp.props.id = ''
     },
   },
