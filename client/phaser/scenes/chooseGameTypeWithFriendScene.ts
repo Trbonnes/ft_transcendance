@@ -33,9 +33,9 @@ export default class ChooseGameTypeWithFriendScene extends Phaser.Scene {
 
         this.menu.push(new Button(this, config.width / 2 + 300, config.height / 2, "Borderless",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.LayoutScene, { type: scenesList.JoinBorderlessScene })
+            Scene.scene.run(scenesList.LayoutScene, { type: scenesList.WaitingBorderlessFriendScene })
             Scene.scene.stop(scenesList.ChooseGameTypeWithFriendScene)
-        }).setDisabled(true))
+        }))
     }
 
     update(/*time, delta*/) {}

@@ -86,7 +86,7 @@ export class GameGateway {
     room.friend = friend
     room.client0 = client
     this.rooms.set(room.id, room)
-    console.log("create room ", room.id, friend)
+    console.log("create room ", room.id)
     client.emit('gameId', room.id)
     client.join(room.id)
     this.clients.set(client.id, room.id)

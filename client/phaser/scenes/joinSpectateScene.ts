@@ -33,6 +33,8 @@ export default class JoinSpectateScene extends Phaser.Scene {
 
         console.log(joinInput.getNode())
 
+        let badIdCount = 0;
+
         new Button(this, config.width / 2, 850, "Join",
         () => {
             console.log(joinInput.getValue())
