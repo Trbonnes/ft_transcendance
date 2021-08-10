@@ -46,7 +46,7 @@ export default class JoinSpectateScene extends Phaser.Scene {
                         },
                         transports: ['websockets'],
                     },
-                    query: { "spectate": joinInput.getValue() },
+                    query: { "spectate": joinInput.getValue(), "friend": "" },
                 })
 
                 this.socket.on('Spectator Joined', (response: {room: string}) => {

@@ -7,6 +7,8 @@ import JoinBorderlessScene from './scenes/joinBorderlessScene'
 import GameResultsScene from './scenes/gameResultsScene'
 import JoinSpectateScene from './scenes/joinSpectateScene'
 import SpectateScene from './scenes/spectateScene'
+import ChooseGameTypeWithFriendScene from './scenes/chooseGameTypeWithFriendScene'
+import WaitingFriendScene from './scenes/waitingFriendScene'
 
 export const scenesList = {
     HomeScene: 'HomeScene',
@@ -18,6 +20,9 @@ export const scenesList = {
     GameResultsScene: 'GameResultsScene',
     JoinSpectateScene: 'JoinSpectateScene',
     SpectateScene: 'SpectateScene',
+    ChooseGameTypeWithFriendScene: 'ChooseGameTypeWithFriendScene',
+    WaitingFriendScene: 'WaitingFriendScene',
+
 }
 
 export var activeScene: string = scenesList.HomeScene
@@ -35,4 +40,6 @@ export function sceneLoader(Scene: Phaser.Scene) {
     Scene.scene.add(scenesList.GameResultsScene, GameResultsScene, false)
     Scene.scene.add(scenesList.JoinSpectateScene, JoinSpectateScene, false)
     Scene.scene.add(scenesList.SpectateScene, SpectateScene, false)
+    Scene.scene.add(scenesList.ChooseGameTypeWithFriendScene, ChooseGameTypeWithFriendScene, false)
+    Scene.scene.add(scenesList.WaitingFriendScene, WaitingFriendScene, false)
 }

@@ -28,6 +28,7 @@ export class GameGateway {
     let joined = false
     
     console.log('spectate: ', data.query['spectate'])
+    console.log('friend: ', data.query['friend'])
     if (data.query['spectate']) {
       for (let gameRoom of this.rooms.keys()) {
         if (gameRoom == data.query['spectate']
@@ -46,15 +47,21 @@ export class GameGateway {
       return
     }
 
+    if (data.query['friend']) {
+      if (data.query['friend'] == "true")
+        this.createGame(client, true)
+      return
+    }
+
     if (!this.rooms.size) {
-      this.createGame(client)
+      this.createGame(client, false)
       joined = true
     }
     else {
       try {
         this.rooms.forEach(
           (game: GameState, id: string) => {
-            if (!game.client1) {
+            if (!game.client1 && !game.friend) {
               this.joinGame(client, id)
               throw 'BreakException'
             }
@@ -63,7 +70,7 @@ export class GameGateway {
       } catch (e) { joined = true }
 
       if (!joined)
-        this.createGame(client)
+        this.createGame(client, false)
     }
 
     console.log('room number: ', this.rooms.size)
@@ -74,11 +81,13 @@ export class GameGateway {
     this.leaveGame(client)
   }
 
-  createGame(client: Socket) {
+  createGame(client: Socket, friend: boolean) {
     let room = new GameState(client)
+    room.friend = friend
     room.client0 = client
     this.rooms.set(room.id, room)
-    console.log("create room ", room.id)
+    console.log("create room ", room.id, friend)
+    client.emit('gameId', room.id)
     client.join(room.id)
     this.clients.set(client.id, room.id)
   }

@@ -39,7 +39,7 @@ export default class JoinBorderlessScene extends Phaser.Scene {
                 },
                 transports: ['websockets']
             },
-            query: { "spectate": "" },
+            query: { "spectate": "", "friend": "" },
         })
 
         this.socket.on('OpponentFound', (response: {player: number, room: string}) => {

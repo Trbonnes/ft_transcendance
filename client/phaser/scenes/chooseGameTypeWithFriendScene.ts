@@ -5,11 +5,11 @@ import { scenesList, activeScene, setActiveScene } from '../sceneManager'
 import Button from '../objects/ButtonObject'
 
 
-export default class chooseGameTypeWithFriendScene extends Phaser.Scene {
+export default class ChooseGameTypeWithFriendScene extends Phaser.Scene {
     private menu: Button[] = []
 
     constructor() {
-        super('chooseGameTypeWithFriendScene')
+        super('ChooseGameTypeWithFriendScene')
     }
 
     init() {}
@@ -17,7 +17,7 @@ export default class chooseGameTypeWithFriendScene extends Phaser.Scene {
     preload() {}
 
     create() {
-        setActiveScene(scenesList.MenuScene);
+        setActiveScene(scenesList.ChooseGameTypeWithFriendScene);
 
         this.add.text(config.width / 2, 120, "Play with a friend ?")
 			.setFontSize(50)
@@ -27,14 +27,14 @@ export default class chooseGameTypeWithFriendScene extends Phaser.Scene {
 
         this.menu.push(new Button(this, config.width / 2 - 300, config.height / 2, "Classic",
         function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.LayoutScene, { type: scenesList.JoinGameScene })
-            Scene.scene.stop(scenesList.MenuScene)
+            Scene.scene.run(scenesList.LayoutScene, { type: scenesList.WaitingFriendScene })
+            Scene.scene.stop(scenesList.ChooseGameTypeWithFriendScene)
         }))
 
         this.menu.push(new Button(this, config.width / 2 + 300, config.height / 2, "Borderless",
         function(Scene: Phaser.Scene) {
             Scene.scene.run(scenesList.LayoutScene, { type: scenesList.JoinBorderlessScene })
-            Scene.scene.stop(scenesList.MenuScene)
+            Scene.scene.stop(scenesList.ChooseGameTypeWithFriendScene)
         }).setDisabled(true))
     }
 
