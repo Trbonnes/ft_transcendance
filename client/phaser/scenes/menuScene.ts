@@ -47,8 +47,7 @@ export default class MenuScene extends Phaser.Scene {
         function(Scene: Phaser.Scene) {
             Scene.scene.run(scenesList.LayoutScene, { type: scenesList.JoinGameScene })
             Scene.scene.stop(scenesList.MenuScene)
-        })
-        .setDisabled(true))
+        }))
     }
 
     update(/*time, delta*/) {}

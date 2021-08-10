@@ -10,6 +10,8 @@ export let router!: VueRouter
 export const config: Phaser.Types.Core.GameConfig & {
 	width: number
 	height: number
+	invite: string | null
+	spectate: string | null
 } = {
 	// https://photonstorm.github.io/phaser3-docs/Phaser.Core.Config.html https://rexrainbow.github.io/phaser3-rex-notes/docs/site/game/
 	type: Phaser.WEBGL,
@@ -97,9 +99,12 @@ export const config: Phaser.Types.Core.GameConfig & {
 		text: '#ffffff',
 		background: ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#000000'],
 	},
+
+	invite: null,
+	spectate: null,
 }
 
-export function setup(_options: {}): Phaser.Game {
+export function setup(_options: {invite: string | null, spectate: string | null}): Phaser.Game {
 
 	class HomeScene extends Phaser.Scene {
 		constructor(Config: Phaser.Types.Scenes.SettingsConfig) {
@@ -118,17 +123,21 @@ export function setup(_options: {}): Phaser.Game {
 		async create() {
 			// const me = userStore.user;
 
-			this.add
-					.image(config.width / 2, config.height / 2, "global_background.png")
+			this.add.image(config.width / 2, config.height / 2, "global_background.png")
 					.setDisplaySize(config.width, config.height)
 
-			//this.scene.run(scenesList.MenuScene)
-			this.scene.run(scenesList.MenuScene)
+			// if(config.invite)
+			// else if (config.spectate)
+			// else
+				this.scene.run(scenesList.MenuScene)
     }
 
 		update(/*time, delta*/) {}
 	}
 
-	const game = new Phaser.Game({ ...config, scene: HomeScene })
+	config.invite = _options.invite
+	config.spectate = _options.spectate
+
+	const game = new Phaser.Game({ ...config, scene: HomeScene,  })
 	return game
 }

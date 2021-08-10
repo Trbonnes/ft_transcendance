@@ -10,12 +10,12 @@ import Vue from 'vue'
 import { setup } from '../../phaser/phaserconfig'
 
 export default Vue.extend({
-	middleware: 'auth',
+	// middleware: 'auth',
 	data() {
 		return { error: false, game: undefined as Phaser.Game | undefined }
 	},
 	async mounted() {
-		if (!this.error) this.game = setup({})
+		if (!this.error) this.game = setup({invite: null, spectate: null})
 	},
 })
 </script>
