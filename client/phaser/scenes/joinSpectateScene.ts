@@ -38,37 +38,45 @@ export default class JoinSpectateScene extends Phaser.Scene {
         new Button(this, config.width / 2, 850, "Join",
         () => {
             console.log(joinInput.getValue())
-            if (joinInput.getValue()) {
+            if (joinInput.getValue())
+                this.establishConnection("game", joinInput.getValue())
+        })
+    }
 
-                console.log(os.hostname())
-                this.socket = io("http://" + os.hostname() + ":3000/game", {
-                    transportOptions: {
-                        cors : {
-                            origin: '*'
-                        },
-                        transports: ['websockets'],
-                    },
-                    query: { "spectate": joinInput.getValue(), "friend": "" },
-                })
+    establishConnection(gateway: string, id: string) {
 
-                this.socket.on('Spectator Joined', (response: {room: string}) => {
-                    console.log('sectator joining')
-                    this.game.domContainer.style.pointerEvents = 'auto'
-                    this.scene.run(scenesList.SpectateScene,  { socket: this.socket, room: response.room, layoutType: this.layoutType})
-                    this.scene.stop(this)
-                })
+        console.log(os.hostname())
+        this.socket = io("http://" + os.hostname() + ":3000/" + gateway, {
+            transportOptions: {
+                cors : {
+                    origin: '*'
+                },
+                transports: ['websockets'],
+            },
+            query: { "spectate": id, "friend": "" },
+        })
 
-                this.socket.on('Bad id', () => {
-                    this.socket = undefined
-                    this.cameras.main.shake(400)
-                    this.add.text(config.width / 2, 250, "BAD ID")
-                        .setFontSize(65)
-                        .setStroke('black', 3)
-                        .setTint(0xff0000)
-                        .setOrigin(0.5, 0.5)
-                })
+        this.socket?.on('Spectator Joined', (response: {room: string}) => {
+            console.log('sectator joining')
+            this.game.domContainer.style.pointerEvents = 'auto'
+            this.scene.run(scenesList.SpectateScene,  { socket: this.socket, room: response.room, layoutType: this.layoutType})
+            this.scene.stop(this)
+        })
+
+        this.socket?.on('Bad id', () => {
+            if (gateway == "game")
+                this.establishConnection("borderless", id)
+            else {
+                this.socket = undefined
+                this.cameras.main.shake(400)
+                this.add.text(config.width / 2, 250, "BAD ID")
+                    .setFontSize(65)
+                    .setStroke('black', 3)
+                    .setTint(0xff0000)
+                    .setOrigin(0.5, 0.5)
             }
         })
+
     }
 
     update(/*time, delta*/) {
