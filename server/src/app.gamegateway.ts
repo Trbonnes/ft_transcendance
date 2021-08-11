@@ -29,6 +29,7 @@ export class GameGateway {
     
     console.log('spectate: ', data.query['spectate'])
     console.log('friend: ', data.query['friend'])
+
     if (data.query['spectate']) {
       for (let gameRoom of this.rooms.keys()) {
         if (gameRoom == data.query['spectate']
@@ -48,8 +49,22 @@ export class GameGateway {
     }
 
     if (data.query['friend']) {
-      if (data.query['friend'] == "true")
+      if (data.query['friend'] == "true") {
         this.createGame(client, true)
+        return
+      }
+      for (let gameRoom of this.rooms.keys()) {
+        if (gameRoom == data.query['friend']
+        && this.rooms.get(gameRoom).client0
+        && !this.rooms.get(gameRoom).client1) {
+          this.joinGame(client, data.query['friend'])
+          joined = true
+        }
+      }
+      if (!joined) {
+        client.emit('Bad id')
+        client.disconnect()
+      }
       return
     }
 

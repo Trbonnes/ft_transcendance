@@ -10,13 +10,15 @@ import Input from '../objects/InputField'
 export default class JoinSpectateScene extends Phaser.Scene {
     private socket?: Socket
     private layoutType?: string
+    private id?: string
 
     constructor() {
         super('JoinSpectateScene')
     }
 
-    init(data: { layout: string }) {
+    init(data: { layout: string, id: string}) {
         this.layoutType = data.layout
+        this.id = data.id
     }
 
     preload() {}
@@ -24,7 +26,7 @@ export default class JoinSpectateScene extends Phaser.Scene {
     create() {
         setActiveScene(scenesList.JoinSpectateScene)
 
-        const joinInput = new Input(this, config.width / 2, config.height / 2, {})
+        const joinInput = new Input(this, config.width / 2, config.height / 2, {}) //for test purpose only
             .setPlaceholder('Enter Game ID')
             .setDisplaySize(560, 60)
             .setDisabled(false)
@@ -33,17 +35,17 @@ export default class JoinSpectateScene extends Phaser.Scene {
 
         console.log(joinInput.getNode())
 
-        let badIdCount = 0;
-
         new Button(this, config.width / 2, 850, "Join",
         () => {
             console.log(joinInput.getValue())
-            if (joinInput.getValue())
-                this.establishConnection("game", joinInput.getValue())
+            if (joinInput.getValue()) {
+                this.id = joinInput.getValue()
+                this.establishConnection("game")
+            }
         })
     }
 
-    establishConnection(gateway: string, id: string) {
+    establishConnection(gateway: string) {
 
         console.log(os.hostname())
         this.socket = io("http://" + os.hostname() + ":3000/" + gateway, {
@@ -53,7 +55,7 @@ export default class JoinSpectateScene extends Phaser.Scene {
                 },
                 transports: ['websockets'],
             },
-            query: { "spectate": id, "friend": "" },
+            query: { "spectate": this.id!, "friend": "" },
         })
 
         this.socket?.on('Spectator Joined', (response: {room: string}) => {
@@ -65,7 +67,7 @@ export default class JoinSpectateScene extends Phaser.Scene {
 
         this.socket?.on('Bad id', () => {
             if (gateway == "game")
-                this.establishConnection("borderless", id)
+                this.establishConnection("borderless")
             else {
                 this.socket = undefined
                 this.cameras.main.shake(400)

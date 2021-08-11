@@ -121,14 +121,15 @@ export function setup(_options: {invite: string | null, spectate: string | null}
 		}
 
 		async create() {
-			// const me = userStore.user;
 
 			this.add.image(config.width / 2, config.height / 2, "global_background.png")
 					.setDisplaySize(config.width, config.height)
 
-			// if(config.invite)
-			// else if (config.spectate)
-			// else
+			if(config.invite)
+				this.scene.run(scenesList.JoinFriendScene, { type: "classical", id: config.invite })
+			else if (config.spectate)
+				this.scene.run(scenesList.JoinSpectateScene, { type: "classical", id: config.spectate })
+			else
 				this.scene.run(scenesList.MenuScene)
     }
 
