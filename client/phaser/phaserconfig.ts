@@ -12,7 +12,8 @@ export const config: Phaser.Types.Core.GameConfig & {
 	height: number
 	invite: string | null
 	spectate: string | null
-	user: string | null
+	userId: string | null
+	userToken: string | null
 } = {
 	// https://photonstorm.github.io/phaser3-docs/Phaser.Core.Config.html https://rexrainbow.github.io/phaser3-rex-notes/docs/site/game/
 	type: Phaser.WEBGL,
@@ -103,10 +104,15 @@ export const config: Phaser.Types.Core.GameConfig & {
 
 	invite: null,
 	spectate: null,
-	user: null,
+	userId: null,
+	userToken: null,
 }
 
-export function setup(_options: {user: string | null, invite: string | null, spectate: string | null}): Phaser.Game {
+export function setup(_options: {
+	userId: string | null,
+	userToken: string | null,
+	invite: string | null,
+	spectate: string | null}): Phaser.Game {
 
 	class HomeScene extends Phaser.Scene {
 		constructor(Config: Phaser.Types.Scenes.SettingsConfig) {
@@ -140,7 +146,8 @@ export function setup(_options: {user: string | null, invite: string | null, spe
 
 	config.invite = _options.invite
 	config.spectate = _options.spectate
-	config.user = _options.user
+	config.userId = _options.userId
+	config.userToken = _options.userToken
 
 	const game = new Phaser.Game({ ...config, scene: HomeScene,  })
 	return game
