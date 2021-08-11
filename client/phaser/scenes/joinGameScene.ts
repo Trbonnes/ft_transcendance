@@ -3,6 +3,7 @@ import { io, Socket } from 'socket.io-client'
 import os from 'os'
 import { config } from '../phaserconfig'
 import { scenesList, activeScene, setActiveScene } from '../sceneManager'
+import userToken from '~/store'
 
 export default class JoinGameScene extends Phaser.Scene {
     private socket?: Socket
@@ -32,6 +33,9 @@ export default class JoinGameScene extends Phaser.Scene {
         this.add.video(config.width / 2, config.height / 2, 'loading.webm').play(true).setLoop()
 
         console.log(os.hostname())
+        console.log("USER")
+        let s = userToken()
+        console.log(s)
         this.socket = io("http://" + os.hostname() + ":3000/game", {
             transportOptions: {
                 cors : {

@@ -20,7 +20,11 @@ const store = () =>
 
       loggedInUser: (state: any) => {
         return state.auth.user
-      }
+      },
+
+      userToken: (state: any) => {
+        return state.$auth.strategy.token.get()
+      },
     },
 
     actions: {
