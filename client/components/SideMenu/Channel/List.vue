@@ -79,8 +79,8 @@ export default Vue.extend({
         this.errors.push('Channel name cannot be empty')
       if (this.isPrivate && this.channelPassword === "")
         this.errors.push('Channel password cannot be empty')
-
-      this.createChannel()
+      if (!this.errors)
+        this.createChannel()
     },
     createChannel() {
       const data: CreateChannelDto = {

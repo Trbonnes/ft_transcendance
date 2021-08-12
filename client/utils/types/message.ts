@@ -1,5 +1,8 @@
 interface Message {
-  sender: string
+  id: string
+  channelId: string
+  senderId: string
+  content: string
 }
 
 interface ChannelMessageDto {
@@ -8,4 +11,4 @@ interface ChannelMessageDto {
   content: string
 }
 
-export { ChannelMessageDto }
+export { ChannelMessageDto, Message }

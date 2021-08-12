@@ -1,3 +1,5 @@
+import { Message } from '~/utils/types/message'
+
 interface Channel {
   id: string
   password: string
@@ -7,7 +9,7 @@ interface Channel {
   createdDate: Date
   lastUpdated: Date
   members: any[]
-  // messages: Messages[]
+  messages: Message[] = []
 }
 
 interface CreateChannelDto {
