@@ -1,6 +1,6 @@
 import { RefreshController, Token } from "@nuxtjs/auth-next";
 
-export default Vue.extend ({
+export default {
   // Disable server-side rendering (https://go.nuxtjs.dev/ssr-mode)
   ssr: false,
   target: 'static',
@@ -152,4 +152,4 @@ export default Vue.extend ({
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
-})
+}
