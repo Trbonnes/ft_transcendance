@@ -15,12 +15,24 @@ export default Vue.extend({
 		return { error: false, game: undefined as Phaser.Game | undefined }
 	},
 	async mounted() {
-		if (!this.error) this.game = setup({
-			userId: null,
-			userToken: null,
-			invite: null,
-			spectate: null})
+		if (this.$auth.loggedIn && this.$auth.user !== null) {
+			const user: any  = this.$auth.user as any
+			let token = this.getToken()
+			console.log(token)
+			console.log(user.id)
+			if (!this.error) this.game = setup({
+				userId: user.id,
+				userToken: token,
+				invite: null,
+				spectate: null})
+		}
 	},
+
+	methods: {
+		getToken() {
+			return this.$auth.strategy.token.get()
+		}
+	}
 })
 </script>
 
