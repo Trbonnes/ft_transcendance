@@ -9,7 +9,7 @@ interface Channel {
   createdDate: Date
   lastUpdated: Date
   members: any[]
-  messages: Message[] = []
+  messages: Message[]
 }
 
 interface CreateChannelDto {

@@ -25,17 +25,16 @@ export default class ChannelModule extends VuexModule {
   }
 
   @Action
-  message(msg : Message)
-  {
+  message(msg: Message) {
     try {
-      this.context.commit('pushMessage', { "channelId" : msg.channelId, "message" : msg })
-    }
-    catch(err: any)
-    {
+      this.context.commit('pushMessage', {
+        channelId: msg.channelId,
+        message: msg,
+      })
+    } catch (err: any) {
       console.log(err)
       console.log(msg)
       // TODO error handlign properly
-
     }
   }
 
@@ -50,30 +49,31 @@ export default class ChannelModule extends VuexModule {
   }
 
   @Mutation
-  pushMessage({channelId, message})
-  {
-    console.log("A new message has been received !")
-    this.channelList.forEach(channel => { // TODO maybe change it to a dictionnary instand of a list to reduce complexity
-      if (channel.id == message.chaeannnelId)
-      {
+  pushMessage({ channelId, message }) {
+    console.log('A new message has been received !')
+
+    this.channelList.forEach((channel) => {
+      // TODO maybe change it to a dictionnary instand of a list to reduce complexity
+      if (channel.id == channelId) {
+        console.log('Actually found a channel with some stuff in it')
+        console.log(channel)
+
         channel.messages.push(message)
-        return;
+        return
       }
-    });
+    })
   }
 
   get all() {
     return this.channelList
   }
 
-  get getOne()
-  {
-    return ((id :string ) => {
-      for (let i = 0; i  < this.channelList.length; i++) {
-        const element = this.channelList[i];
-        if (element.id == id)
-          return element
+  get getOne() {
+    return (id: string) => {
+      for (let i = 0; i < this.channelList.length; i++) {
+        const element = this.channelList[i]
+        if (element.id == id) return element
       }
-    })
+    }
   }
 }

@@ -90,7 +90,12 @@ export class ChatGateway {
     console.log('it seems that a message has been received');
     if (dto.content.trim() === '') return;
     if (client.rooms.has(dto.channelId)) {
-      this.server.in(dto.channelId).emit('channel/message', { "id" : "sasdffasdf", "senderId" : this.activeClients.get(client.id), "channelId": dto.channelId, "content" : dto.content})
+      this.server.in(dto.channelId).emit('channel/message', {
+        id: 'sasdffasdf',
+        senderId: this.activeClients.get(client.id).id,
+        channelId: dto.channelId,
+        content: dto.content,
+      });
       console.log('Message received for a room that is valid !');
       console.log(dto.content.trim());
     }
