@@ -1,7 +1,10 @@
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
 import { Socket, Server, Namespace } from 'socket.io'
 import { AppService } from './app.service'
+import { AuthService } from './auth/auth.service';
+import { User } from './entities/user.entity';
 import GameState from './GameState.class'
+import { UsersService } from './users/users.service';
 
 @WebSocketGateway({
   namespace: 'game',
@@ -13,7 +16,10 @@ export class GameGateway {
   protected rooms: Map<string, GameState>
   protected clients: Map<string, string>
 
-  constructor(private AppService: AppService) {
+  constructor(
+      protected readonly usersService: UsersService,
+      protected readonly authService: AuthService,
+      private AppService: AppService) {
     this.rooms = new Map<string, GameState>()
     this.clients = new Map<string, string>()
   }
@@ -27,14 +33,19 @@ export class GameGateway {
     let data = client.handshake
     let joined = false
     
-    const token = data.headers.authorization.split(' ')[1]
     const userId = data.headers.user_id
-    console.log("IN GATEWAY")
-    console.log("token " + token)
-    console.log("userId " + userId)
-    console.log('spectate: ', data.query['spectate'])
-    console.log('friend: ', data.query['friend'])
-
+    
+    try {
+      const token = data.headers.authorization.split(' ')[1]
+      let authData = this.authService.validateTokenSync(token);
+      if (authData == null) {
+        client.disconnect();
+        return;
+      }
+    } catch (error: any) {
+      console.log(error)
+      client.disconnect();
+    }
     if (data.query['spectate']) {
       for (let gameRoom of this.rooms.keys()) {
         if (gameRoom == data.query['spectate']

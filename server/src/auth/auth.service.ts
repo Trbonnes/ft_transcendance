@@ -16,9 +16,21 @@ export class AuthService {
 			const value = await this.jwtService.verify(accessToken);
 			return (value);
 		} catch (err) {
+			console.log("Promise null")
 			return null;
 		}
 	}
+
+	validateTokenSync(accessToken: string) {
+		try {
+			const value = this.jwtService.verify(accessToken);
+			return value;
+		}
+		catch (e: any) {
+			return null;
+		}
+	}
+
 
 	async generateToken(payload: any, args?: any): Promise<string> {
 		return this.jwtService.sign(payload, args)
