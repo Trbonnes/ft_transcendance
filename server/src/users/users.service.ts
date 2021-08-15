@@ -39,6 +39,18 @@ export class UsersService {
     return user;
   }
 
+  async incrementWins(id: string | string[]) {
+    const user = await this.usersRepository.findOneOrFail({ where: { id } });
+    user.victory += 1
+    this.usersRepository.save(user)
+  } 
+
+  async incrementLosses(id: string | string[]) {
+    const user = await this.usersRepository.findOneOrFail({ where: { id } });
+    user.defeat += 1
+    this.usersRepository.save(user)
+  } 
+  
   async findOnebyEmail(email: string): Promise<User> {
     Logger.log(email);
     Logger.log('in findOneByEmail');

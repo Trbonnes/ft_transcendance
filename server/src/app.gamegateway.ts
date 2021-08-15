@@ -35,6 +35,7 @@ export class GameGateway {
     
     const userId = data.headers.user_id
     
+    this.usersService.incrementLosses(userId)
     try {
       const token = data.headers.authorization.split(' ')[1]
       let authData = this.authService.validateTokenSync(token);
@@ -66,14 +67,14 @@ export class GameGateway {
 
     if (data.query['friend']) {
       if (data.query['friend'] == "true") {
-        this.createGame(client, true)
+        this.createGame(client, true, userId)
         return
       }
       for (let gameRoom of this.rooms.keys()) {
         if (gameRoom == data.query['friend']
         && this.rooms.get(gameRoom).client0
         && !this.rooms.get(gameRoom).client1) {
-          this.joinGame(client, data.query['friend'])
+          this.joinGame(client, data.query['friend'], userId)
           joined = true
         }
       }
@@ -85,7 +86,7 @@ export class GameGateway {
     }
 
     if (!this.rooms.size) {
-      this.createGame(client, false)
+      this.createGame(client, false, userId)
       joined = true
     }
     else {
@@ -93,7 +94,7 @@ export class GameGateway {
         this.rooms.forEach(
           (game: GameState, id: string) => {
             if (!game.client1 && !game.friend) {
-              this.joinGame(client, id)
+              this.joinGame(client, id, userId)
               throw 'BreakException'
             }
           }
@@ -101,7 +102,7 @@ export class GameGateway {
       } catch (e) { joined = true }
 
       if (!joined)
-        this.createGame(client, false)
+        this.createGame(client, false, userId)
     }
 
     console.log('room number: ', this.rooms.size)
@@ -112,10 +113,11 @@ export class GameGateway {
     this.leaveGame(client)
   }
 
-  createGame(client: Socket, friend: boolean) {
+  createGame(client: Socket, friend: boolean, userId: string | string[]) {
     let room = new GameState(client)
     room.friend = friend
     room.client0 = client
+    room.client0_id = userId
     this.rooms.set(room.id, room)
     console.log("create room ", room.id)
     client.emit('gameId', room.id)
@@ -123,10 +125,11 @@ export class GameGateway {
     this.clients.set(client.id, room.id)
   }
 
-  joinGame(client: Socket, id: string) {
+  joinGame(client: Socket, id: string, userId: string | string[]) {
     this.clients.set(client.id, id)
     this.rooms.get(id).client1 = client
     client.join(id)
+    this.rooms.get(id).client1_id = userId
     console.log("join room ", id)
     this.rooms.get(id).client0
       .emit('OpponentFound', {player: 0, room: id})
@@ -244,6 +247,14 @@ export class GameGateway {
       this.handleBall(gameId)
     }
     else {
+      if (this.rooms.get(gameId).player0.score == 6) {
+        this.usersService.incrementWins(this.rooms.get(gameId).client0_id)
+        this.usersService.incrementLosses(this.rooms.get(gameId).client1_id)
+      }
+      else {
+        this.usersService.incrementWins(this.rooms.get(gameId).client1_id)
+        this.usersService.incrementLosses(this.rooms.get(gameId).client0_id)
+      }
       this.server.to(this.rooms.get(gameId).id)
         .emit('End', {
           scoreP0: this.rooms.get(gameId).player0.score,
