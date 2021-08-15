@@ -27,6 +27,11 @@ export class GameGateway {
     let data = client.handshake
     let joined = false
     
+    const token = data.headers.authorization.split(' ')[1]
+    const userId = data.headers.user_id
+    console.log("IN GATEWAY")
+    console.log("token " + token)
+    console.log("userId " + userId)
     console.log('spectate: ', data.query['spectate'])
     console.log('friend: ', data.query['friend'])
 
