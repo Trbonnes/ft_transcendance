@@ -35,7 +35,6 @@ export class GameGateway {
     
     const userId = data.headers.user_id
     
-    this.usersService.incrementLosses(userId)
     try {
       const token = data.headers.authorization.split(' ')[1]
       let authData = this.authService.validateTokenSync(token);
