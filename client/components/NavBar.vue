@@ -33,12 +33,12 @@
     	  		<NuxtLink to='/game' class="btn btn-ghost btn-sm rounded-btn">
     	          Play
     	        </NuxtLink> 
-    	  		<a class="btn btn-ghost btn-sm rounded-btn">
+    	  		<NuxtLink to='/' class="btn btn-ghost btn-sm rounded-btn">
     	          Friends
-    	        </a>
-    	  		<a class="btn btn-ghost btn-sm rounded-btn">
-				  Leaderboard
-    	        </a>
+    	        </NuxtLink>
+    	  		<NuxtLink to ='/leaderboard' class="btn btn-ghost btn-sm rounded-btn">
+				  Players
+    	        </NuxtLink>
     		</div>
   		</div> 
   		<div class="flex-none">
