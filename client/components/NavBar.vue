@@ -2,15 +2,34 @@
 	<div>
 		<div class="navbar shadow-lg bg-neutral text-neutral-content">
 			<div class="flex-none px-2 mx-2">
-			    <span class="text-lg font-bold">
+			    <NuxtLink to='/' class="text-lg font-bold">
 	            Ft_Transcendance
-	        	</span>
+	        	</NuxtLink>
 			</div> 
+		<div class="flex-none sm:hidden">
+			<div class="dropdown dropdown-end">
+    		<button class="btn btn-square btn-ghost" tabindex="0">
+    			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current">           
+        			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>               
+      			</svg>
+    		</button>
+			<ul tabindex="0" class="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52">
+    			<li>
+    	  			<NuxtLink to='/game'>
+    	  	        	Play
+    	  	    	</NuxtLink> 
+    			</li> 
+    			<li>
+		    		<a>Item 2</a>
+		    	</li> 
+		    	<li>
+					<a>Item 3</a>
+		    	</li>
+		  	</ul>
+			</div>
+  		</div> 
   		<div class="flex-1 px-2 mx-2">
-    		<div class="items-stretch hidden lg:flex">
-    	  		<NuxtLink to='/' class="btn btn-ghost btn-sm rounded-btn">
-    	          Home
-    	        </NuxtLink> 
+    		<div class="items-stretch hidden sm:flex">
     	  		<NuxtLink to='/game' class="btn btn-ghost btn-sm rounded-btn">
     	          Play
     	        </NuxtLink> 

@@ -30,7 +30,7 @@ export default Vue.extend({
 
 	methods: {
 		getToken() {
-			return this.$auth.strategy.token.get()
+			return (this.$auth.strategy as any).token.get()
 		}
 	}
 })
