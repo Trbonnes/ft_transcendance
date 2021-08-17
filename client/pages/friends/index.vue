@@ -27,7 +27,14 @@ import {Component} from 'nuxt-property-decorator'
 		}
 	)
 	export default class Leaderboard extends Vue {
+
+		mounted() {
+			if (this.$auth.loggedIn)
+				this.$auth.fetchUser
+		}
+
 		friendsRequests: any[] = []
+		userFriends: any[] = []
 		
 		async fetch() {
 			this.friendsRequests = await this.$axios.$get('/friends/requests')
