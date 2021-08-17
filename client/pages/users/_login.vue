@@ -12,7 +12,6 @@
 						  <p class="sm:text-sm">Level: {{ user.level }}</p>
 					</div>
 					<div v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id">
-						<p>llol</p>
 						<friend-button @update="updateFriend" :friendStatus="friendStatus"/>
 					</div>
 					<div class="flex flex-1 flex-row m-5 justify-center">
@@ -32,6 +31,7 @@
 					<div class="flex justify-center">
   						<button v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id" class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">Challenge</button>
 					</div>
+					<button @click="showuser"> click </button>
   			</div>
 		</section>
 
@@ -51,7 +51,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		friendRequests:any[] = [];
 
 		mounted() {
-			if (this.$auth.loggedIn)
+			if (this.$auth.loggedIn) 
 				this.$auth.fetchUser()
 		}
 
@@ -66,20 +66,27 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 			return ({user});
 		}
 
+		async fetch() {
+			this.friendRequests = await this.$axios.$get(`/friends/requests`)
+		}
+
 		async fetchRequests() {
 			this.friendRequests = await this.$axios.$get(`/friends/requests`)
 		}
 
 		get friendStatus(): FriendStatus {
-			const friends = (this.$auth.user as any)
-			console.log(friends)
-	//		if ((friends as any[]).map(friend => friend.id).indexOf(this.user.id) !== -1)
-	//			return FriendStatus.FRIEND
-	//		if (this.friendRequests.filter(request => request.sender.id === this.user.id).length > 0)
-	//			return FriendStatus.PENDING_RECEIPIENT
-	//		if (this.friendRequests.filter(request => request.receipient.id === this.user.id).length > 0)
-	//			return FriendStatus.PENDING_SENDER
-	//		return FriendStatus.NOT_FRIEND
+			if (this.friendRequests.filter(request => request.sender.id === this.user.id).length > 0)
+				return FriendStatus.PENDING_RECEIPIENT
+			if (this.friendRequests.filter(request => request.receipient.id === this.user.id).length > 0)
+				return FriendStatus.PENDING_SENDER
+			const friends = (this.$auth.user as any).friends
+			if (friends == null) {
+				return FriendStatus.NOT_FRIEND
+				console.log("Friends null")
+			}
+			if ((friends as any[]).map(friend => friend.id).indexOf(this.user.id) !== -1)
+				return FriendStatus.FRIEND
+			return FriendStatus.NOT_FRIEND
 		}
 
 		async updateFriend(friendStatus: FriendStatus) {
@@ -119,6 +126,10 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 				})
 			}
 			await this.fetchRequests()
+		}
+
+		showuser() {
+			console.log(this.friendRequests)
 		}
 		
 	}

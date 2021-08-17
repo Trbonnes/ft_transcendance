@@ -157,27 +157,39 @@ export class UsersService {
 
   // add friend
   async addFriend(sender: User, receipient: User): Promise<User | undefined> {
-    const alreadyFriends = sender.friends.map(friend => friend.id).indexOf(sender.id) !== -1
+    let alreadyFriends = false;
+    if (sender.friends == null)
+      alreadyFriends = false;
+    else 
+      alreadyFriends = sender.friends.map(friend => friend.id).indexOf(sender.id) !== -1
     if (!alreadyFriends) {
-      sender.friends.push(receipient)
+      if (sender.friends == null)
+        sender.friends = [receipient]
+      //sender.friends.push(receipient)
+      if (receipient.friends == null)
+        receipient.friends = [sender]
+      //receipient.friends.push(sender)
     }
+    this.usersRepository.save(receipient)
     return !alreadyFriends ? this.usersRepository.save(sender) : undefined
   }
 
   // remove friend
   async removeFriend(userId: string, friendId: string) {
-    const friend1 = await this.usersRepository.findOne(userId, {relations: ['friends']})
-    const friend = await this.usersRepository.findOne(friendId, {relations: ['friends']})
+    const user = await this.usersRepository.findOne(userId)
+    const friend = await this.usersRepository.findOne(friendId)
 
-    const user = friend1.friends.filter(fd => fd.id === friend.id || fd.id === friend1.id).length > 0? friend1: friend;
-    const otherUser = friend1.friends.filter(fd => fd.id === friend.id || fd.id === friend1.id).length === 0? friend1: friend;
-    const index = user.friends.map(fd => fd.id).indexOf(otherUser.id);
+    const index = user.friends.map(fd => fd.id).indexOf(friend.id);
 
     if (index === -1)
       throw new HttpException({
         error: `This user is not in your friends' list`
       }, HttpStatus.BAD_REQUEST)
     user.friends.splice(index, 1)
+
+    const index2 = friend.friends.map(fd => fd.id).indexOf(user.id)
+    friend.friends.splice(index2, 1)
+    this.usersRepository.save(friend)
     return this.usersRepository.save(user)
   }
 
