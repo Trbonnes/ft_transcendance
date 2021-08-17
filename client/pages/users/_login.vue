@@ -10,7 +10,7 @@
 						<button class="inline-flex text-white bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-sm mb-5" v-if="this.$auth.loggedIn && this.$auth.user.id === user.id">
 							Change display name </button>
 						  <p class="sm:text-sm">Level: {{ user.level }}</p>
-					<div class="flex flex-1 flex-row m-5 justify-center lg:w-3/3">
+					<div class="flex flex-1 flex-row m-5 justify-center">
 							<div class="card shadow compact m-3 flex-grow">
   								<div class="card-body">
  								   <h2 class="card-title">Victories</h2> 

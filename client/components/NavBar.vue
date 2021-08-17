@@ -20,10 +20,10 @@
     	  	    	</NuxtLink> 
     			</li> 
     			<li>
-		    		<a>Item 2</a>
+		    		<NuxtLink to='/friends'>Friends</NuxtLink>
 		    	</li> 
 		    	<li>
-					<a>Item 3</a>
+					<NuxtLink to='/leaderboard'>Players</NuxtLink>
 		    	</li>
 		  	</ul>
 			</div>
@@ -33,7 +33,7 @@
     	  		<NuxtLink to='/game' class="btn btn-ghost btn-sm rounded-btn">
     	          Play
     	        </NuxtLink> 
-    	  		<NuxtLink to='/' class="btn btn-ghost btn-sm rounded-btn">
+    	  		<NuxtLink to='/friends' class="btn btn-ghost btn-sm rounded-btn">
     	          Friends
     	        </NuxtLink>
     	  		<NuxtLink to ='/leaderboard' class="btn btn-ghost btn-sm rounded-btn">

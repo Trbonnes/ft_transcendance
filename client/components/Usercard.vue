@@ -3,7 +3,7 @@
 		<NuxtLink :to="`/users/${user.login}`" class="card shadow m-5">
 		  <div class="card-body">
 			  <div class="flex">
-				<p class="flex mx-left self-center m-3">{{rank}}</p>
+				<p class="flex mx-left self-center m-3">{{index}}</p>
 				<div class="avatar">
   					<div class="m-3 rounded-full w-24 h-24">
     					<img :src="user.avatar">
@@ -27,7 +27,7 @@ import {Component, Prop} from "nuxt-property-decorator"
 	@Component
 	export default class UserCard extends Vue {
 		@Prop({required: true}) user: any
-		@Prop({required: true}) rank: any
+		@Prop({required: true}) index: any
 		
 	}
 </script>
