@@ -10,6 +10,11 @@
 						<button class="inline-flex text-white bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-sm mb-5" v-if="this.$auth.loggedIn && this.$auth.user.id === user.id">
 							Change display name </button>
 						  <p class="sm:text-sm">Level: {{ user.level }}</p>
+					</div>
+					<div v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id">
+						<p>llol</p>
+						<friend-button @update="updateFriend" :friendStatus="friendStatus"/>
+					</div>
 					<div class="flex flex-1 flex-row m-5 justify-center">
 							<div class="card shadow compact m-3 flex-grow">
   								<div class="card-body">
@@ -24,11 +29,9 @@
   								</div>
 							</div>
 					</div>
-      							<div class="flex justify-center">
-        							<button v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id" class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">Challenge</button>
-        								<button v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id" class="ml-4 inline-flex text-gray-700 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg">Add as friend</button>
-      							</div>
-    				</div>
+					<div class="flex justify-center">
+  						<button v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id" class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">Challenge</button>
+					</div>
   			</div>
 		</section>
 
@@ -39,11 +42,13 @@
 import { Context } from '@nuxt/types'
 import { Component } from 'nuxt-property-decorator'
 import Vue from 'vue'
+import {FriendStatus} from '~/utils/enums/friends-request.enum'
 
 	@Component
 	export default class Profile extends Vue {
 
 		user:any = null;
+		friendRequests:any[] = [];
 
 		mounted() {
 			if (this.$auth.loggedIn)
@@ -59,6 +64,61 @@ import Vue from 'vue'
 					})
 				})
 			return ({user});
+		}
+
+		async fetchRequests() {
+			this.friendRequests = await this.$axios.$get(`/friends/requests`)
+		}
+
+		get friendStatus(): FriendStatus {
+			const friends = (this.$auth.user as any)
+			console.log(friends)
+	//		if ((friends as any[]).map(friend => friend.id).indexOf(this.user.id) !== -1)
+	//			return FriendStatus.FRIEND
+	//		if (this.friendRequests.filter(request => request.sender.id === this.user.id).length > 0)
+	//			return FriendStatus.PENDING_RECEIPIENT
+	//		if (this.friendRequests.filter(request => request.receipient.id === this.user.id).length > 0)
+	//			return FriendStatus.PENDING_SENDER
+	//		return FriendStatus.NOT_FRIEND
+		}
+
+		async updateFriend(friendStatus: FriendStatus) {
+			if (friendStatus === FriendStatus.NOT_FRIEND) {
+				this.$axios.post(`/friends/requests`, {
+					receipient: {
+						id: this.user.id
+					}
+				}).then((result) => {
+					this.friendRequests.push(result.data)
+				}).catch((error) => {
+
+				})
+			}
+			else if (friendStatus === FriendStatus.FRIEND) {
+				this.$axios.delete(`friends`, {
+					data: {
+						friend: {
+							id: this.user.id
+						}
+					}
+				}).then(() => {
+					this.$auth.fetchUser()
+				}).catch((error) => {
+
+				})
+			}
+			else if (friendStatus === FriendStatus.PENDING_RECEIPIENT) {
+				this.$axios.post(`/friends/accept`, {
+					sender: {
+						id: this.user.id
+					}
+				}).then(() => {
+					this.$auth.fetchUser()
+				}).catch((error) => {
+
+				})
+			}
+			await this.fetchRequests()
 		}
 		
 	}
