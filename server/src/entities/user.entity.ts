@@ -53,14 +53,13 @@ export class User {
 
 	@UpdateDateColumn()
 	lastUpdated: Date
+	
+	@Column("text", {array: true, default: '{}'})
+	public friends: string[]
 
 	@ManyToMany(() => Game, game => game.players)
 	@JoinTable()
 	public games: Game[]
-
-	@ManyToMany(() => User, user => user.friends)
-	@JoinTable()
-	public friends: User[]
 
 	@ManyToMany(() => Channel, channel => channel.members)
 	@JoinTable()

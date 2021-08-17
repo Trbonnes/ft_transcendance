@@ -75,17 +75,13 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		}
 
 		get friendStatus(): FriendStatus {
+			const friends = (this.$auth.user as any).friends
+			if ((friends as string[]).indexOf(this.user.id) !== -1)
+				return FriendStatus.FRIEND
 			if (this.friendRequests.filter(request => request.sender.id === this.user.id).length > 0)
 				return FriendStatus.PENDING_RECEIPIENT
 			if (this.friendRequests.filter(request => request.receipient.id === this.user.id).length > 0)
 				return FriendStatus.PENDING_SENDER
-			const friends = (this.$auth.user as any).friends
-			if (friends == null) {
-				return FriendStatus.NOT_FRIEND
-				console.log("Friends null")
-			}
-			if ((friends as any[]).map(friend => friend.id).indexOf(this.user.id) !== -1)
-				return FriendStatus.FRIEND
 			return FriendStatus.NOT_FRIEND
 		}
 
@@ -129,7 +125,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		}
 
 		showuser() {
-			console.log(this.friendRequests)
+			console.log(this.$auth.user)
 		}
 		
 	}
