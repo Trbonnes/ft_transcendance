@@ -3,13 +3,24 @@
 		<section class="body-font">
   			<div class="container mx-auto flex px-5 py-24 items-center justify-center flex-col">
     			<img class="lg:w-1/6 md:w-2/6 w-4/6 mb-3 object-cover object-center rounded " alt="hero" :src="user.avatar">
-				<button class="inline-flex text-white bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-sm mb-5" v-if="this.$auth.loggedIn && this.$auth.user.id === user.id">
+				<button class="inline-flex text-white bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-sm mb-5"
+						v-if="this.$auth.loggedIn && this.$auth.user.id === user.id">
 					Change avatar </button>
     				<div class="text-center lg:w-3/3 w-full">
       					<h1 class="title-font sm:text-4xl text-3xl mb-2 font-medium">Lord {{ user.displayName }}</h1>
-						<button class="inline-flex text-white bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-sm mb-5" v-if="this.$auth.loggedIn && this.$auth.user.id === user.id">
+						<button class="inline-flex text-white bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-sm mb-3"
+								v-if="this.$auth.loggedIn && this.$auth.user.id === user.id"
+								@click="toggleDisplayNameField">
 							Change display name </button>
-						  <p class="sm:text-sm">Level: {{ user.level }}</p>
+						<div v-if="inputDisplayName">
+							<div class="form-control mb-3">
+								<div class="flex space-x-2 justify-center">
+									<input type="text" placeholder="Display Name" v-model="displayNameInput" class="input input-primary input-bordered"> 
+								    <button @click="updateDisplayName" class="btn btn-primary">Save</button>
+								</div>
+							</div>
+						</div>
+						<p class="sm:text-sm">Level: {{ user.level }}</p>
 					</div>
 					<div v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id">
 						<friend-button @update="updateFriend" :friendStatus="friendStatus"/>
@@ -49,10 +60,17 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 
 		user:any = null;
 		friendRequests:any[] = [];
+		inputDisplayName:boolean = false;
+		displayNameInput:string = "";
 
 		mounted() {
 			if (this.$auth.loggedIn) 
 				this.$auth.fetchUser()
+		}
+
+		toggleDisplayNameField() {
+			this.inputDisplayName = !this.inputDisplayName;
+			console.log(this.inputDisplayName)
 		}
 
 		async asyncData({app, params, error}: Context) {
@@ -126,6 +144,19 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 
 		showuser() {
 			console.log(this.$auth.user)
+		}
+
+		updateDisplayName() {
+			this.$axios.patch('users/me', {
+				displayName: this.displayNameInput
+			}).then((result) => {
+				this.user.displayName = this.displayNameInput
+				this.$auth.fetchUser()
+				this.toggleDisplayNameField();
+			}).catch((err) => {
+				this.toggleDisplayNameField();
+				console.log("error changing display name")
+			})
 		}
 		
 	}

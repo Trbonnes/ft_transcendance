@@ -4,7 +4,7 @@ export class UpdateUserDto {
 	@IsOptional()
 	@IsString()
 	@Length(2, 20)
-	display_name:string
+	displayName:string
 
 	@IsOptional()
 	twoFactor: boolean
