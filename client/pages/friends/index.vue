@@ -11,8 +11,8 @@
 		<div>
 			<h1 class="flex mx-auto justify-center mt-10 m-5 text-3xl font-bold"> Your Friends </h1>
 		</div>
-		<div class="" v-for="(friend, number) in this.$auth.user.friends" :key="`${friend}.id`">
-			<Usercard :user="friend" :index="number + 1"/>
+		<div class="" v-for="(friendId, number) in this.$auth.user.friends" :key="`${friendId}`">
+			<IdUsercard :userId="friendId" :index="number + 1"/>
 		</div>
 	</div>
 </template>

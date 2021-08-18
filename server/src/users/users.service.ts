@@ -39,13 +39,13 @@ export class UsersService {
     return user;
   }
 
-  async findOnebyEmail(email: string): Promise<User> {
-    Logger.log(email);
-    Logger.log('in findOneByEmail');
-    const user = await this.usersRepository.findOne({ email });
-    if (user) return user;
-    throw new HttpException('No user with this email', HttpStatus.NOT_FOUND);
-  }
+  //async findOnebyCaracteristic(caracteristic: string): Promise<User> {
+  //  Logger.log(carac);
+  //  Logger.log('in findOnebyCaracteristic');
+  //  const user = await this.usersRepository.findOne({ carac });
+  //  if (user) return user;
+  //  throw new HttpException('No user with this email', HttpStatus.NOT_FOUND);
+  //}
 
   async searchByName(name: string): Promise<any> {
     const manager = getManager();
@@ -56,7 +56,7 @@ export class UsersService {
     return res;
   }
 
-  async findOnebyId(id: string): Promise<User> {
+  async findOneById(id: string): Promise<User> {
     Logger.log(id);
     Logger.log('in findOneById');
     const user = await this.usersRepository.findOne({ id });
@@ -143,14 +143,14 @@ export class UsersService {
   }
 
   async setTwoFactorCode(userId: string, token: string) {
-    let user = await this.findOnebyId(userId);
+    let user = await this.findOneById(userId);
     user.twoFactorCode = token;
     await this.sendTwoFactorMail(user, token);
     return this.usersRepository.save(user);
   }
 
   async removeTwoFactorCode(userId: string) {
-    let user = await this.findOnebyId(userId);
+    let user = await this.findOneById(userId);
     user.twoFactorCode = '';
     return this.usersRepository.save(user);
   }

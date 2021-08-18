@@ -112,7 +112,7 @@ export class AuthController {
 	@UseGuards(JwtAuthGuard)
 	@Get("/user")
 	async user(@Req() request, @Res() response: Response) {
-		const user = await this.usersService.findOnebyId(request.user.id);
+		const user = await this.usersService.findOneById(request.user.id);
 		return response.status(200).json(user);
 	}
 
