@@ -19,6 +19,12 @@ import {Component} from 'nuxt-property-decorator'
 		}
 	)
 	export default class Leaderboard extends Vue {
+
+		mounted() {
+			if (this.$auth.loggedIn)
+				this.$auth.fetchUser()
+		}
+
 		users: any[] = []
 		
 		async fetch() {

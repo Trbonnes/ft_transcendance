@@ -16,6 +16,7 @@ export default Vue.extend({
 	},
 	async mounted() {
 		if (this.$auth.loggedIn && this.$auth.user !== null) {
+			this.$auth.fetchUser()
 			const user: any  = this.$auth.user as any
 			let token = this.getToken()
 			console.log(token)

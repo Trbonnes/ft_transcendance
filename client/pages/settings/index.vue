@@ -26,9 +26,12 @@ import { Component } from "nuxt-property-decorator"
 		middleware: ['auth']
 	})
 	export default class Settings extends Vue {
+
 		twoFactor:boolean = false;
 
 		mounted() {
+			if (this.$auth.loggedIn)
+				this.$auth.fetchUser()
 			this.twoFactor = (this.$auth.user as any).twoFactor;
 		}
 

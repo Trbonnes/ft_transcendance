@@ -30,7 +30,7 @@ import {Component} from 'nuxt-property-decorator'
 
 		mounted() {
 			if (this.$auth.loggedIn)
-				this.$auth.fetchUser
+				this.$auth.fetchUser()
 		}
 
 		friendsRequests: any[] = []
