@@ -8,7 +8,11 @@ function createWebSocketPlugin(store: any) {
   console.log('Initializing the websocket ')
   console.log('Hostname: ' + os.hostname())
   socket = io('http://' + os.hostname() + ':3000/chat', {
-    transportOptions: {
+  //   extraHeaders: {
+  //     "Authorization": config.userToken,
+  //     "user_id": config.userId
+  // },
+transportOptions: {
       cors: {
         origin: '*',
       },

@@ -49,6 +49,10 @@ export default class JoinFriendScene extends Phaser.Scene {
 
         console.log(os.hostname())
         this.socket = io("http://" + os.hostname() + ":3000/" + gateway, {
+            extraHeaders: {
+                "Authorization": config.userToken,
+                "user_id": config.userId
+            },
             transportOptions: {
                 cors : {
                     origin: '*'
