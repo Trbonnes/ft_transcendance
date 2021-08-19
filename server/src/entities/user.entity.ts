@@ -27,6 +27,12 @@ export class User {
 	@Column()
 	avatar: string = "" // link to the image
 
+	@Column()
+	defaultAvatar: string = "" // link to default 42 intra avatar
+
+	@Column()
+	avatarFileName: string = "" // custom avatar file name
+
   	@Column()
 	isActive: boolean = false
 

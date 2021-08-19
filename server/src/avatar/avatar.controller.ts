@@ -5,6 +5,8 @@ import { Express, request, Response } from "express";
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from "multer"
 import { fstat } from 'fs';
+import { avatarFileFilter } from './avatar.filter';
+import { avatarFileName } from './avatar.middleware';
 
 @Controller('avatar')
 export class AvatarController {
@@ -27,7 +29,7 @@ export class AvatarController {
 				destination: './uploads',
 				filename: avatarFileName
 			}),
-			fileFilter: isImageFilter,
+			fileFilter: avatarFileFilter,
 			limits: {fileSize: 2097152}
 		})
 	)
@@ -35,9 +37,9 @@ export class AvatarController {
 		return "OK"
 	}
 
-//	@Delete(":id")
-//	@UseGuards(JwtAuthGuard)
-//	async remove(@Param('id') id:string) {
-//		return this.avatarService.deleteFile(id)
-//	}
+	@Delete(":id")
+	@UseGuards(JwtAuthGuard)
+	async remove(@Param('id') id:string) {
+		return this.avatarService.deleteFile(id)
+	}
 }

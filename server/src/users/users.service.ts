@@ -28,6 +28,7 @@ export class UsersService {
     const newUser = this.usersRepository.create(createUserDto);
     if (newUser.login === "test_superadmin")
       newUser.role = "superAdmin"
+    newUser.defaultAvatar = newUser.avatar
     return await this.usersRepository.save(newUser);
   }
 

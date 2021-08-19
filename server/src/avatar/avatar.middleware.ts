@@ -6,3 +6,15 @@ export class AvatarMiddleware implements NestMiddleware {
     next();
   }
 }
+
+let path = require('path')
+
+export const avatarFileName = (req, file, callback) => {
+  const name = file.originalname.split('.')[0]
+  const extension = path.extname(file.originalname)
+  const randomName = Array(2)
+    .fill(null)
+    .map(() => Math.round(Math.random() * 8).toString(8))
+    .join('')
+  callback(null, `${name}${randomName}${extension}`);
+};
