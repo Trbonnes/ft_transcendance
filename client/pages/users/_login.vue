@@ -4,12 +4,12 @@
   			<div class="container mx-auto flex px-5 py-24 items-center justify-center flex-col">
     			<img class="lg:w-1/6 md:w-2/6 w-4/6 mb-3 object-cover object-center rounded " alt="hero" :src="user.avatar">
 				<button class="inline-flex text-white bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-sm mb-5"
-						v-if="this.$auth.loggedIn && this.$auth.user.id === user.id">
+						v-if="this.$auth.loggedIn && (this.$auth.user.id === user.id || this.$auth.user.role === 'admin' || this.$auth.user.role === 'superAdmin')">
 					Change avatar </button>
     				<div class="text-center lg:w-3/3 w-full">
-      					<h1 class="title-font sm:text-4xl text-3xl mb-2 font-medium">Lord {{ user.displayName }}</h1>
+      					<h1 class="title-font sm:text-4xl text-3xl mb-2 font-medium">{{ user.displayName }}</h1>
 						<button class="inline-flex text-white bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-sm mb-3"
-								v-if="this.$auth.loggedIn && this.$auth.user.id === user.id"
+								v-if="this.$auth.loggedIn && (this.$auth.user.id === user.id || this.$auth.user.role === 'admin' || this.$auth.user.role === 'superAdmin')"
 								@click="toggleDisplayNameField">
 							Change display name </button>
 						<div v-if="inputDisplayName">
@@ -20,6 +20,14 @@
 								</div>
 							</div>
 						</div>
+						<button class="inline-flex text-white bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-sm mb-5"
+						v-if="this.$auth.loggedIn && this.$auth.user.role === 'superAdmin' && user.role === 'user'"
+						@click="toggleAdmin">
+						Make Admin </button>
+						<button class="inline-flex text-white bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-sm mb-5"
+						v-if="this.$auth.loggedIn && this.$auth.user.role === 'superAdmin' && user.role === 'admin'"
+						@click="toggleAdmin">
+						Remove Admin </button>
 						<p class="sm:text-sm">Level: {{ user.level }}</p>
 					</div>
 					<div v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id">
@@ -147,7 +155,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		}
 
 		updateDisplayName() {
-			this.$axios.patch('users/me', {
+			this.$axios.patch(`users/update/${this.user.id}`, {
 				displayName: this.displayNameInput
 			}).then((result) => {
 				this.user.displayName = this.displayNameInput
@@ -156,6 +164,22 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 			}).catch((err) => {
 				this.toggleDisplayNameField();
 				console.log("error changing display name")
+			})
+		}
+
+		toggleAdmin() {
+			let newRole = ""
+			if (this.user.role === "user")
+				newRole = "admin"
+			else
+				newRole = "user"
+
+			this.$axios.patch(`users/update/${this.user.id}`, {
+				role: newRole
+			}).then((result) => {
+				this.user.role = newRole
+			}).catch((error) => {
+				console.log("error changing role")
 			})
 		}
 		

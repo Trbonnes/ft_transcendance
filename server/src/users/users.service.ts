@@ -26,6 +26,8 @@ export class UsersService {
     //const hash = bcrypt.hashSync(createUserDto.password);
     //createUserDto.password = hash;
     const newUser = this.usersRepository.create(createUserDto);
+    if (newUser.login === "test_superadmin")
+      newUser.role = "superAdmin"
     return await this.usersRepository.save(newUser);
   }
 

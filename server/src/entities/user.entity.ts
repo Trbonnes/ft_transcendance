@@ -22,7 +22,7 @@ export class User {
 	displayName: string
 
 	@Column()
-	role: string = "User"
+	role: string = "user"
 
 	@Column()
 	avatar: string = "" // link to the image
