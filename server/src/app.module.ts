@@ -15,6 +15,7 @@ import { BorderlessGateway } from './app.borderlessgateway';
 import { ChatGateway } from './app.chatgateway';
 import { AuthController } from './auth/auth.controller';
 import { FriendsModule } from './friends/friends.module';
+import { AvatarModule } from './avatar/avatar.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { FriendsModule } from './friends/friends.module';
       }),
     }),
     FriendsModule,
+    AvatarModule,
   ],
   controllers: [AppController],
   providers: [AppService, GameGateway, ChatGateway, BorderlessGateway],
