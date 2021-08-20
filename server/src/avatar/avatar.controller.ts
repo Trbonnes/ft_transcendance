@@ -21,7 +21,7 @@ export class AvatarController {
 		return null;
 	}
 
-	@Post(":id")
+	@Post(":filename")
 	@UseGuards(JwtAuthGuard)
 	@UseInterceptors(
 		FileInterceptor('file', {
