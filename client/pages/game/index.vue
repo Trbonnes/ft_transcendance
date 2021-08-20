@@ -19,8 +19,6 @@ export default Vue.extend({
 			this.$auth.fetchUser()
 			const user: any  = this.$auth.user as any
 			let token = this.getToken()
-			console.log(token)
-			console.log(user.id)
 			if (!this.error) this.game = setup({
 				userId: user.id,
 				userToken: token,

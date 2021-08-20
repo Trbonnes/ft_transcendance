@@ -178,13 +178,11 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 				this.toggleDisplayNameField();
 			}).catch((err) => {
 				this.toggleDisplayNameField();
-				console.log("error changing display name")
+				this.$toast.error("Name already taken")
 			})
 		}
 
 		updateAvatar(filename: any) {
-			//console.log(filename.filename);
-			//const file:string = filename.filename
 			const avatarFileName = filename.filename
 			const avatar = `http://localhost:3000/avatar/${filename.filename}`
 			this.$axios.patch(`users/update/${this.user.id}`, {

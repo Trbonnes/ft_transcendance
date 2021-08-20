@@ -37,7 +37,6 @@ import {Component, Prop} from "nuxt-property-decorator"
 		
 		async fetch() {
 			this.user = await this.$axios.$get('/users/' + this.userId)
-			console.log(this.user)
 		}
 
 		async fetchUser() {

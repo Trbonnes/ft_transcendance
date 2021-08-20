@@ -1,5 +1,5 @@
 <template>
-    <div class="hero min-h-screen" style="background-image: url(&quot;https://images.unsplash.com/photo-1511067007398-7e4b90cfa4bc?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGluZyUyMHBvbmclMjB0YWJsZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80&quot;);">
+    <div class="hero min-h-screen bg-center" style="background-image: url(&quot;https://images.unsplash.com/photo-1511067007398-7e4b90cfa4bc?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGluZyUyMHBvbmclMjB0YWJsZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80&quot;);">
       <div class="hero-overlay bg-opacity-65"></div> 
       <div class="text-center hero-content text-neutral-content">
         <div class="max-w-md">
@@ -26,7 +26,7 @@ export default Vue.extend({
         let response = await this.$auth.logout()
         this.$router.replace('/login')
       } catch (err) {
-        console.log(err)
+        this.$toast.error("Logging out failed")
       }
     },
 

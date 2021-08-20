@@ -40,10 +40,11 @@ import { Component, Prop } from 'nuxt-property-decorator'
 						filename: response.data
 					})
 				}).catch((error) => {
+					this.$toast.error("File upload error. Please check file size.")
 
 				})
 			} else {
-				console.log("no file provided")
+				this.$toast.error("No file provided")
 			}
 		}
 

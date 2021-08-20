@@ -32,7 +32,6 @@
 		methods: {
 			login() {
 				const code = this.$route.query.code as string;
-				console.log(code);
 				if (code !== '') {
 					this.$auth.loginWith('localrefresh', {
 						data : {
