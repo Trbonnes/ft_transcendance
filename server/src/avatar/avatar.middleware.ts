@@ -20,6 +20,11 @@ let path = require('path')
 //};
 
 export const avatarFileName = (req, file, callback) => {
-  const name = file.originalname
-  callback(null, `${name}`)
+  const name = file.originalname.split('.')[0]
+  const extension = path.extname(file.originalname)
+  const randomString = Array(2)
+    .fill(null)
+    .map(() => Math.round(Math.random() * 8).toString(8))
+    .join('')
+  callback(null, `${name}${randomString}${extension}`)
 }

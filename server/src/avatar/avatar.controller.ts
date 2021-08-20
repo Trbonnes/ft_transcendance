@@ -13,7 +13,6 @@ export class AvatarController {
 	constructor(private avatarService: AvatarService) {}
 
 	@Get(":file")
-	@UseGuards(JwtAuthGuard)
 	async findOne(@Param('file') file:string, @Res() res: Response) {
 		const fs = require("fs");
 		if (fs.existsSync(`./uploads/${file}`))
@@ -33,8 +32,8 @@ export class AvatarController {
 			limits: {fileSize: 2097152}
 		})
 	)
-	addAvatar(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
-		return "OK"
+	addAvatar(@Param('filename') filename: string, @UploadedFile() file: Express.Multer.File) {
+		return file.filename
 	}
 
 	@Delete(":id")

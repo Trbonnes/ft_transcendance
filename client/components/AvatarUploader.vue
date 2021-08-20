@@ -1,7 +1,8 @@
 <template>
-	<div>
+	<div class="items-center">
 		<input type="file" ref="file" @change="uploadImage($event)" accept="image/png, image/jpeg" class="hidden">
 		<button class="btn" @click="$refs.file.click()"> Choose File </button>
+		<label class="ml-2">2 Mo file max</label>
 	</div>
 </template>
 
@@ -17,7 +18,9 @@ import { Component, Prop } from 'nuxt-property-decorator'
 			if ($event.target && $event.target.files.length > 0) {
 				let data = new FormData()
 				const file = $event.target.files[0]
-				let ext = file.filename
+				console.log(file)
+				let ext = file.name
+				const oldAvatar = this.user.avatar
 
 				ext = ext.split('.').pop()
 
@@ -25,14 +28,16 @@ import { Component, Prop } from 'nuxt-property-decorator'
 
 				data.append('file', file, filename)
 
-				this.$axios.post(`avatar`, data, {
+				this.$axios.post(`avatar/${filename}`, data, {
 					headers: {
 						'accept': 'application/json',
 						'Content-type': `multipart/form-data;boundary=${(data as any)._boundary}`
 					}
 				}).then((response) => {
+					if (this.user.avatarFileName !== "")
+						this.$axios.delete(`avatar/${this.user.id}`)
 					this.$emit('imageUploaded', {
-						filename: filename
+						filename: response.data
 					})
 				}).catch((error) => {
 

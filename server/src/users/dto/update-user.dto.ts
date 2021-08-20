@@ -12,4 +12,7 @@ export class UpdateUserDto {
 	@IsOptional()
 	//@IsImageCheck()
 	avatar: string
+
+	@IsOptional()
+	avatarFileName: string
 }
