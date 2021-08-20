@@ -128,6 +128,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 						id: this.user.id
 					}
 				}).then((result) => {
+					this.$toast.info("Friend request sent")
 					this.friendRequests.push(result.data)
 				}).catch((error) => {
 
@@ -141,6 +142,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 						}
 					}
 				}).then(() => {
+					this.$toast.info("Friend removed")
 					this.$auth.fetchUser()
 				}).catch((error) => {
 
@@ -152,6 +154,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 						id: this.user.id
 					}
 				}).then(() => {
+					this.$toast.success("You have a new friend!")
 					this.$auth.fetchUser()
 				}).catch((error) => {
 
@@ -171,6 +174,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 				this.user.displayName = this.displayNameInput
 				this.$auth.fetchUser()
 				this.fetchUser()
+				this.$toast.success("Display Name changed!")
 				this.toggleDisplayNameField();
 			}).catch((err) => {
 				this.toggleDisplayNameField();
@@ -190,9 +194,10 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 				this.user.avatar = avatar
 				this.$auth.fetchUser()
 				this.fetchUser()
+				this.$toast.success("Avatar updated!")
 				this.toggleAvatarUploader()
 			}).catch((error) => {
-				console.log("avatar change failed")
+				this.$toast.error("Avatar change failed")
 				this.toggleAvatarUploader()
 			})
 		}
@@ -208,8 +213,9 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 				role: newRole
 			}).then((result) => {
 				this.user.role = newRole
+				this.$toast.success("User's role changed")
 			}).catch((error) => {
-				console.log("error changing role")
+				this.$toast.error("Could not change user's role")
 			})
 		}
 		

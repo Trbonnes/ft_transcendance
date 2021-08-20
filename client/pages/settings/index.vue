@@ -36,13 +36,12 @@ import { Component } from "nuxt-property-decorator"
 		}
 
 		toggleTwoFactor() {
-			console.log(this.twoFactor)
 			this.$axios.patch(`users/me`, {
 				twoFactor: this.twoFactor
 			}).then(() => {
 				this.$auth.fetchUser()
 			}).catch((err) => {
-				console.log(err);
+				this.$toast.error("Error toggling two factor")
 			})
 		}
 	}

@@ -87,6 +87,7 @@ import {Component, Getter} from "nuxt-property-decorator"
 
 		logOut() {
 			this.$auth.logout()
+			this.$router.push('/login')
 		}
 	}
 </script>

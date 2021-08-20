@@ -41,12 +41,12 @@
 						}
 					}).then(() => {
 						this.$router.replace('/');
+						this.$toast.success("You are logged in!")
 					}).catch((error) => {
-						console.log(error);
 						if (error.response.data.type === 'missing_twofactor') {
 							this.twoFactorAuthentication = true;
 						} else {
-							this.$router.replace('/');
+							this.$router.push('/');
 						}
 					})
 				}
