@@ -2,15 +2,15 @@
 	<div>
 		<section class="body-font">
   			<div class="container mx-auto flex px-5 py-24 items-center justify-center flex-col">
-    			<img class="lg:w-1/6 md:w-2/6 w-4/6 mb-3 object-cover object-center rounded " alt="hero" :src="user.avatar">
-				<button class="inline-flex text-white bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-sm mb-3"
+    			<img class="lg:w-1/6 md:w-2/6 w-4/6 mb-1 object-cover object-center rounded " alt="hero" :src="user.avatar">
+				<button class="inline-flex text-white bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-xs italic mb-3"
 						v-if="this.$auth.loggedIn && (this.$auth.user.id === user.id || this.$auth.user.role === 'admin' || this.$auth.user.role === 'superAdmin')"
 						@click="toggleAvatarUploader">
 					Change avatar </button>
 				<avatar-uploader v-if="inputAvatarUpload" @imageUploaded="updateAvatar" :user="user" class="flex mb-3"/>
     			<div class="text-center lg:w-3/3 w-full">
-     					<h1 class="title-font sm:text-4xl text-3xl mb-2 font-medium">{{ user.displayName }}</h1>
-					<button class="inline-flex text-white bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-sm mb-3"
+     					<h1 class="title-font sm:text-5xl text-3xl mb-0 font-medium text-info">{{ user.displayName }}</h1>
+					<button class="inline-flex text-white bg-grey border-0 py-0.5 px-2 focus:outline-none hover:bg-blue-700 rounded mb-3 text-xs italic"
 							v-if="this.$auth.loggedIn && (this.$auth.user.id === user.id || this.$auth.user.role === 'admin' || this.$auth.user.role === 'superAdmin')"
 							@click="toggleDisplayNameField">
 						Change display name </button>
@@ -30,21 +30,21 @@
 					v-if="this.$auth.loggedIn && this.$auth.user.role === 'superAdmin' && user.role === 'admin'"
 					@click="toggleAdmin">
 					Remove Admin </button>
-					<p class="sm:text-sm">Level: {{ user.level }}</p>
+					<p class="sm:text-lg mt-10 text-info">Level: {{ user.level }}</p>
 				</div>
 				<div v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id">
 					<friend-button @update="updateFriend" :friendStatus="friendStatus"/>
 				</div>
-				<div class="flex flex-1 flex-row m-5 justify-center">
-						<div class="card shadow compact m-3 flex-grow">
-  							<div class="card-body">
- 							   <h2 class="card-title">Victories</h2> 
+				<div class="flex w-full m-5 justify-center items-center">
+						<div class="card shadow m-3 flex flex-grow items-center">
+  							<div class="card-body items-center">
+ 							   <h2 class="card-title text-success">Victories</h2> 
    									<p>{{ user.victory }}</p>
   							</div>
 						</div> 
-						<div class="card shadow compact m-3 flex-grow">
-  							<div class="card-body">
-    							<h2 class="card-title">Defeats</h2> 
+						<div class="card shadow m-3 flex flex-grow">
+  							<div class="card-body items-center">
+    							<h2 class="card-title text-error">Defeats</h2> 
     							<p>{{ user.defeat }}</p>
   							</div>
 						</div>
@@ -52,7 +52,7 @@
 				<div class="flex justify-center">
   					<button v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id" class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">Challenge</button>
 				</div>
-				<button @click="showuser"> click </button>
+				<button @click="showuser"> click to show user debug </button>
   			</div>
 		</section>
 
