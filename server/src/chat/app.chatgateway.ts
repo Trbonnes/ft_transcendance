@@ -42,8 +42,8 @@ export class ChatGateway {
   private activeClients: Map<string, User>;
 
   async handleConnection(client: Socket, ...args: any[]) {
-    let token = client.handshake.headers.authorization.split(' ')[1];
     try {
+      let token = client.handshake.headers.authorization.split(' ')[1];
       let data = await this.auth.validateToken(token);
       if (!data) {
         client.disconnect();
