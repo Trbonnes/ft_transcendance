@@ -12,8 +12,8 @@ export const config: Phaser.Types.Core.GameConfig & {
 	height: number
 	invite: string | null
 	spectate: string | null
-	userId: string | null
-	userToken: string | null
+	userId: string
+	userToken: string
 } = {
 	// https://photonstorm.github.io/phaser3-docs/Phaser.Core.Config.html https://rexrainbow.github.io/phaser3-rex-notes/docs/site/game/
 	type: Phaser.WEBGL,
@@ -104,13 +104,13 @@ export const config: Phaser.Types.Core.GameConfig & {
 
 	invite: null,
 	spectate: null,
-	userId: null,
-	userToken: null,
+	userId: "",
+	userToken: "",
 }
 
 export function setup(_options: {
-	userId: string | null,
-	userToken: string | null,
+	userId: string,
+	userToken: string,
 	invite: string | null,
 	spectate: string | null}): Phaser.Game {
 

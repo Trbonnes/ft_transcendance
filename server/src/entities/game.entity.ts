@@ -8,15 +8,18 @@ export class Game {
     id: string;
 
     @Column()
+    game_id: string;
+    
+    @Column()
     status: boolean // 0: ongoing 1: finished
 
     @ManyToMany(() => User, user => user.games)
     public players: User[]
 	
-    @OneToOne(() => User)
-    @JoinColumn()
 	public winner: User
 
+	public loser: User
+    
 	@CreateDateColumn()
     date: Date
 }

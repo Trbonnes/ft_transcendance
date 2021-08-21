@@ -5,8 +5,8 @@ export default class GameState {
     public id: string
     public client0: Socket //= undefined
     public client1: Socket //= undefined
-    public client0_id: string | string[]
-    public client1_id: string | string[]
+    public client0_id: string
+    public client1_id: string
     public friend: boolean
     public player0: {
       x: number
