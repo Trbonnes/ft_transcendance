@@ -40,8 +40,9 @@ export class UsersService {
   }
 
   async incrementWins(id: string | string[]) {
-    const user = await this.usersRepository.findOneOrFail({ where: { id } });
+    let user = await this.usersRepository.findOneOrFail({ where: { id } });
     user.victory += 1
+    user.level = Math.floor(user.victory / 5)
     this.usersRepository.save(user)
   } 
 

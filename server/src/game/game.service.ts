@@ -50,7 +50,8 @@ export class GameService {
     //   loser: loser,
     //   status: true
     // }
-    Logger.log(game)
+    // winner.games.push(game)
+    // Logger.log(winner.games)
     return this.gameRepository.save( {...game} )
   }
 
