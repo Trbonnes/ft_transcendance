@@ -32,7 +32,7 @@ import { AvatarModule } from './avatar/avatar.module';
       }),
     }),
     FriendsModule,
-    GameModule
+    GameModule,
     AvatarModule
   ],
   controllers: [AppController],
