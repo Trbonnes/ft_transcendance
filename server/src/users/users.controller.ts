@@ -54,9 +54,9 @@ export class UsersController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  @Get(':email')
-  findOne(@Param('email') email: string) {
-    return this.usersService.findOnebyEmail(email);
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOneById(id);
   }
 
   //@Patch('update/:id')
@@ -64,6 +64,12 @@ export class UsersController {
   //update(@Req() request, @Body() updateUserDto: UpdateUserDto) {
   //  return this.usersService.update(request.user.id, updateUserDto);
   //}
+
+  @Get('id/:id')
+  @UseGuards(JwtAuthGuard)
+  fineOneById(@Param('id') id: string) {
+    return this.usersService.findOneById(id);
+  }
 
   @Patch('update/:id')
   @UseGuards(JwtAuthGuard)

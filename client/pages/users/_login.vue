@@ -53,6 +53,17 @@
   					<button v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id" class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">Challenge</button>
 				</div>
 				<button @click="showuser"> click to show user debug </button>
+				<div class="">
+					<h1 class="flex mx-auto justify-center mt-10 m-5 text-3xl font-bold"> Your game history </h1>
+					<div v-if="playedGames.length <= 0">
+						<p class="flex mx-auto justify-center text-xl font-bold"> You don't have any game</p>
+					</div>
+					<div v-else>
+						<div class="items-center" v-for="(game) in playedGames" :key="`${game}.id`">
+							<GameCard :user="user" :game="game"/>
+						</div>
+					</div>
+				</div>
   			</div>
 		</section>
 
@@ -73,6 +84,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		inputDisplayName:boolean = false;
 		displayNameInput:string = "";
 		inputAvatarUpload:boolean = false;
+		games: any[] = [];
 
 		mounted() {
 			if (this.$auth.loggedIn) 
@@ -100,6 +112,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 
 		async fetch() {
 			this.friendRequests = await this.$axios.$get(`/friends/requests`)
+			this.games = await this.$axios.$get(`game`)
 		}
 
 		async fetchRequests() {
@@ -120,6 +133,16 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 				return FriendStatus.PENDING_SENDER
 			return FriendStatus.NOT_FRIEND
 		}
+
+		get playedGames(): any[] {
+			let tmp = this.games.filter(game => game.winner_id === (this.$auth.user as any).id
+											|| game.loser_id === (this.$auth.user as any).id)
+			console.log(tmp);
+			return tmp.sort((a, b) => {
+				return a.date - b.date
+			})
+		}
+
 
 		async updateFriend(friendStatus: FriendStatus) {
 			if (friendStatus === FriendStatus.NOT_FRIEND) {
