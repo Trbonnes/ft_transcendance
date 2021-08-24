@@ -135,11 +135,11 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		}
 
 		get playedGames(): any[] {
-			let tmp = this.games.filter(game => game.winner_id === (this.$auth.user as any).id
-											|| game.loser_id === (this.$auth.user as any).id)
+			let tmp = this.games.filter(game => game.winner_id === (this.user as any).id
+											|| game.loser_id === (this.user as any).id)
 			console.log(tmp);
 			return tmp.sort((a, b) => {
-				return a.date - b.date
+				return a.date - b.date ? -1 : 1
 			})
 		}
 

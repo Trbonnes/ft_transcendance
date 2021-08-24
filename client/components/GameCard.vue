@@ -15,7 +15,7 @@
     					<img :src="winner.data.avatar">
   					</div>
 				</div> 
-				<div class="flex mx-left ml-5 self-center">
+				<div class="flex mx-left ml-2 self-center">
 					<p class="m-3">Winner : {{ winner.data.displayName }}</p>
 				</div>
 				<div class="avatar">
@@ -23,7 +23,7 @@
     					<img :src="loser.data.avatar">
   					</div>
 				</div> 
-				<div class="flex mx-left ml-5 self-center">
+				<div class="flex mx-left ml-2 self-center">
 					<p class="m-3">Opponent : {{ loser.data.displayName }}</p>
 				</div>
 			  </div>
