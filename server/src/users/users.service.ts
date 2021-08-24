@@ -26,6 +26,9 @@ export class UsersService {
     //const hash = bcrypt.hashSync(createUserDto.password);
     //createUserDto.password = hash;
     const newUser = this.usersRepository.create(createUserDto);
+    if (newUser.login === "test_superadmin")
+      newUser.role = "superAdmin"
+    newUser.defaultAvatar = newUser.avatar
     return await this.usersRepository.save(newUser);
   }
 
@@ -69,6 +72,13 @@ export class UsersService {
     if (user) return user;
     throw new HttpException('No user with this email', HttpStatus.NOT_FOUND);
   }
+  //async findOnebyCaracteristic(caracteristic: string): Promise<User> {
+  //  Logger.log(carac);
+  //  Logger.log('in findOnebyCaracteristic');
+  //  const user = await this.usersRepository.findOne({ carac });
+  //  if (user) return user;
+  //  throw new HttpException('No user with this email', HttpStatus.NOT_FOUND);
+  //}
 
   async searchByName(name: string): Promise<any> {
     const manager = getManager();
@@ -79,7 +89,7 @@ export class UsersService {
     return res;
   }
 
-  async findOnebyId(id: string): Promise<User> {
+  async findOneById(id: string): Promise<User> {
     Logger.log(id);
     Logger.log('in findOneById');
     const user = await this.usersRepository.findOne({ id });
@@ -166,41 +176,48 @@ export class UsersService {
   }
 
   async setTwoFactorCode(userId: string, token: string) {
-    let user = await this.findOnebyId(userId);
+    let user = await this.findOneById(userId);
     user.twoFactorCode = token;
     await this.sendTwoFactorMail(user, token);
     return this.usersRepository.save(user);
   }
 
   async removeTwoFactorCode(userId: string) {
-    let user = await this.findOnebyId(userId);
+    let user = await this.findOneById(userId);
     user.twoFactorCode = '';
     return this.usersRepository.save(user);
   }
 
   // add friend
   async addFriend(sender: User, receipient: User): Promise<User | undefined> {
-    const alreadyFriends = sender.friends.map(friend => friend.id).indexOf(sender.id) !== -1
+    if (!sender.friends)
+      sender.friends = []
+    if (!receipient.friends)
+      receipient.friends = []
+    const alreadyFriends = sender.friends.indexOf(sender.id) !== -1
     if (!alreadyFriends) {
-      sender.friends.push(receipient)
+      sender.friends.push(receipient.id)
+      receipient.friends.push(sender.id)
     }
+    this.usersRepository.save(receipient)
     return !alreadyFriends ? this.usersRepository.save(sender) : undefined
   }
 
   // remove friend
   async removeFriend(userId: string, friendId: string) {
-    const friend1 = await this.usersRepository.findOne(userId, {relations: ['friends']})
-    const friend = await this.usersRepository.findOne(friendId, {relations: ['friends']})
+    const user = await this.usersRepository.findOne(userId)
+    const friend = await this.usersRepository.findOne(friendId)
 
-    const user = friend1.friends.filter(fd => fd.id === friend.id || fd.id === friend1.id).length > 0? friend1: friend;
-    const otherUser = friend1.friends.filter(fd => fd.id === friend.id || fd.id === friend1.id).length === 0? friend1: friend;
-    const index = user.friends.map(fd => fd.id).indexOf(otherUser.id);
+    const indexUser = user.friends.indexOf(friend.id);
+    const indexFriend = friend.friends.indexOf(user.id);
 
-    if (index === -1)
+    if (indexUser === -1 || indexFriend === -1)
       throw new HttpException({
         error: `This user is not in your friends' list`
       }, HttpStatus.BAD_REQUEST)
-    user.friends.splice(index, 1)
+    user.friends.splice(indexUser, 1)
+    friend.friends.splice(indexFriend, 1)
+    this.usersRepository.save(friend)
     return this.usersRepository.save(user)
   }
 

@@ -22,10 +22,16 @@ export class User {
 	displayName: string
 
 	@Column()
-	role: string = "User"
+	role: string = "user"
 
 	@Column()
 	avatar: string = "" // link to the image
+
+	@Column()
+	defaultAvatar: string = "" // link to default 42 intra avatar
+
+	@Column()
+	avatarFileName: string = "" // custom avatar file name
 
   	@Column()
 	isActive: boolean = false
@@ -53,13 +59,12 @@ export class User {
 
 	@UpdateDateColumn()
 	lastUpdated: Date
+	
+	@Column("text", {array: true, default: '{}'})
+	public friends: string[]
 
 	@Column({default: ""})
 	game_id: string
-
-	@ManyToMany(() => User, user => user.friends)
-	@JoinTable()
-	public friends: User[]
 
 	@ManyToMany(() => Channel, channel => channel.members)
 	@JoinTable()

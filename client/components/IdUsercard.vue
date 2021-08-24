@@ -1,6 +1,6 @@
 <template>
-	<div>
-		<NuxtLink :to="`/users/${user.login}`" class="card shadow m-5">
+	<div v-if="user">
+		<NuxtLink :to="`/users/${user.login}`" class="card bg-accent-focus shadow m-5">
 		  <div class="card-body">
 			  <div class="flex">
 				<p class="flex mx-left self-center m-3">{{index}}</p>
@@ -25,10 +25,24 @@ import Vue from 'vue'
 import {Component, Prop} from "nuxt-property-decorator"
 
 	@Component
-	export default class UserCard extends Vue {
-		@Prop({required: true}) user: any
+	export default class IdUserCard extends Vue {
+		@Prop({required: true}) userId: any
 		@Prop({required: true}) index: any
+
+		user:any = null;
+
+		mounted() {
+			this.fetchUser();
+		}
 		
+		async fetch() {
+			this.user = await this.$axios.$get('/users/' + this.userId)
+		}
+
+		async fetchUser() {
+			this.user = await this.$axios.$get('/users/' + this.userId)
+		}
+
 	}
 </script>
 

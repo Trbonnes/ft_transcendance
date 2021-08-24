@@ -22,7 +22,7 @@ export class FriendsService {
 
 	// Find LoggedUser's friend requests
 	async findAllRequests(id: string): Promise<FriendRequest[]> {
-		const sender = await this.usersService.findOnebyId(id)
+		const sender = await this.usersService.findOneById(id)
 		if (!sender)
 			throw new HttpException({
 				error: `User not found`
@@ -40,7 +40,7 @@ export class FriendsService {
 
 	// Send friend request
 	async sendFriendRequest(senderId: string, receipient: User) {
-		const sender = await this.usersService.findOnebyId(senderId)
+		const sender = await this.usersService.findOneById(senderId)
 		if (sender && !await this.hasRequest(sender, receipient)) {
 			if (senderId === receipient.id)
 				throw new HttpException({
@@ -59,7 +59,7 @@ export class FriendsService {
 
 	// Accept a friend request
 	async acceptFriendRequest(id: string, sender: User): Promise<User> {
-		let receipient = await this.usersService.findOnebyId(id);
+		let receipient = await this.usersService.findOneById(id);
 		if (!receipient)
 			throw new HttpException({
 				error: `Friend request's receipient does not exist`

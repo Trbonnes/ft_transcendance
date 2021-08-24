@@ -46,8 +46,9 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
+    '@nuxtjs/toast',
     '@nuxtjs/axios',
-	'@nuxtjs/auth-next',
+	  '@nuxtjs/auth-next',
     '@nuxtjs/pwa',
     '@nuxtjs/proxy',
     'nuxt-socket-io',

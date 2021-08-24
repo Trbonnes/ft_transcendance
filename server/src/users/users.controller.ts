@@ -59,10 +59,16 @@ export class UsersController {
     return this.usersService.findOnebyEmail(email);
   }
 
-  @Patch('me')
+  //@Patch('update/:id')
+  //@UseGuards(JwtAuthGuard)
+  //update(@Req() request, @Body() updateUserDto: UpdateUserDto) {
+  //  return this.usersService.update(request.user.id, updateUserDto);
+  //}
+
+  @Patch('update/:id')
   @UseGuards(JwtAuthGuard)
-  update(@Req() request, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(request.user.id, updateUserDto);
+  adminUpdate(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(id, updateUserDto)
   }
 
   @Delete(':id')
