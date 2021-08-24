@@ -40,6 +40,10 @@ export default class WaitingBorderlessFriendScene extends Phaser.Scene {
 
         console.log(os.hostname())
         this.socket = io("http://" + os.hostname() + ":3000/borderless", {
+            extraHeaders: {
+                "Authorization": config.userToken,
+                "user_id": config.userId
+            },
             transportOptions: {
                 cors : {
                     origin: '*'
