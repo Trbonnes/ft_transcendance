@@ -13,12 +13,14 @@ export class Game {
     @Column()
     status: boolean // 0: ongoing 1: finished
 
-    @ManyToMany(() => User, user => user.games)
-    public players: User[]
+    // @ManyToMany(() => User, user => user.games)
+    // public players: User[]
 	
-	public winner: User
+    @Column({default: ""})
+	public winner_id: string
 
-	public loser: User
+    @Column({default: ""})
+	public loser_id: string
     
 	@CreateDateColumn()
     date: Date

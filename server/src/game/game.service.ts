@@ -16,14 +16,12 @@ export class GameService {
 
   async create(game_id: string, players: string[]) {
     
-    const p1 = await this.usersService.findOne(players[0])
-    const p2 = await this.usersService.findOne(players[1])
-    let newGame = {
-      game_id: game_id,
-      status: false,
-      players: [p1, p2]
-    }
-    // newGame.players[]
+    this.usersService.setCurrentGame(players[0], game_id)
+    this.usersService.setCurrentGame(players[1], game_id)
+    let newGame = new Game()
+    newGame.game_id = game_id
+    newGame.status = false
+
     return await this.gameRepository.save(newGame)
   }
 
@@ -39,19 +37,15 @@ export class GameService {
   async update(game_id: string, winner_id: string, loser_id: string) {
     let game = await this.gameRepository.findOne( { where: {game_id} } )
 
-    const winner = await this.usersService.findOne(winner_id)
-    const loser = await this.usersService.findOne(loser_id)
 
     game.status = true
-    game.winner = winner
-    game.loser = loser
-    // const updatedGame = {
-    //   winnner: winner,
-    //   loser: loser,
-    //   status: true
-    // }
-    // winner.games.push(game)
-    // Logger.log(winner.games)
+    game.winner_id = winner_id
+    game.loser_id = loser_id
+
+    this.usersService.setCurrentGame(winner_id, "")
+    this.usersService.setCurrentGame(loser_id, "")
+
+    // let hello = "world"
     return this.gameRepository.save( {...game} )
   }
 

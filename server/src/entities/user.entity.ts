@@ -54,9 +54,8 @@ export class User {
 	@UpdateDateColumn()
 	lastUpdated: Date
 
-	@ManyToMany(() => Game, game => game.players)
-	@JoinTable()
-	public games: Game[]
+	@Column({default: ""})
+	game_id: string
 
 	@ManyToMany(() => User, user => user.friends)
 	@JoinTable()

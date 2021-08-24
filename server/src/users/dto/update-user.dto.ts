@@ -12,4 +12,10 @@ export class UpdateUserDto {
 	@IsOptional()
 	//@IsImageCheck()
 	avatar: string
+
+	@IsOptional()
+	game_id: string
+
+	@IsOptional()
+	inGame: boolean
 }

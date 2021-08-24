@@ -52,6 +52,16 @@ export class UsersService {
     this.usersRepository.save(user)
   } 
   
+  async setCurrentGame(id: string, game_id: string) {
+      let user = await this.usersRepository.findOneOrFail({ where: { id } });
+      user.game_id = game_id
+      if (game_id == "")
+        user.inGame = false
+      else
+        user.inGame = true
+      return await this.usersRepository.save(user)
+    }
+
   async findOnebyEmail(email: string): Promise<User> {
     Logger.log(email);
     Logger.log('in findOneByEmail');
