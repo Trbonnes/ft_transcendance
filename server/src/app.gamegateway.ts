@@ -154,8 +154,6 @@ export class GameGateway {
           this.gameService.update(gameRoom, this.rooms.get(gameRoom).client1_id, this.rooms.get(gameRoom).client0_id)
           this.usersService.incrementWins(this.rooms.get(gameRoom).client1_id)
           this.usersService.incrementLosses(this.rooms.get(gameRoom).client0_id)
-          this.usersService.setCurrentGame(this.rooms.get(gameRoom).client0_id, "")
-          this.usersService.setCurrentGame(this.rooms.get(gameRoom).client1_id, "")
           this.rooms.get(gameRoom).disconnection = true
           break
         }
@@ -163,8 +161,6 @@ export class GameGateway {
           this.gameService.update(gameRoom, this.rooms.get(gameRoom).client0_id, this.rooms.get(gameRoom).client1_id)
           this.usersService.incrementWins(this.rooms.get(gameRoom).client0_id)
           this.usersService.incrementLosses(this.rooms.get(gameRoom).client1_id)
-          this.usersService.setCurrentGame(this.rooms.get(gameRoom).client0_id, "")
-          this.usersService.setCurrentGame(this.rooms.get(gameRoom).client1_id, "")
           this.rooms.get(gameRoom).disconnection = true
           break
         }
