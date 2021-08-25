@@ -150,8 +150,21 @@ export class GameGateway {
 
     for (let gameRoom of this.rooms.keys()) {
       if (gameRoom == serverSideClient[1]) {
-        if (client.id == this.rooms.get(gameRoom).client0.id
-        || client.id == this.rooms.get(gameRoom).client1.id) {
+        if (client.id == this.rooms.get(gameRoom).client0.id) {
+          this.gameService.update(gameRoom, this.rooms.get(gameRoom).client1_id, this.rooms.get(gameRoom).client0_id)
+          this.usersService.incrementWins(this.rooms.get(gameRoom).client1_id)
+          this.usersService.incrementLosses(this.rooms.get(gameRoom).client0_id)
+          this.usersService.setCurrentGame(this.rooms.get(gameRoom).client0_id, "")
+          this.usersService.setCurrentGame(this.rooms.get(gameRoom).client1_id, "")
+          this.rooms.get(gameRoom).disconnection = true
+          break
+        }
+        else if (client.id == this.rooms.get(gameRoom).client1.id) {
+          this.gameService.update(gameRoom, this.rooms.get(gameRoom).client0_id, this.rooms.get(gameRoom).client1_id)
+          this.usersService.incrementWins(this.rooms.get(gameRoom).client0_id)
+          this.usersService.incrementLosses(this.rooms.get(gameRoom).client1_id)
+          this.usersService.setCurrentGame(this.rooms.get(gameRoom).client0_id, "")
+          this.usersService.setCurrentGame(this.rooms.get(gameRoom).client1_id, "")
           this.rooms.get(gameRoom).disconnection = true
           break
         }
