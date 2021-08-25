@@ -22,6 +22,7 @@ export default Vue.extend({
 			if (!this.error) this.game = setup({
 				userId: user.id,
 				userToken: token,
+				gameId: user.game_id,
 				invite: null,
 				spectate: null})
 		}

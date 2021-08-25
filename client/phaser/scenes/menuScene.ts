@@ -4,7 +4,6 @@ import { scenesList, activeScene, setActiveScene } from '../sceneManager'
 
 import Button from '../objects/ButtonObject'
 
-
 export default class MenuScene extends Phaser.Scene {
     private menu: Button[] = []
 
