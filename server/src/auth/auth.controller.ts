@@ -30,7 +30,7 @@ export class AuthController {
 			if (!user)
 				throw new HttpException({
 					error: 'Two Factor Authentication code is invalid',
-					type: 'missing_twofactor'
+					type: 'wrong_twofactor'
 				},	HttpStatus.UNAUTHORIZED)
 		}
 		else {

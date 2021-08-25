@@ -10,7 +10,7 @@
 			<div v-else class="text-gray-500">
 				<h1> Please enter the two factor authentication code you received on your 42 email </h1>
 				<form @submit.prevent="login">
-					<input type="text" v-model="twoFactorCode">
+					<input type="text" class="rounded border border-grey-900" v-model="twoFactorCode">
 					<button type="submit">Sign in</button>
 				</form>
 			</div>
@@ -44,6 +44,9 @@
 					}).catch((error) => {
 						if (error.response.data.type === 'missing_twofactor') {
 							this.twoFactorAuthentication = true;
+						}
+						else if (error.response.data.type === 'wrong_twofactor') {
+							this.$toast.error("Wrong 2FA code");
 						} else {
 							this.$router.push('/');
 						}
