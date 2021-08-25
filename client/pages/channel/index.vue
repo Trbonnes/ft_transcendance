@@ -1,9 +1,12 @@
-
 <template>
-  <div>
-    <div v-for="c in $store.state.channel.channelList" class="card bordered">
-      <div class="card-body cursor-pointer" @click="$emit('select', c.id)">
-        <h1>{{c.name}}</h1>
+  <div class="flex flex-col items-center h-full">
+    <div id="channelList" >
+      <div v-for="c in $store.state.channel.channelList" class="card bordered">
+      <nuxt-link :to="`/channel/${c.id}`">
+        <div class="card-body cursor-pointer w-full">
+          <h1>{{c.name}}</h1>
+        </div>
+      </nuxt-link>
       </div>
     </div>
     <a href="#create-channel" class="btn btn-primary">Create a channel</a>
@@ -50,6 +53,7 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -64,44 +68,51 @@ export default Vue.extend({
       errors: [] as string[],
     }
   },
-  fetch()
-  {
-      this.$store.dispatch('channel/fetchAll')
+  fetch() {
+    this.$store.dispatch('channel/fetchAll')
   },
   mounted() {
     console.log(this.$store.state.channel.channelList)
   },
   methods: {
-      checkForm(e : any) {
+    checkForm(e: any) {
       e.preventDefault()
       this.errors = []
       if (this.channelName === '')
         this.errors.push('Channel name cannot be empty')
-      if (this.isPrivate && this.channelPassword === "")
+      if (this.isPrivate && this.channelPassword === '')
         this.errors.push('Channel password cannot be empty')
-      if (!this.errors)
-        this.createChannel()
+      if (this.errors.length == 0) this.createChannel()
     },
     createChannel() {
       const data: CreateChannelDto = {
-        isPublic : !this.isPrivate,
-        channelPassword : this.channelPassword,
-        channelName : this.channelName,
+        isPublic: !this.isPrivate,
+        channelPassword: this.channelPassword,
+        channelName: this.channelName,
       }
-      this.$store.dispatch('channel/create', data).then((channel : Channel) =>
-      {
-        this.$store.dispatch('channel/fetchAll')
-        this.isPrivate = false
-        this.channelName = ''
-        this.channelPassword = ''
-        this.$router.back()
-      }).catch((error : any) => {
-          console.log("There is an error")
+      this.$store
+        .dispatch('channel/create', data)
+        .then((channel: Channel) => {
+          this.$store.dispatch('channel/fetchAll')
+          this.isPrivate = false
+          this.channelName = ''
+          this.channelPassword = ''
+          this.$router.back()
+        })
+        .catch((error: any) => {
+          console.log('There is an error')
           console.log(error)
-      })
+        })
     },
   },
 })
 </script>
 
-<style></style>
+<style>
+#channelList {
+  display: block;
+  width: 50%;
+  min-height: 75%;
+  background-color: darkblue;
+}
+</style>

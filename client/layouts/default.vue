@@ -1,23 +1,14 @@
 <template>
   <div>
-    <NavBar/>
-    <Nuxt/>
+    <NavBar />
+    <Nuxt />
   </div>
 </template>
 
-<script lang="ts">
-</script>
+<script lang="ts"></script>
 
 <style>
 #top {
   width: 80vw;
-}
-#side {
-  width: 20vw;
-  height: 100vh;
-  position: fixed;
-  right: 0;
-  top: 0;
-  @apply shadow
 }
 </style>
