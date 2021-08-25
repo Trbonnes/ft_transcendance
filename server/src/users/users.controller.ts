@@ -9,12 +9,16 @@ import {
   UsePipes,
   ValidationPipe,
   UseGuards,
+  Req,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Logger } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Request, response } from 'express';
 
 @Controller('users')
 export class UsersController {
@@ -33,22 +37,48 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findAllOrByLogin(@Req() req: Request) {
+    if (req.query.login) {
+      const user = await this.usersService.findOneByFortyTwoLogin(req.query.login.toString())
+      Logger.log(user)
+      Logger.log("in findAllorByLogin");
+      if (!user)
+        throw new HttpException({
+          message: [ `This user does not exist.`]
+        }, HttpStatus.BAD_REQUEST)
+      return user;
+    }
+    else {
+      return this.usersService.findAll();
+    }
   }
 
+  // @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOneById(id);
+  }
+
+  //@Patch('update/:id')
+  //@UseGuards(JwtAuthGuard)
+  //update(@Req() request, @Body() updateUserDto: UpdateUserDto) {
+  //  return this.usersService.update(request.user.id, updateUserDto);
+  //}
+
+  @Get('id/:id')
   @UseGuards(JwtAuthGuard)
-  @Get(':email')
-  findOne(@Param('email') email: string) {
-    return this.usersService.findOnebyEmail(email);
+  fineOneById(@Param('id') id: string) {
+    return this.usersService.findOneById(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  @Patch('update/:id')
+  @UseGuards(JwtAuthGuard)
+  adminUpdate(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(id, updateUserDto)
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }

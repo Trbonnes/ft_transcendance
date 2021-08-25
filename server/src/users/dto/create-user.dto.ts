@@ -17,7 +17,7 @@ export class CreateUserDto {
   avatar: string; // link to the image
 
   @IsOptional()
-  twoFactor: boolean;
+  twoFactor: boolean = false;
 
   setEmail(str: string) {
     this.email = str;

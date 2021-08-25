@@ -15,12 +15,28 @@ export default Vue.extend({
 		return { error: false, game: undefined as Phaser.Game | undefined }
 	},
 	async mounted() {
-		if (!this.error) this.game = setup({})
+		if (this.$auth.loggedIn && this.$auth.user !== null) {
+			this.$auth.fetchUser()
+			const user: any  = this.$auth.user as any
+			let token = this.getToken()
+			if (!this.error) this.game = setup({
+				userId: user.id,
+				userToken: token,
+				gameId: user.game_id,
+				invite: null,
+				spectate: null})
+		}
 	},
+
+	methods: {
+		getToken() {
+			return (this.$auth.strategy as any).token.get()
+		}
+	}
 })
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 
 #gameCtnr {
 	width: 100%;
@@ -29,8 +45,18 @@ export default Vue.extend({
 }
 
 >>> input {
-	font-size: 60;
-	pointer-events: auto;
+	background-image: url(https://assets.labrute.prushka.fr/buttons/brute_button.png);
+	background-size: 100% 100%;
+	border: none;
+	padding: 5px 15px;
+	font-size: 15px;
+}
+.copy-field input {
+	pointer-events: none;
+	width: 100%;
+	height: 100%;
+	font-size: inherit;
+	text-align: inherit;
 }
 
 </style>

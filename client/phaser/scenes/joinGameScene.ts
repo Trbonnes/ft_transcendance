@@ -33,13 +33,17 @@ export default class JoinGameScene extends Phaser.Scene {
 
         console.log(os.hostname())
         this.socket = io("http://" + os.hostname() + ":3000/game", {
+            extraHeaders: {
+                "Authorization": config.userToken,
+                "user_id": config.userId
+            },
             transportOptions: {
                 cors : {
                     origin: '*'
                 },
                 transports: ['websockets']
             },
-            query: { "spectate": "" },
+            query: { "spectate": "", "friend": "" },
         })
 
         this.socket.on('OpponentFound', (response: {player: number, room: string}) => {

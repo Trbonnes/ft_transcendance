@@ -8,12 +8,11 @@ import { configService } from './config/config.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
-import { AuthService } from './auth/auth.service';
-import { JwtService } from '@nestjs/jwt';
 import { GameGateway } from './app.gamegateway';
 import { BorderlessGateway } from './app.borderlessgateway';
-import { ChatGateway } from './chat/app.chatgateway';
-import { AuthController } from './auth/auth.controller';
+import { FriendsModule } from './friends/friends.module';
+import { GameModule } from './game/game.module';
+import { AvatarModule } from './avatar/avatar.module';
 
 @Module({
   imports: [
@@ -28,8 +27,11 @@ import { AuthController } from './auth/auth.controller';
         JWT_EXPIRATION_TIME: Joi.string().required(),
       }),
     }),
+    FriendsModule,
+    GameModule,
+    AvatarModule
   ],
   controllers: [AppController],
   providers: [AppService, GameGateway, BorderlessGateway],
 })
-export class AppModule {}
+export class AppModule { }

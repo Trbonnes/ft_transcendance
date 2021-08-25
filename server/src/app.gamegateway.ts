@@ -1,7 +1,11 @@
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
 import { Socket, Server, Namespace } from 'socket.io'
 import { AppService } from './app.service'
+import { AuthService } from './auth/auth.service';
+import { User } from './entities/user.entity';
+import { GameService } from './game/game.service';
 import GameState from './GameState.class'
+import { UsersService } from './users/users.service';
 
 @WebSocketGateway({
   namespace: 'game',
@@ -13,7 +17,11 @@ export class GameGateway {
   protected rooms: Map<string, GameState>
   protected clients: Map<string, string>
 
-  constructor(private AppService: AppService) {
+  constructor(
+      protected readonly usersService: UsersService,
+      protected readonly authService: AuthService,
+      protected readonly gameService: GameService,
+      private AppService: AppService) {
     this.rooms = new Map<string, GameState>()
     this.clients = new Map<string, string>()
   }
@@ -27,7 +35,20 @@ export class GameGateway {
     let data = client.handshake
     let joined = false
     
-    console.log('spectate: ', data.query['spectate'])
+    // const id = client.handshake.headers.get('user_id')
+    const userId = client.handshake.headers.user_id as string;
+    
+    try {
+      const token = data.headers.authorization.split(' ')[1]
+      let authData = this.authService.validateTokenSync(token)
+      if (authData == null) {
+        client.disconnect();
+        return;
+      }
+    } catch (error: any) {
+      console.log(error)
+      client.disconnect();
+    }
     if (data.query['spectate']) {
       for (let gameRoom of this.rooms.keys()) {
         if (gameRoom == data.query['spectate']
@@ -46,16 +67,36 @@ export class GameGateway {
       return
     }
 
+    if (data.query['friend']) {
+      if (data.query['friend'] == "true") {
+        this.createGame(client, true, userId)
+        return
+      }
+      for (let gameRoom of this.rooms.keys()) {
+        if (gameRoom == data.query['friend']
+        && this.rooms.get(gameRoom).client0
+        && !this.rooms.get(gameRoom).client1) {
+          this.joinGame(client, data.query['friend'], userId)
+          joined = true
+        }
+      }
+      if (!joined) {
+        client.emit('Bad id')
+        client.disconnect()
+      }
+      return
+    }
+
     if (!this.rooms.size) {
-      this.createGame(client)
+      this.createGame(client, false, userId)
       joined = true
     }
     else {
       try {
         this.rooms.forEach(
           (game: GameState, id: string) => {
-            if (!game.client1) {
-              this.joinGame(client, id)
+            if (!game.client1 && !game.friend) {
+              this.joinGame(client, id, userId)
               throw 'BreakException'
             }
           }
@@ -63,7 +104,7 @@ export class GameGateway {
       } catch (e) { joined = true }
 
       if (!joined)
-        this.createGame(client)
+        this.createGame(client, false, userId)
     }
 
     console.log('room number: ', this.rooms.size)
@@ -74,20 +115,25 @@ export class GameGateway {
     this.leaveGame(client)
   }
 
-  createGame(client: Socket) {
+  createGame(client: Socket, friend: boolean, userId: string) {
     let room = new GameState(client)
+    room.friend = friend
     room.client0 = client
+    room.client0_id = userId
     this.rooms.set(room.id, room)
     console.log("create room ", room.id)
+    client.emit('gameId', room.id)
     client.join(room.id)
     this.clients.set(client.id, room.id)
   }
 
-  joinGame(client: Socket, id: string) {
+  joinGame(client: Socket, id: string, userId: string) {
     this.clients.set(client.id, id)
     this.rooms.get(id).client1 = client
     client.join(id)
+    this.rooms.get(id).client1_id = userId
     console.log("join room ", id)
+    this.gameService.create(id, [this.rooms.get(id).client0_id, this.rooms.get(id).client1_id])
     this.rooms.get(id).client0
       .emit('OpponentFound', {player: 0, room: id})
     this.rooms.get(id).client1
@@ -104,8 +150,17 @@ export class GameGateway {
 
     for (let gameRoom of this.rooms.keys()) {
       if (gameRoom == serverSideClient[1]) {
-        if (client.id == this.rooms.get(gameRoom).client0.id
-        || client.id == this.rooms.get(gameRoom).client1.id) {
+        if (client.id == this.rooms.get(gameRoom).client0.id) {
+          this.gameService.update(gameRoom, this.rooms.get(gameRoom).client1_id, this.rooms.get(gameRoom).client0_id)
+          this.usersService.incrementWins(this.rooms.get(gameRoom).client1_id)
+          this.usersService.incrementLosses(this.rooms.get(gameRoom).client0_id)
+          this.rooms.get(gameRoom).disconnection = true
+          break
+        }
+        else if (client.id == this.rooms.get(gameRoom).client1.id) {
+          this.gameService.update(gameRoom, this.rooms.get(gameRoom).client0_id, this.rooms.get(gameRoom).client1_id)
+          this.usersService.incrementWins(this.rooms.get(gameRoom).client0_id)
+          this.usersService.incrementLosses(this.rooms.get(gameRoom).client1_id)
           this.rooms.get(gameRoom).disconnection = true
           break
         }
@@ -204,6 +259,20 @@ export class GameGateway {
       this.handleBall(gameId)
     }
     else {
+      if (this.rooms.get(gameId).player0.score == 6) {
+        const ret = this.gameService.update(gameId, this.rooms.get(gameId).client0_id, this.rooms.get(gameId).client1_id)
+        console.log("P1 won")
+        console.log(ret)
+        this.usersService.incrementWins(this.rooms.get(gameId).client0_id)
+        this.usersService.incrementLosses(this.rooms.get(gameId).client1_id)
+      }
+      else {
+        const ret = this.gameService.update(gameId, this.rooms.get(gameId).client1_id, this.rooms.get(gameId).client0_id)
+        console.log("P2 won")
+        console.log(ret)
+        this.usersService.incrementWins(this.rooms.get(gameId).client1_id)
+        this.usersService.incrementLosses(this.rooms.get(gameId).client0_id)
+      }
       this.server.to(this.rooms.get(gameId).id)
         .emit('End', {
           scoreP0: this.rooms.get(gameId).player0.score,

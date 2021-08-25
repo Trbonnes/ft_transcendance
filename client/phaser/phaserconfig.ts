@@ -10,6 +10,10 @@ export let router!: VueRouter
 export const config: Phaser.Types.Core.GameConfig & {
 	width: number
 	height: number
+	invite: string | null
+	spectate: string | null
+	userId: string
+	userToken: string
 } = {
 	// https://photonstorm.github.io/phaser3-docs/Phaser.Core.Config.html https://rexrainbow.github.io/phaser3-rex-notes/docs/site/game/
 	type: Phaser.WEBGL,
@@ -97,9 +101,48 @@ export const config: Phaser.Types.Core.GameConfig & {
 		text: '#ffffff',
 		background: ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#000000'],
 	},
+
+	invite: null,
+	spectate: null,
+	userId: "",
+	userToken: "",
 }
 
-export function setup(_options: {}): Phaser.Game {
+export function setup(_options: {
+	userId: string,
+	userToken: string,
+	gameId: string,
+	invite: string | null,
+	spectate: string | null}): Phaser.Game {
+
+	class InGame extends Phaser.Scene {
+		constructor(Config: Phaser.Types.Scenes.SettingsConfig) {
+			super(Config)
+		}
+
+    video?: Phaser.GameObjects.Video;
+
+		init() {}
+
+		preload() {
+			// sceneLoader(this)
+			assetLoader(this)
+		}
+
+		async create() {
+
+			this.add.image(config.width / 2, config.height / 2, "global_background.png")
+					.setDisplaySize(config.width, config.height)
+
+			this.add.text(config.width / 2, config.height / 2, "ALREADY IN GAME")
+			.setFontSize(65)
+			.setStroke('black', 3)
+			.setTint(0xff0000)
+			.setOrigin(0.5, 0.5)
+    }
+
+		update(/*time, delta*/) {}
+	} 
 
 	class HomeScene extends Phaser.Scene {
 		constructor(Config: Phaser.Types.Scenes.SettingsConfig) {
@@ -116,19 +159,31 @@ export function setup(_options: {}): Phaser.Game {
 		}
 
 		async create() {
-			// const me = userStore.user;
 
-			this.add
-					.image(config.width / 2, config.height / 2, "global_background.png")
+			this.add.image(config.width / 2, config.height / 2, "global_background.png")
 					.setDisplaySize(config.width, config.height)
 
-			//this.scene.run(scenesList.MenuScene)
-			this.scene.run(scenesList.MenuScene)
+			if(config.invite)
+				this.scene.run(scenesList.JoinFriendScene, { type: "classical", id: config.invite })
+			else if (config.spectate)
+				this.scene.run(scenesList.JoinSpectateScene, { type: "classical", id: config.spectate })
+			else
+				this.scene.run(scenesList.MenuScene)
     }
 
 		update(/*time, delta*/) {}
 	}
 
-	const game = new Phaser.Game({ ...config, scene: HomeScene })
+	config.invite = _options.invite
+	config.spectate = _options.spectate
+	config.userId = _options.userId
+	config.userToken = _options.userToken
+
+	let game: Phaser.Game
+
+	if (_options.gameId)
+		game = new Phaser.Game({ ...config, scene: InGame,  })
+	else
+		game = new Phaser.Game({ ...config, scene: HomeScene,  })
 	return game
 }

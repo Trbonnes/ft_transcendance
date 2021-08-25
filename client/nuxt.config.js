@@ -44,6 +44,7 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
+    '@nuxtjs/toast',
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
     '@nuxtjs/pwa',
@@ -113,6 +114,11 @@ export default {
         },
       },
     },
+  },
+
+  toast: {
+    position: 'bottom-right',
+    duration: '5000',
   },
 
   fontawesome: {

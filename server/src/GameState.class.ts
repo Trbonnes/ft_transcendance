@@ -5,6 +5,9 @@ export default class GameState {
     public id: string
     public client0: Socket //= undefined
     public client1: Socket //= undefined
+    public client0_id: string
+    public client1_id: string
+    public friend: boolean
     public player0: {
       x: number
       y: number
@@ -35,6 +38,7 @@ export default class GameState {
         this.id = uuidv4()
         this.client0 = client
         this.client1 = undefined
+        this.friend = false
         this.player0 = {
             x: 79.6,
             y: 540,

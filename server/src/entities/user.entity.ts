@@ -1,7 +1,7 @@
 import { PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, Entity, OneToMany, ManyToMany, OneToOne, JoinTable, JoinColumn } from 'typeorm';
-import { Friendship } from './friendship.entity';
 import { Game } from './game.entity';
 import { Channel } from './channel.entity';
+import { FriendRequest } from './friend-request.entity';
 
 @Entity()
 export class User {
@@ -22,7 +22,16 @@ export class User {
 	displayName: string
 
 	@Column()
+	role: string = "user"
+
+	@Column()
 	avatar: string = "" // link to the image
+
+	@Column()
+	defaultAvatar: string = "" // link to default 42 intra avatar
+
+	@Column()
+	avatarFileName: string = "" // custom avatar file name
 
   	@Column()
 	isActive: boolean = false
@@ -43,21 +52,19 @@ export class User {
 	defeat: number = 0
 
 	@Column()
-	ladder: number = 0
+	level: number = 0
 
 	@CreateDateColumn()
 	createdDate: Date
 
 	@UpdateDateColumn()
 	lastUpdated: Date
+	
+	@Column("text", {array: true, default: '{}'})
+	public friends: string[]
 
-	@ManyToMany(() => Game, game => game.players)
-	@JoinTable()
-	public games: Game[]
-
-	@ManyToMany(() => Friendship, friendship => friendship.users)
-	@JoinTable()
-	public friendships: Friendship[]
+	@Column({default: ""})
+	game_id: string
 
 	@ManyToMany(() => Channel, channel => channel.members)
 	@JoinTable()

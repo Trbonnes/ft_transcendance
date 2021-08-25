@@ -27,7 +27,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   private logger: Logger = new Logger('authControllerLogger');
 
@@ -38,25 +38,20 @@ export class AuthController {
     let user = null;
 
     if (code === 'twoFactorAuthenticationActivated') {
-      user = await this.usersService.findOneByTwoFactorCode(twoFactorCode);
+      user = await this.usersService.findOneByTwoFactorCode(twoFactorCode)
       if (!user)
-        throw new HttpException(
-          {
-            error: 'Two Factor Authentication code is invalid',
-            type: 'missing_twofactor',
-          },
-          HttpStatus.UNAUTHORIZED,
-        );
-    } else {
+        throw new HttpException({
+          error: 'Two Factor Authentication code is invalid',
+          type: 'wrong_twofactor'
+        }, HttpStatus.UNAUTHORIZED)
+    }
+    else {
       console.log(code);
       const fortyTwoUser = await this.authService.getFortyTwoUser(code);
       if (!fortyTwoUser) {
-        throw new HttpException(
-          {
-            error: '42 User not found',
-          },
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new HttpException({
+          error: '42 User not found'
+        }, HttpStatus.BAD_REQUEST)
       }
       user = await this.usersService.findOneByFortyTwoLogin(fortyTwoUser.login);
       if (user === null) {
@@ -65,7 +60,7 @@ export class AuthController {
           .setLogin(fortyTwoUser.login)
           .setDisplayName(fortyTwoUser.displayname)
           .setFirstName(fortyTwoUser.displayname)
-          .setAvatar(fortyTwoUser.image_url);
+          .setAvatar(fortyTwoUser.image_url)
 
         user = await this.usersService.create(userDto);
       }
@@ -129,9 +124,9 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/user')
+  @Get("/user")
   async user(@Req() request, @Res() response: Response) {
-    const user = await this.usersService.findOnebyId(request.user.id);
+    const user = await this.usersService.findOneById(request.user.id);
     return response.status(200).json(user);
   }
 

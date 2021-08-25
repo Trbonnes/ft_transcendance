@@ -11,7 +11,9 @@
       px-4
       sm:px-6
       lg:px-8
-      bg-gray-500 bg-no-repeat bg-cover
+      bg-gray-500 bg-no-repeat
+      md:bg-contain
+      bg-center
       relative
       items-center
     "
@@ -26,7 +28,7 @@
           Welcome to ft_transcendance!
         </h2>
         <p class="mt-2 text-sm text-gray-600">Please sign in to your account</p>
-        <p class="mt-2 text-sm text-gray-600">
+        <p class="mt-2 text-sm text-gray-600 text-italic">
           For Test User: please check the box
         </p>
         <input type="checkbox" class="mt-3" v-model="testSignIn" />
@@ -59,7 +61,7 @@
       </div>
       <div v-else class="">
         <label class="text-sm font-bold text-gray-700 tracking-wide"
-          >Test User Name</label
+          >Test User Name (16 characters max.)</label
         >
         <input
           class="
@@ -70,8 +72,11 @@
             focus:outline-none
             focus:border-indigo-500
             mb-5
+            text-black
           "
           type="text"
+          maxlength="16"
+          v-on:keypress="isAlphaNumerical($event)"
           v-model="testUserName"
           placeholder="Name"
         />
@@ -108,6 +113,9 @@
 import Vue from 'vue'
 
 export default Vue.extend({
+  layout: 'loggedout',
+  middleware: 'auth',
+
   data() {
     return {
       testSignIn: false,
@@ -115,14 +123,16 @@ export default Vue.extend({
     }
   },
 
-  middleware: 'auth',
-
   methods: {
     userLogin() {
       this.$auth.loginWith('fortytwo')
     },
 
     testUserLogin() {
+      if (this.testUserName.length < 2) {
+        this.$toast.error('Test User name too short')
+        return
+      }
       this.$auth.loginWith('testrefresh', {
         params: {
           user: this.testUserName,
@@ -132,6 +142,15 @@ export default Vue.extend({
 
     displayState() {
       console.log(this.$store.state)
+    },
+
+    isAlphaNumerical($event: any) {
+      let char = String.fromCharCode($event.keyCode)
+      if (/^[A-Za-z0-9]+$/.test(char)) return true
+      else {
+        $event.preventDefault()
+        this.$toast.error('Only alphanumerical characters')
+      }
     },
   },
 })

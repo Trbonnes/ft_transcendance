@@ -3,6 +3,9 @@ import { Socket, Server, Namespace } from 'socket.io'
 import { AppService } from './app.service'
 import GameState from './GameState.class'
 import { GameGateway } from './app.gamegateway'
+import { UsersService } from './users/users.service';
+import { AuthService } from './auth/auth.service';
+import { GameService } from './game/game.service';
 
 @WebSocketGateway({
   namespace: 'borderless',
@@ -12,8 +15,13 @@ import { GameGateway } from './app.gamegateway'
 })
 export class BorderlessGateway extends GameGateway {
 
-  constructor(private appService: AppService) {
-    super(appService)
+  constructor(
+    protected readonly usersService: UsersService,
+    protected readonly authService: AuthService,
+    protected readonly gameService: GameService,
+
+    private appService: AppService) {
+    super(usersService, authService, gameService, appService)
 
     super.hitWall = function(gameId: string) {
       if (this.rooms.get(gameId).ball.y >= 1080)
