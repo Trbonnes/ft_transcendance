@@ -7,9 +7,11 @@ import {
   Entity,
   ManyToMany,
   OneToOne,
+  OneToMany,
   ManyToOne,
 } from 'typeorm';
 import { User } from './user.entity';
+import { ChannelMessage } from './channel-message.entity';
 
 @Entity()
 export class Channel {
@@ -37,6 +39,9 @@ export class Channel {
   @ManyToOne(() => User)
   @JoinColumn()
   owner: User;
+
+  @OneToMany(() => ChannelMessage, (msg) => msg.channel)
+  messages: ChannelMessage[];
 
   @ManyToMany(() => User, (user) => user.channels)
   members: User[];

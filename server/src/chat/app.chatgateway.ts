@@ -13,7 +13,9 @@ import { User } from './../entities/user.entity';
 import { UsersService } from './../users/users.service';
 import { AuthService } from 'src/auth/auth.service';
 import { ChannelService } from 'src/chat/channel/channel.service';
+import { ChannelMessageService } from 'src/chat/channel/channel-message/channel-message.service';
 import { ChannelMessageDto } from './channel/dto/channel-message.dto';
+import { ChannelMessage } from 'src/entities/channel-message.entity';
 
 @WebSocketGateway({
   namespace: 'chat',
@@ -26,6 +28,7 @@ export class ChatGateway {
   constructor(
     private readonly userService: UsersService,
     private readonly channelService: ChannelService,
+    private readonly channelMessageService: ChannelMessageService,
     private readonly auth: AuthService,
   ) {
     this.activeChannels = new Map<string, Channel>();
@@ -46,6 +49,7 @@ export class ChatGateway {
       let token = client.handshake.headers.authorization.split(' ')[1];
       let data = await this.auth.validateToken(token);
       if (!data) {
+        console.log('Disconnected client');
         client.disconnect();
         return;
       }
@@ -88,16 +92,23 @@ export class ChatGateway {
     @ConnectedSocket() client: Socket,
   ) {
     console.log('it seems that a message has been received');
-    if (dto.content.trim() === '') return;
+    console.log(dto);
+    if (!dto.content || dto.content.trim() === '') return;
+    console.log(this.activeChannels);
     if (client.rooms.has(dto.channelId)) {
-      this.server.in(dto.channelId).emit('channel/message', {
-        id: 'sasdffasdf',
-        senderId: this.activeClients.get(client.id).id,
-        channelId: dto.channelId,
-        content: dto.content,
-      });
-      console.log('Message received for a room that is valid !');
-      console.log(dto.content.trim());
+      console.log('The channel is active');
+      let data: ChannelMessage;
+      try {
+        data = await this.channelMessageService.createOne(
+          client.id,
+          dto.channelId,
+          dto.content,
+        );
+        this.server.in(dto.channelId).emit('channel/message', data);
+      } catch (error) {
+        // TODO handle error
+        console.log(error);
+      }
     }
   }
 

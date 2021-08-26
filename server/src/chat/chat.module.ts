@@ -16,4 +16,4 @@ import { Channel } from 'src/entities/channel.entity';
   ],
   providers: [ChatGateway],
 })
-export class ChatModule { }
+export class ChatModule {}

@@ -1,11 +1,8 @@
 <template>
   <div class="flex flex-col h-full">
-    <div id="chatHeader">
-      <a href="#" @click="$emit('exit')" class="btn btn-primary">Go back</a>
-    </div>
     <div id="chatMessages" class="flex flex-col">
-      <div v-for="c in getMessages">
-        {{ c.content }}
+      <div v-for="c in messages">
+        {{ c }}
       </div>
     </div>
     <div class="flex flex-row">
@@ -42,6 +39,7 @@ export default Vue.extend({
       if (this.message.trim() != '') {
         // sending the even to the parent page
         this.$emit('sendMessage', this.message.trim())
+        this.message = ''
       }
     },
   },

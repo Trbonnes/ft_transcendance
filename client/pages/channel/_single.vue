@@ -1,32 +1,35 @@
 <template>
   <div>
-    This is the channel with id : {{ channelId }}
-    <Conversation
-      messages="['this is a message', 'this is another', 'let's go]"
-    />
+    This is the channel with id : {{}}
+    <Conversation :messages="messages" @sendMessage="sendMessage" />
   </div>
 </template>
 
 <script lang="ts">
-import { CreateMessageDto } from '~/utils/types/message'
-import { getSocket } from '~/store/plugins/websocket'
 import Vue from 'vue'
-
-sock = getSocket()
+import { CreateMessageDto, Message } from '~/utils/types/message'
+import { getSocket } from '~/store/plugins/websocket'
 
 export default Vue.extend({
   // fetch channel given the id and pass the data to the Conversation component
-  props: ['channelId'],
   data() {
-    return {}
+    return {
+      id: this.$route.params.single,
+      messages: [] as Message[],
+    }
   },
-  computed: {},
+  mounted() {
+    const sock = getSocket()
+    sock.emit('joinChannel', this.id)
+  },
   methods: {
-    sendMessage() {
-      const dto: ChannelMessageDto = {
-        channelId: this.$props.id,
-        content: this.message.trim(),
+    sendMessage(msgContent: string) {
+      const sock = getSocket()
+      const dto: CreateMessageDto = {
+        channelId: this.id,
+        content: msgContent,
       }
+
       sock.emit('channelMessage', dto)
     },
   },
