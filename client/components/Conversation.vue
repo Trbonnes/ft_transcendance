@@ -33,10 +33,10 @@ export default Vue.extend({
   methods: {
     listenKey(e: any) {
       // key code for enter key
-      if (e.keyCode == 13) this.sendMessage()
+      if (e.keyCode === 13) this.sendMessage()
     },
     sendMessage() {
-      if (this.message.trim() != '') {
+      if (this.message.trim() !== '') {
         // sending the even to the parent page
         this.$emit('sendMessage', this.message.trim())
         this.message = ''

@@ -2,11 +2,28 @@
   <div class="flex flex-col items-center h-full">
     <div id="channelList" >
       <div v-for="c in $store.state.channel.channelList" class="card bordered">
-      <nuxt-link :to="`/channel/${c.id}`">
-        <div class="card-body cursor-pointer w-full">
+        <div @click="joinChannel(c)" class="card-body cursor-pointer w-full">
           <h1>{{c.name}}</h1>
         </div>
-      </nuxt-link>
+      </div>
+    </div>
+
+    <div id="join-private"  v-bind:class="[this.joinForm ? 'modal-open' : 'modal']">
+      <div class="modal-box ">
+      <form @submit="joinPrivate()">
+          <label for="channelPrivatePassword" class="cursor-pointer label">
+            Password required
+            <input
+              v-model="channelPrivatePassword"
+              id="channelPrivatePassword"
+              type="password"
+              placeholder=""
+              class="input input-bordered"
+            />
+          </label>
+          <input type="submit" value="Join channel" class="btn btn-primary" />
+      </form>
+
       </div>
     </div>
     <a href="#create-channel" class="btn btn-primary">Create a channel</a>
@@ -44,10 +61,8 @@
               v-bind:disabled="!isPrivate"
             />
           </label>
-
           <input type="submit" value="Create channel" class="btn btn-primary" />
         </form>
-        <div v-for="error in errors" class="alert alert-error"><label>{{error}}</label></div>
           <a href="#" class="btn btn-primary">Close</a>
         </div>
       </div>
@@ -65,7 +80,8 @@ export default Vue.extend({
       isPrivate: false as boolean,
       channelName: '' as string,
       channelPassword: '' as string,
-      errors: [] as string[],
+      channelPrivatePassword: '' as string,
+      joinForm : false
     }
   },
   fetch() {
@@ -77,15 +93,14 @@ export default Vue.extend({
   methods: {
     checkForm(e: any) {
       e.preventDefault()
-      this.errors = []
       if (this.channelName === '')
-        this.errors.push('Channel name cannot be empty')
-      if (this.isPrivate && this.channelPassword === '')
-        this.errors.push('Channel password cannot be empty')
-      if (this.errors.length == 0) this.createChannel()
+        this.$toast.error('Channel name cannot be empty')
+      else if (this.isPrivate && this.channelPassword === '')
+        this.$toast.error('Channel password cannot be empty')
+      else this.createChannel()
     },
     createChannel() {
-      const data: CreateChannelDto = {
+      const data: CreateChannelDto = { // TODO remove DTO, kinda overkill, types that are used only one time don't need to be defined elsewhere
         isPublic: !this.isPrivate,
         channelPassword: this.channelPassword,
         channelName: this.channelName,
@@ -104,6 +119,20 @@ export default Vue.extend({
           console.log(error)
         })
     },
+    joinChannel(channel : Channel)
+    {
+      console.log(this.joinForm) 
+      /* if (channel.isPublic == false) */
+      /*     this.joinForm = true */
+        this.joinForm = !this.joinForm
+      console.log(this.joinForm) 
+
+    },
+    joinPrivate()
+    {
+      if (this.channelPrivatePassword == "")
+        this.$toast.error("Password cannot be empty")
+    }
   },
 })
 </script>

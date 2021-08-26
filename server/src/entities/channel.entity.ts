@@ -9,6 +9,7 @@ import {
   OneToOne,
   OneToMany,
   ManyToOne,
+  JoinTable,
 } from 'typeorm';
 import { User } from './user.entity';
 import { ChannelMessage } from './channel-message.entity';
@@ -27,8 +28,8 @@ export class Channel {
   @Column({ unique: true })
   name: string = '';
 
-  @Column()
-  password: string = '';
+  @Column({ select: false })
+  password?: string = '';
 
   @CreateDateColumn()
   createdDate: Date;
@@ -43,6 +44,7 @@ export class Channel {
   @OneToMany(() => ChannelMessage, (msg) => msg.channel)
   messages: ChannelMessage[];
 
-  @ManyToMany(() => User, (user) => user.channels)
+  @ManyToMany(() => User)
+  @JoinTable()
   members: User[];
 }

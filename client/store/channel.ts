@@ -13,6 +13,7 @@ export default class ChannelModule extends VuexModule {
     let data: Channel[]
     try {
       data = await $axios.$get<Channel[]>('/channel/all')
+      console.log(data)
       this.context.commit('setChannelList', data)
     } catch (error: any) {
       // TODO proper error handling

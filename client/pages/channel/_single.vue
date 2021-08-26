@@ -19,7 +19,9 @@ export default Vue.extend({
   },
   mounted() {
     const sock = getSocket()
-    sock.emit('joinChannel', this.id)
+    if (!sock.connected)
+      this.$toast.error('Cannot join channel, check your internet connection')
+    else sock.emit('joinChannel', this.id)
   },
   methods: {
     sendMessage(msgContent: string) {

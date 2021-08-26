@@ -14,6 +14,7 @@ import {
 import { ChannelService } from './channel.service';
 import { Channel } from '../../entities/channel.entity';
 import { CreateChannelDto } from './dto/create-channel.dto';
+import { JoinChannelDto } from './dto/join-channel.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('channel')
@@ -64,5 +65,22 @@ export class ChannelController {
       throw error;
     }
     return data;
+  }
+
+  @Post('join')
+  @UseGuards(JwtAuthGuard)
+  async joinChannel(@Req() req, @Body() dto: JoinChannelDto) {
+    try {
+      const channel = await this.channelService.getById(dto.channelId);
+      if (channel.isPublic == false) {
+        // TODO set password to sha256
+        if (dto.password == channel.password)
+          this.channelService.joinChannel(dto.channelId, req.user.id);
+        else
+          return new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
+      }
+    } catch (error) {
+      return new HttpException("Can't join channel", HttpStatus.BAD_REQUEST);
+    }
   }
 }

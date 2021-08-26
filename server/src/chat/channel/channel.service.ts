@@ -5,11 +5,13 @@ import { Channel } from '../../entities/channel.entity';
 import { User } from '../../entities/user.entity';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { getManager } from 'typeorm';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class ChannelService {
   constructor(
     @InjectRepository(Channel) private channelRepositery: Repository<Channel>,
+    private readonly userService: UsersService,
   ) {}
 
   async createChannel(
@@ -24,7 +26,31 @@ export class ChannelService {
     // TODO should we only update password if the channel is private ?
     newChannel.password = channelDto.channelPassword;
 
-    return this.channelRepositery.save(newChannel);
+    const data = await this.channelRepositery.save(newChannel);
+    delete data.password;
+    return data;
+  }
+
+  async joinChannel(channelId: string, userId: string) {
+    let user = await this.userService.findOneById(userId);
+    let channel = await this.channelRepositery.findOne(channelId, {
+      relations: ['members'],
+    });
+    channel.members.push(user);
+    this.channelRepositery.save(channel);
+  }
+
+  async findUserInChannel(channelId: string, userId: string) {
+    let data = await this.channelRepositery
+      .createQueryBuilder('channel')
+      .innerJoinAndSelect('channel.members', 'member')
+      .where('channel.id = :channelId AND member.id = :userId', {
+        channelId,
+        userId,
+      })
+      .getOne();
+    if (data) delete data.password;
+    return data;
   }
 
   getById(channelId: string) {
@@ -35,6 +61,10 @@ export class ChannelService {
     let data: Channel[];
     try {
       data = await this.channelRepositery.find();
+      for (let index = 0; index < data.length; index++) {
+        const c = data[index];
+        delete c.password;
+      }
     } catch (err) {
       throw err;
     }
@@ -43,10 +73,14 @@ export class ChannelService {
 
   async searchByName(name: string): Promise<any> {
     const manager = getManager();
-    const res = manager.query(
+    const res = await manager.query(
       'select *, levenshtein(($1), "channel".name) as leven from "channel" order by leven limit 10',
       [name],
     );
+    for (let index = 0; index < res.length; index++) {
+      const element = res[index];
+      delete element.password;
+    }
     return res;
   }
 }

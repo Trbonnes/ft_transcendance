@@ -6,6 +6,7 @@ import {
   WebSocketServer,
   WsResponse,
 } from '@nestjs/websockets';
+import { EntityNotFoundError } from 'typeorm';
 import { UseGuards, Req } from '@nestjs/common';
 import { Socket, Server, Namespace } from 'socket.io';
 import { Channel } from './../entities/channel.entity';
@@ -72,18 +73,22 @@ export class ChatGateway {
     @ConnectedSocket() client: Socket,
   ) {
     //Check if channel in map
-    if (this.activeChannels.has(channelId)) client.join(channelId);
-    else {
-      let channel: Channel;
-      try {
-        channel = await this.channelService.getById(channelId);
-      } catch (error) {
-        // TODO check if not found
-        return;
-      }
-      this.activeChannels.set(channelId, channel);
-      client.join(channelId);
+    let channel: Channel;
+    try {
+      channel = await this.channelService.findUserInChannel(
+        channelId,
+        this.activeClients.get(client.id).id,
+      );
+    } catch (e) {
+      return;
     }
+    //       if (channel.isPublic)
+    //       {
+    //
+    //       }
+    //       else if ()
+    // this.activeChannels.set(channelId, channel);
+    // client.join(channelId);
   }
 
   @SubscribeMessage('channelMessage')

@@ -2,7 +2,6 @@ import { Message } from '~/utils/types/message'
 
 interface Channel {
   id: string
-  password: string
   name: string
   isPublic: boolean
   isSticky: boolean
