@@ -6,8 +6,6 @@ import {
   Param,
   HttpException,
   HttpStatus,
-  UseFilters,
-  BadRequestException,
   UseGuards,
   Req,
 } from '@nestjs/common';
@@ -71,9 +69,13 @@ export class ChannelController {
   @UseGuards(JwtAuthGuard)
   async joinChannel(@Req() req, @Body() dto: JoinChannelDto) {
     try {
-      const channel = await this.channelService.getById(dto.channelId);
-      if (channel.isPublic == false) {
+      const channel = await this.channelService.getById(dto.channelId, true); // the true includes the password
+      console.log('we should be there my dear');
+      console.log(channel);
+      if (channel.isPublic === false) {
+        console.log('Here');
         // TODO set password to sha256
+        console.log(dto.password, channel.password);
         if (dto.password == channel.password)
           this.channelService.joinChannel(dto.channelId, req.user.id);
         else
@@ -82,5 +84,6 @@ export class ChannelController {
     } catch (error) {
       return new HttpException("Can't join channel", HttpStatus.BAD_REQUEST);
     }
+    return { status: 201, message: 'Joined channel' };
   }
 }
