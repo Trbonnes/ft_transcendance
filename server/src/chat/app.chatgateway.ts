@@ -100,7 +100,7 @@ export class ChatGateway {
       let data: ChannelMessage;
       try {
         data = await this.channelMessageService.createOne(
-          client.id,
+          this.activeClients.get(client.id).id,
           dto.channelId,
           dto.content,
         );

@@ -54,12 +54,11 @@ export default class ChannelModule extends VuexModule {
 
     this.channelList.forEach((channel) => {
       // TODO maybe change it to a dictionnary instand of a list to reduce complexity
-      if (channel.id == channelId) {
+      if (channel.id === channelId) {
         console.log('Actually found a channel with some stuff in it')
         console.log(channel)
 
         channel.messages.push(message)
-        return
       }
     })
   }
@@ -72,7 +71,7 @@ export default class ChannelModule extends VuexModule {
     return (id: string) => {
       for (let i = 0; i < this.channelList.length; i++) {
         const element = this.channelList[i]
-        if (element.id == id) return element
+        if (element.id === id) return element
       }
     }
   }

@@ -14,6 +14,7 @@ export class ChannelMessageService {
 
   async createOne(senderId: string, channelId: string, content: string) {
     let msg = new ChannelMessage();
+    console.log(senderId, channelId, content, 'bande de fils de putes');
     msg.senderId = senderId; // TO DO fix inneficient ffs
     msg.channelId = channelId;
     msg.content = content;

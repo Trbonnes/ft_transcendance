@@ -54,7 +54,6 @@ export default Vue.extend({
 }
 
 #chatMessages {
-  border: 5px solid blue;
   height: 70%;
   width: 100%;
 }

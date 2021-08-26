@@ -1,6 +1,5 @@
 <template>
   <div>
-    This is the channel with id : {{}}
     <Conversation :messages="messages" @sendMessage="sendMessage" />
   </div>
 </template>
