@@ -79,16 +79,15 @@ export class ChatGateway {
         channelId,
         this.activeClients.get(client.id).id,
       );
+      console.log('Channel found');
+      console.log(channel);
+      if (channel.isPublic) {
+        client.join(channelId);
+        this.activeChannels.set(channelId, channel);
+      }
     } catch (e) {
       return;
     }
-    //       if (channel.isPublic)
-    //       {
-    //
-    //       }
-    //       else if ()
-    // this.activeChannels.set(channelId, channel);
-    // client.join(channelId);
   }
 
   @SubscribeMessage('channelMessage')
