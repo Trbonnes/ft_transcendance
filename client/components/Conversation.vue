@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col h-full" id="convo">
-    <div id="chatMessages" class="flex flex-col">
+  <div class="flex flex-col h-full" >
+    <div id="convo" class="flex flex-col">
       <div v-for="c in messages" 
             class="p-3 m-0.5 rounded-xl inline-block"
             v-bind:class="[$auth.user.id === c.senderId ? 'text-white bg-blue-500 self-end' : ' text-black bg-gray-300 self-start']"
@@ -31,7 +31,12 @@ export default Vue.extend({
       message: '',
     }
   },
-  mounted() {},
+  updated() {
+    var container = this.$el.querySelector("#convo");
+    container.scrollTop = container.scrollHeight;
+  },
+  mounted() {
+  },
   computed: {},
   methods: {
     listenKey(e: any) {
@@ -50,14 +55,10 @@ export default Vue.extend({
 </script>
 
 <style>
-#chatHeader {
-  border: 5px solid red;
-  height: 10%;
-  width: 100%;
-}
 
-#chatMessages {
-  height: 70%;
+#convo {
+  height: 70vh;
   width: 100%;
+  overflow-y: scroll;
 }
 </style>

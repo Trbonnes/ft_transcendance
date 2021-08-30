@@ -34,12 +34,12 @@ export class ChannelService {
   }
 
   async joinChannel(channelId: string, userId: string) {
-    let user = await this.userService.findOneById(userId);
-    let channel = await this.channelRepositery.findOne(channelId, {
-      relations: ['members'],
-    });
-    channel.members.push(user);
-    this.channelRepositery.save(channel);
+    // let user = await this.userService.findOneById(userId);
+    // let channel = await this.channelRepositery.findOne(channelId, {
+    //   relations: ['members'],
+    // });
+    // // channel.members.push(user);
+    // this.channelRepositery.save(channel);
   }
 
   async findUserInChannel(channelId: string, userId: string) {

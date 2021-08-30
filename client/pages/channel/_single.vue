@@ -20,20 +20,18 @@ export default Vue.extend({
     {
       let data = this.$store.getters["channel/messages"](this.id)
       console.log("trying to call getter")
-      console.log(data)
       return data
     }
   },
   mounted() {
-      try {
-        this.$store.dispatch("channel/joinChannel", this.id)
-        this.$store.dispatch("channel/getMessages", this.id)
-      }
-      catch(error)
-      {
-        // TODO handling error
-
-      } 
+    try {
+      this.$store.dispatch("channel/joinChannel", this.id)
+      this.$store.dispatch("channel/getMessages", this.id)
+    }
+    catch(error)
+    {
+      // TODO handling error
+    } 
   },
   methods: {
     sendMessage(msgContent: string) {
