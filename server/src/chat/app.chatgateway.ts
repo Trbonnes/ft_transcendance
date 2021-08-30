@@ -15,6 +15,7 @@ import { UsersService } from './../users/users.service';
 import { AuthService } from 'src/auth/auth.service';
 import { ChannelService } from 'src/chat/channel/channel.service';
 import { ChannelMessageService } from 'src/chat/channel/channel-message/channel-message.service';
+import { ChannelMembershipService } from 'src/chat/channel/channel-membership/channel-membership.service';
 import { ChannelMessageDto } from './channel/dto/channel-message.dto';
 import { ChannelMessage } from 'src/entities/channel-message.entity';
 
@@ -30,6 +31,7 @@ export class ChatGateway {
     private readonly userService: UsersService,
     private readonly channelService: ChannelService,
     private readonly channelMessageService: ChannelMessageService,
+    private readonly membershipService: ChannelMembershipService,
     private readonly auth: AuthService,
   ) {
     this.activeChannels = new Map<string, Channel>();
@@ -72,23 +74,12 @@ export class ChatGateway {
     @MessageBody() channelId: string,
     @ConnectedSocket() client: Socket,
   ) {
-    //Check if channel in map
     let channel: Channel;
     try {
-      channel = await this.channelService.findUserInChannel(
-        channelId,
-        this.activeClients.get(client.id).id,
-      );
-      console.log('Channel found');
-      console.log(channelId)
-      console.log(channel);
-      if (channel.isPublic) {
-        client.join(channelId);
-        this.activeChannels.set(channelId, channel);
-      }
-      else {
-        // TODO check for membership 
-      }
+      if ((await this.membershipService.isMember(channelId, this.activeClients.get(client.id).id)) == false)
+        return  // TODO return error message ? 
+      client.join(channelId);
+      this.activeChannels.set(channelId, channel);
     } catch (e) {
       //TODO error handling
       return;
@@ -100,6 +91,7 @@ export class ChatGateway {
     @MessageBody() dto: ChannelMessageDto,
     @ConnectedSocket() client: Socket,
   ) {
+    console.log("message received")
     if (!dto.content || dto.content.trim() === '') return;
     if (client.rooms.has(dto.channelId)) {
       let data: ChannelMessage;

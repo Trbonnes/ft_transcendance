@@ -10,6 +10,8 @@ import {
   Req,
 } from '@nestjs/common';
 import { ChannelService } from './channel.service';
+import { ChannelMembershipService } from './channel-membership/channel-membership.service';
+import { ChannelMembership } from '../../entities/channel-membership.entity';
 import { Channel } from '../../entities/channel.entity';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { JoinChannelDto } from './dto/join-channel.dto';
@@ -17,19 +19,15 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('channel')
 export class ChannelController {
-  constructor(private readonly channelService: ChannelService) { }
+  constructor(
+    private readonly channelService: ChannelService,
+    private readonly membershipService: ChannelMembershipService
+  ) { }
 
   // Returns all channel for an user, can only be used by admin and the user who has the channels
   @Get('all')
   all() {
     return this.channelService.getAllChannels();
-  }
-
-  // Returns a specific channe information
-  // TODO maybe hide password ? You dumbass
-  @Get(':id')
-  getOne() {
-    return {};
   }
 
   @Get('search/:name')
@@ -51,6 +49,18 @@ export class ChannelController {
     }
   }
 
+  @Get(':channelId/members')
+  async getMembers(@Param('channelId') channelId: string) {
+    try {
+      return await this.channelService.getMembers(channelId)
+    } catch (error) {
+      return new HttpException(
+        'Cannot retrieve members',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
   @Post('create')
   @UseGuards(JwtAuthGuard)
   async createChannel(@Req() req, @Body() channelDto: CreateChannelDto) {
@@ -68,6 +78,7 @@ export class ChannelController {
     let data: Channel;
     try {
       data = await this.channelService.createChannel(channelDto, req.user.id);
+      (await this.membershipService.create(data.id, req.user.id, true)) // Creates a new membership with admin rights
     } catch (error) {
       if (error && error.code == '23505')
         return new HttpException(
@@ -83,19 +94,16 @@ export class ChannelController {
   @UseGuards(JwtAuthGuard)
   async joinChannel(@Req() req, @Body() dto: JoinChannelDto) {
     try {
+      if (await this.membershipService.isMember(dto.channelId, req.user.id))
+        return { status: 201, message: 'Joined channel' }
       const channel = await this.channelService.getById(dto.channelId, true); // the true includes the password
       if (channel.isPublic === false) {
-        console.log('Here');
         // TODO set password to sha256
         console.log(dto.password, channel.password);
-        if (dto.password == channel.password)
-          this.channelService.joinChannel(dto.channelId, req.user.id);
-        else
-          return new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
+        if (dto.password != channel.password)
+          return new HttpException('Invalid password', HttpStatus.BAD_REQUEST);
       }
-      else {
-        this.channelService.joinChannel(dto.channelId, req.user.id);
-      }
+      this.membershipService.create(dto.channelId, req.user.id)
     } catch (error) {
       return new HttpException("Can't join channel", HttpStatus.BAD_REQUEST);
     }

@@ -7,6 +7,7 @@ import { CreateChannelDto } from './dto/create-channel.dto';
 import { getManager } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
 import { ChannelMessageService } from './channel-message/channel-message.service'
+import { ChannelMembership } from '../../entities/channel-membership.entity'
 
 @Injectable()
 export class ChannelService {
@@ -33,15 +34,6 @@ export class ChannelService {
     return data;
   }
 
-  async joinChannel(channelId: string, userId: string) {
-    // let user = await this.userService.findOneById(userId);
-    // let channel = await this.channelRepositery.findOne(channelId, {
-    //   relations: ['members'],
-    // });
-    // // channel.members.push(user);
-    // this.channelRepositery.save(channel);
-  }
-
   async findUserInChannel(channelId: string, userId: string) {
     let data = await this.channelRepositery
       .createQueryBuilder('channel')
@@ -66,6 +58,10 @@ export class ChannelService {
 
   getMessageHistory(channelId: string) {
     return this.channelMessageService.getByChannelId(channelId) // TODO maybe it's best practice to move this logic into the controller ?
+  }
+
+  getMembers(channelId: string) {
+    return this.channelRepositery.findOne(channelId, { relations: ["members"] })
   }
 
   async getAllChannels(): Promise<Channel[]> {

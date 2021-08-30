@@ -127,10 +127,23 @@ export default Vue.extend({
     },
     joinChannel(channel : Channel)
     {
-      if (channel.isPublic === false)
-        this.toggleJoinForm(channel.id)
-      else
-        this.joinRequest(channel.id)
+      this.$axios.$post("/channel/join", { channelId : channel.id })
+      .then((rep : any) => {
+        if (rep.status == 201)
+        {
+          this.$toast.success(rep.message)
+          this.$router.push(`/channel/${id}`)
+        }
+        else
+        {
+          if (rep.status == 401)
+            this.toggleJoinForm(channel.id)
+          this.$toast.error(rep.message)
+        }
+      })
+      .catch((error) => {
+        console.log(error) //TODO error handling
+      })
     },
     toggleJoinForm(channelId = '')
     {
@@ -138,35 +151,6 @@ export default Vue.extend({
       this.joinForm.show = !this.joinForm.show;
       this.channelPrivatePassword = ''
     },
-    joinPrivate(e : any)
-    {
-      e.preventDefault()
-      if (this.channelPrivatePassword === "")
-        this.$toast.error("Password cannot be empty")
-      else
-      {
-        this.joinRequest(this.joinForm.channelId, this.channelPrivatePassword)
-      }
-    },
-    joinRequest(id : string, passwd = "")
-    {
-      console.log("id ", id)
-        this.$axios.$post("/channel/join", { channelId : id, password: passwd})
-      .then((rep : any) => { console.log(rep);
-        if (rep.status != 201)
-          this.$toast.error(rep.message)
-        else
-        {
-          this.$toast.success(rep.message)
-          this.$router.push(`/channel/${id}`)
-        }
-      })
-      .catch((error) => 
-      {
-        console.log(error)
-        this.$toast.error("Http error, check your internet connection")
-      })
-    }
   },
 })
 </script>
