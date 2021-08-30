@@ -80,12 +80,17 @@ export class ChatGateway {
         this.activeClients.get(client.id).id,
       );
       console.log('Channel found');
+      console.log(channelId)
       console.log(channel);
       if (channel.isPublic) {
         client.join(channelId);
         this.activeChannels.set(channelId, channel);
       }
+      else {
+        // TODO check for membership 
+      }
     } catch (e) {
+      //TODO error handling
       return;
     }
   }
@@ -95,12 +100,8 @@ export class ChatGateway {
     @MessageBody() dto: ChannelMessageDto,
     @ConnectedSocket() client: Socket,
   ) {
-    console.log('it seems that a message has been received');
-    console.log(dto);
     if (!dto.content || dto.content.trim() === '') return;
-    console.log(this.activeChannels);
     if (client.rooms.has(dto.channelId)) {
-      console.log('The channel is active');
       let data: ChannelMessage;
       try {
         data = await this.channelMessageService.createOne(
@@ -108,6 +109,7 @@ export class ChatGateway {
           dto.channelId,
           dto.content,
         );
+        console.log("Here is the id ", dto.channelId)
         this.server.in(dto.channelId).emit('channel/message', data);
       } catch (error) {
         // TODO handle error
@@ -124,7 +126,6 @@ export class ChatGateway {
     console.log('A client has been leaving the channel !');
     if (client.rooms.has(channelId)) {
       client.leave(channelId);
-
       try {
         const sockets = await this.server.in(channelId).fetchSockets();
         if (sockets.length == 0) this.activeChannels.delete(channelId);

@@ -1,4 +1,17 @@
-import { Message } from '~/utils/types/message'
+
+
+interface Message {
+  id: string
+  channelId: string
+  senderId: string
+  content: string
+}
+
+interface ChannelMessageDto {
+  // message that will be sent
+  channelId: string
+  content: string
+}
 
 interface Channel {
   id: string
@@ -18,4 +31,4 @@ interface CreateChannelDto {
   channelPassword: string
 }
 
-export { Channel, CreateChannelDto }
+export { ChannelMessageDto, Message, Channel, CreateChannelDto }

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { Plugin } from 'vuex'
 import { createWebSocketPlugin } from '~/store/plugins/websocket'
-import chat from '~/store/chat'
 import channel from '~/store/channel'
 
 Vue.use(Vuex)
@@ -9,9 +9,9 @@ Vue.use(Vuex)
 const store = () =>
   new Vuex.Store({
     // apparently the fact that it returns a function is super duper important
-    plugins: [createWebSocketPlugin], // plugin for websocket interaction when mutations
+    plugins: [createWebSocketPlugin as Plugin<any>], // plugin for websocket interaction when mutations
     modules: {
-      channel,
+      channel, // TODO only launch when logged in maybe ?
     },
     getters: {
       isLoggedIn: (state: any) => {
@@ -24,7 +24,7 @@ const store = () =>
     },
     actions: {
       loadChat() {
-        this.registerModule('chat', chat)
+        this.registerModule('channel', channel)
       },
     },
   })

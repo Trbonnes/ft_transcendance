@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col items-center h-full">
     <div id="channelList" >
-      <div v-for="c in $store.state.channel.channelList" class="card bordered">
+      <div v-for="c in getChannels" class="card bordered bg-gray-600 text-white">
         <div @click="joinChannel(c)" class="card-body cursor-pointer w-full">
-          <h1>{{c.name}}</h1>
+          <h1>{{c[1].name}}</h1> <!-- TODO not pretty -->
         </div>
       </div>
     </div>
@@ -90,8 +90,11 @@ export default Vue.extend({
   fetch() {
     this.$store.dispatch('channel/fetchAll')
   },
-  mounted() {
-    console.log(this.$store.state.channel.channelList)
+  computed : {
+    getChannels()
+    {
+      return this.$store.getters["channel/all"]
+    }
   },
   methods: {
     checkForm(e: any) {
@@ -125,12 +128,15 @@ export default Vue.extend({
     joinChannel(channel : Channel)
     {
       console.log(this.joinForm) 
+      console.log(channel)
       if (channel.isPublic === false)
       {
         this.toggleJoinForm(channel.id)
       }
-      console.log(this.joinForm) 
-
+      else
+      {
+        this.joinRequest(channel.id)
+      }
     },
     toggleJoinForm(channelId = '')
     {
@@ -145,21 +151,26 @@ export default Vue.extend({
         this.$toast.error("Password cannot be empty")
       else
       {
-        this.$axios.$post("/channel/join", { channelId : this.joinForm.channelId, password : this.channelPrivatePassword})
-        .then((rep : any) => { console.log(rep);
-          if (rep.status != 201)
-            this.$toast.error(rep.message)
-          else
-          {
-            this.$toast.success(rep.message)
-            this.$router.push(`/channel/${this.joinForm.channelId}`)
-          }
-        })
-        .catch((error) => 
-        {
-          this.$toast.error("Http error, check your internet connection")
-        })
+        this.joinRequest(this.joinForm.channelId, this.channelPrivatePassword)
       }
+    },
+    joinRequest(id : string, passwd = "")
+    {
+      this.$axios.$post("/channel/join", { channelId : id, password: passwd})
+      .then((rep : any) => { console.log(rep);
+        if (rep.status != 201)
+          this.$toast.error(rep.message)
+        else
+        {
+          this.$toast.success(rep.message)
+          this.$router.push(`/channel/${id}`)
+        }
+      })
+      .catch((error) => 
+      {
+        console.log(error)
+        this.$toast.error("Http error, check your internet connection")
+      })
     }
   },
 })
@@ -170,6 +181,5 @@ export default Vue.extend({
   display: block;
   width: 50%;
   min-height: 75%;
-  background-color: darkblue;
 }
 </style>

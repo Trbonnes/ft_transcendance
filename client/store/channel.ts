@@ -1,11 +1,10 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
-import { Channel, CreateChannelDto } from '~/utils/types/channel'
-import { Message } from '~/utils/types/message'
+import { Channel, CreateChannelDto, Message } from '~/utils/types'
 import { $axios } from '~/utils/api'
 
 @Module({ namespaced: true }) // since we're using a custom store this is important to make it namespaced, so we can use "chat/someAction" later
 export default class ChannelModule extends VuexModule {
-  public channelList: Channel[] = []
+  public channels = new Map<string, Channel>()
 
   @Action
   async fetchAll() {
@@ -14,7 +13,7 @@ export default class ChannelModule extends VuexModule {
     try {
       data = await $axios.$get<Channel[]>('/channel/all')
       console.log(data)
-      this.context.commit('setChannelList', data)
+      this.context.commit('setChannels', data)
     } catch (error: any) {
       // TODO proper error handling
     }
@@ -40,40 +39,41 @@ export default class ChannelModule extends VuexModule {
   }
 
   @Mutation
-  setChannelList(data: Channel[]) {
-    this.channelList = data
+  setChannels(data: Channel[]) {
+    this.channels.clear()
+    let tmp = new Map<string, Channel>()
+    for (let i = 0; i < data.length; i++) {
+      const c = data[i];
+      tmp.set(c.id, c)
+    }
+    this.channels = tmp
   }
 
   @Mutation
   pushChannel(data: Channel) {
-    this.channelList.push(data)
+    let copy = new Map(this.channels)
+    copy.set(data.id, data)
+    this.channels = copy
   }
 
   @Mutation
-  pushMessage({ channelId, message }) {
+  pushMessage(payload: { channelId: string; message: Message }) {
     console.log('A new message has been received !')
-
-    this.channelList.forEach((channel) => {
-      // TODO maybe change it to a dictionnary instand of a list to reduce complexity
-      if (channel.id === channelId) {
-        console.log('Actually found a channel with some stuff in it')
-        console.log(channel)
-
-        channel.messages.push(message)
-      }
-    })
+    try {
+      let c = this.channels.get(payload.channelId)
+      if (c)
+        c.messages.push(payload.message)
+    } catch (error) {
+    }
   }
 
   get all() {
-    return this.channelList
+    return this.channels
   }
 
   get getOne() {
     return (id: string) => {
-      for (let i = 0; i < this.channelList.length; i++) {
-        const element = this.channelList[i]
-        if (element.id === id) return element
-      }
+      return this.channels.get(id)
     }
   }
 }

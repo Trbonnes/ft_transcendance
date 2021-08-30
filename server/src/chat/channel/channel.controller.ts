@@ -17,7 +17,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('channel')
 export class ChannelController {
-  constructor(private readonly channelService: ChannelService) {}
+  constructor(private readonly channelService: ChannelService) { }
 
   // Returns all channel for an user, can only be used by admin and the user who has the channels
   @Get('all')
@@ -70,8 +70,6 @@ export class ChannelController {
   async joinChannel(@Req() req, @Body() dto: JoinChannelDto) {
     try {
       const channel = await this.channelService.getById(dto.channelId, true); // the true includes the password
-      console.log('we should be there my dear');
-      console.log(channel);
       if (channel.isPublic === false) {
         console.log('Here');
         // TODO set password to sha256
@@ -80,6 +78,9 @@ export class ChannelController {
           this.channelService.joinChannel(dto.channelId, req.user.id);
         else
           return new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
+      }
+      else {
+        this.channelService.joinChannel(dto.channelId, req.user.id);
       }
     } catch (error) {
       return new HttpException("Can't join channel", HttpStatus.BAD_REQUEST);
