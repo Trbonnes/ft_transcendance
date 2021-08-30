@@ -10,7 +10,7 @@ export class ChannelMessageService {
   constructor(
     @InjectRepository(ChannelMessage)
     private channelMessageRepositery: Repository<ChannelMessage>,
-  ) {}
+  ) { }
 
   async createOne(senderId: string, channelId: string, content: string) {
     let msg = new ChannelMessage();
@@ -19,5 +19,12 @@ export class ChannelMessageService {
     msg.channelId = channelId;
     msg.content = content;
     return this.channelMessageRepositery.save(msg);
+  }
+
+  async getByChannelId(channelId: string) {
+    let builder = this.channelMessageRepositery.createQueryBuilder('channel-message')
+      .where("channel-message.channelId = :channelId", { channelId })
+      .orderBy('channel-message.createdDate')
+    return builder.getMany()
   }
 }

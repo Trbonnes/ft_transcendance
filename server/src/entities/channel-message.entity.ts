@@ -23,7 +23,7 @@ export class ChannelMessage {
   @Column()
   content: string;
 
-  @ManyToOne((type) => User)
+  @ManyToOne(() => User)
   @JoinColumn()
   sender: User;
 

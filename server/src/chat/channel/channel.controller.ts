@@ -37,6 +37,20 @@ export class ChannelController {
     return await this.channelService.searchByName(name);
   }
 
+  @Get(':channelId/history')
+  @UseGuards(JwtAuthGuard)
+  async history(@Param('channelId') channelId: string) {
+    try {
+      return await this.channelService.getMessageHistory(channelId)
+    }
+    catch (error: any) {
+      return new HttpException(
+        'Channel password malformed',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
   @Post('create')
   @UseGuards(JwtAuthGuard)
   async createChannel(@Req() req, @Body() channelDto: CreateChannelDto) {

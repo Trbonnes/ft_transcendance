@@ -6,13 +6,15 @@ import { User } from '../../entities/user.entity';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { getManager } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
+import { ChannelMessageService } from './channel-message/channel-message.service'
 
 @Injectable()
 export class ChannelService {
   constructor(
     @InjectRepository(Channel) private channelRepositery: Repository<Channel>,
     private readonly userService: UsersService,
-  ) {}
+    private readonly channelMessageService: ChannelMessageService,
+  ) { }
 
   async createChannel(
     channelDto: CreateChannelDto,
@@ -60,6 +62,10 @@ export class ChannelService {
       .where('channel.id = :channelId', { channelId });
     if (includePassword) builder.addSelect('channel.password');
     return builder.getOneOrFail(); // TODO should i add or fail ?
+  }
+
+  getMessageHistory(channelId: string) {
+    return this.channelMessageService.getByChannelId(channelId) // TODO maybe it's best practice to move this logic into the controller ?
   }
 
   async getAllChannels(): Promise<Channel[]> {

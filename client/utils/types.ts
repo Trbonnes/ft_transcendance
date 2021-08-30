@@ -13,6 +13,11 @@ interface ChannelMessageDto {
   content: string
 }
 
+interface CreateMessageDto {
+  channelId: string
+  content: string
+}
+
 interface Channel {
   id: string
   name: string
@@ -31,4 +36,4 @@ interface CreateChannelDto {
   channelPassword: string
 }
 
-export { ChannelMessageDto, Message, Channel, CreateChannelDto }
+export { CreateMessageDto, ChannelMessageDto, Message, Channel, CreateChannelDto }

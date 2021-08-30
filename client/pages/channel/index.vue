@@ -3,7 +3,7 @@
     <div id="channelList" >
       <div v-for="c in getChannels" class="card bordered bg-gray-600 text-white">
         <div @click="joinChannel(c)" class="card-body cursor-pointer w-full">
-          <h1>{{c[1].name}}</h1> <!-- TODO not pretty -->
+          <h1>{{c.name}}</h1> <!-- TODO not pretty -->
         </div>
       </div>
     </div>
@@ -127,16 +127,10 @@ export default Vue.extend({
     },
     joinChannel(channel : Channel)
     {
-      console.log(this.joinForm) 
-      console.log(channel)
       if (channel.isPublic === false)
-      {
         this.toggleJoinForm(channel.id)
-      }
       else
-      {
         this.joinRequest(channel.id)
-      }
     },
     toggleJoinForm(channelId = '')
     {
@@ -156,7 +150,8 @@ export default Vue.extend({
     },
     joinRequest(id : string, passwd = "")
     {
-      this.$axios.$post("/channel/join", { channelId : id, password: passwd})
+      console.log("id ", id)
+        this.$axios.$post("/channel/join", { channelId : id, password: passwd})
       .then((rep : any) => { console.log(rep);
         if (rep.status != 201)
           this.$toast.error(rep.message)

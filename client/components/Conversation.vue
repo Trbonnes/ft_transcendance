@@ -1,8 +1,11 @@
 <template>
-  <div class="flex flex-col h-full">
+  <div class="flex flex-col h-full" id="convo">
     <div id="chatMessages" class="flex flex-col">
-      <div v-for="c in messages">
-        {{ c }}
+      <div v-for="c in messages" 
+            class="p-3 m-0.5 rounded-xl inline-block"
+            v-bind:class="[$auth.user.id === c.senderId ? 'text-white bg-blue-500 self-end' : ' text-black bg-gray-300 self-start']"
+      >
+        {{ c.content }}
       </div>
     </div>
     <div class="flex flex-row">
