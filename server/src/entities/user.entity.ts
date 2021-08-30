@@ -13,6 +13,7 @@ import {
 import { Game } from './game.entity';
 import { Channel } from './channel.entity';
 import { FriendRequest } from './friend-request.entity';
+import { ChannelMembership } from './channel-membership.entity'
 
 @Entity()
 export class User {
@@ -72,6 +73,9 @@ export class User {
 
   @Column('text', { array: true, default: '{}' })
   public friends: string[];
+
+  @OneToMany(() => ChannelMembership, chan => chan.user)
+  memberships: ChannelMembership[]
 
   @Column({ default: '' })
   game_id: string;

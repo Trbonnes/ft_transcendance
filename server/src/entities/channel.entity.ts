@@ -13,6 +13,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { ChannelMessage } from './channel-message.entity';
+import { ChannelMembership } from './channel-membership.entity';
 
 @Entity()
 export class Channel {
@@ -44,7 +45,6 @@ export class Channel {
   @OneToMany(() => ChannelMessage, (msg) => msg.channel)
   messages: ChannelMessage[];
 
-  @ManyToMany(() => User)
-  @JoinTable()
-  members: User[];
+  @OneToMany(() => ChannelMembership, (mem) => mem.channel)
+  members: ChannelMembership[];
 }
