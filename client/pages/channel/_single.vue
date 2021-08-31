@@ -3,15 +3,19 @@
     <Conversation id="convo" :messages="getMessages" @sendMessage="sendMessage" />
     <div>
      
-      <a href="#members" class="btn btn-primary text-white">
+      <a href="#members" @click="fetchMembers" class="btn btn-primary text-white">
         <font-awesome-icon class="text-xl mx-1.5" icon="users"> </font-awesome-icon> Members</a>
       <div id="members" class="modal">
       <div class="modal-box">
           <div class="flex flex-col">
-            <div class="p-3 my-1 flex flex-row items-center justify-between rounded-xl bg-gray-300" v-for='m in getMembers'> 
+            <div :class="{'bg-green-400' : m.user.id === $auth.user.id}" class="p-3 my-1 flex flex-row items-center justify-between rounded-xl bg-gray-300" v-for='m in getMembers'> 
               <img class="w-16 h-16 rounded-full" :src="m.user.avatar" :alt="m.user.displayName">
               <span>{{m.user.displayName}}</span>
-              <font-awesome-icon v-if="getOwner === m.user.id" class="text-xl mx-1.5" icon="crown"> </font-awesome-icon>
+              <font-awesome-icon v-if="getOwner === m.user.id"  class="text-xl mx-1.5" icon="crown"> </font-awesome-icon>
+              <div v-if="getOwner === $auth.user.id && m.user.id !== $auth.user.id" class="flex flex-row">
+                <span @click="updateMember(m.user.id, true, false)" class="btn btn-accent mx-1">Admin</span>
+                <span  class="btn mx-1" @click="updateMember(m.user.id, false, false)">Ban</span>
+              </div>
             </div>
           </div>
           <div class="modal-action">
@@ -59,10 +63,8 @@ export default Vue.extend({
   mounted() {
     console.log("Mounted the single vue")
     try {
-
       this.$store.dispatch("channel/joinChannel", this.id)
       this.$store.dispatch("channel/getMessages", this.id)
-      this.$store.dispatch("channel/getMembers", this.id)
     }
     catch(error)
     {
@@ -70,6 +72,34 @@ export default Vue.extend({
     } 
   },
   methods: {
+    fetchMembers()
+    {
+      this.$store.dispatch("channel/getMembers", this.id) // TODO loading animation ?
+    },
+    updateMember(userToUpdate : string, makeAdmin = false, ban = false)
+    {
+        this.$axios.$post(`/channel/${this.id}/members/${userToUpdate}/update`,
+          { channelId : this.id, userId : userToUpdate, isAdmin : makeAdmin, isBanned : ban})
+        .then((rep : any) => {
+          if (rep.status == 201) 
+          {
+            this.$toast.success("Member updated")
+            this.$router.back()
+          }
+          else
+          {
+            this.$toast.error(rep.message)
+          }
+        })
+        .catch((error : any) =>
+        {
+            console.log(error)// TODO error handling
+        })
+    },
+    makeAdmin(userId : string)
+    {
+        
+    },
     sendMessage(msgContent: string) {
       const dto: CreateMessageDto = {
         channelId: this.id,

@@ -18,12 +18,25 @@ export class ChannelMembershipService {
   }
 
   async getMembers(cId: string) {
-    const data = await this.membershipRepo.find({ where: { channelId: cId }, relations: ["user"] })
+    const data = await this.membershipRepo.find({ where: { channelId: cId }, relations: ["user"] }) // TODO refactor names
     console.log("Here is the data")
     console.log(data)
     if (data)
       return data
     return []
+  }
+
+  async getOne(channelId: string, userId: string) {
+    return this.membershipRepo.findOneOrFail({ channelId: channelId, userId: userId })
+  }
+
+  async update(channelId: string, userId: string, isAdmin: boolean, isBanned: boolean) {
+    let mem = new ChannelMembership()
+    mem.channelId = channelId
+    mem.userId = userId
+    mem.isAdmin = isAdmin
+    mem.isBanned = isBanned
+    return this.membershipRepo.save(mem)
   }
 
   async create(channelId: string, userId: string, isAdmin = false) {
