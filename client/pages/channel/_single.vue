@@ -1,6 +1,26 @@
 <template>
   <div class="flex items-center justify-center">
     <Conversation id="convo" :messages="getMessages" @sendMessage="sendMessage" />
+    <div>
+     
+      <a href="#members" class="btn btn-primary text-white">
+        <font-awesome-icon class="text-xl mx-1.5" icon="users"> </font-awesome-icon> Members</a>
+      <div id="members" class="modal">
+      <div class="modal-box">
+          <div class="flex flex-col">
+            <div class="p-3 my-1 flex flex-row items-center justify-between rounded-xl bg-gray-300" v-for='m in getMembers'> 
+              <img class="w-16 h-16 rounded-full" :src="m.user.avatar" :alt="m.user.displayName">
+              <span>{{m.user.displayName}}</span>
+              <font-awesome-icon v-if="getOwner === m.user.id" class="text-xl mx-1.5" icon="crown"> </font-awesome-icon>
+            </div>
+          </div>
+          <div class="modal-action">
+            <a href="#" class="btn">Close</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </template>
 
@@ -16,10 +36,23 @@ export default Vue.extend({
     }
   },
   computed: {
+    getOwner()
+    {
+      const data = this.$store.getters["channel/getOne"](this.id)
+      console.log("trying to get owner ", data)
+      if (data)
+        return data.owner
+      return ""
+    },
     getMessages()
     {
       let data = this.$store.getters["channel/messages"](this.id)
       console.log("trying to call getter")
+      return data
+    },
+    getMembers()
+    {
+      let data = this.$store.getters["channel/members"](this.id)
       return data
     }
   },
@@ -29,6 +62,7 @@ export default Vue.extend({
 
       this.$store.dispatch("channel/joinChannel", this.id)
       this.$store.dispatch("channel/getMessages", this.id)
+      this.$store.dispatch("channel/getMembers", this.id)
     }
     catch(error)
     {

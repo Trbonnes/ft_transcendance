@@ -17,8 +17,13 @@ export class ChannelMembershipService {
     return false
   }
 
-  getMembers(cId: string) {
-    return this.membershipRepo.findOne(cId, { relations: ["user"] })
+  async getMembers(cId: string) {
+    const data = await this.membershipRepo.find({ where: { channelId: cId }, relations: ["user"] })
+    console.log("Here is the data")
+    console.log(data)
+    if (data)
+      return data
+    return []
   }
 
   async create(channelId: string, userId: string, isAdmin = false) {

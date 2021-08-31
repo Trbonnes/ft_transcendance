@@ -50,9 +50,10 @@ export class ChannelController {
   }
 
   @Get(':channelId/members')
+  @UseGuards(JwtAuthGuard)
   async getMembers(@Param('channelId') channelId: string) {
     try {
-      return await this.channelService.getMembers(channelId)
+      return await this.membershipService.getMembers(channelId)
     } catch (error) {
       return new HttpException(
         'Cannot retrieve members',

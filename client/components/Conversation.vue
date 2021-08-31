@@ -15,6 +15,7 @@
         v-model="message"
         class="flex-grow input input-bordered"
       />
+      
       <span @click="sendMessage" class="btn btn-primary">Send</span>
     </div>
   </div>

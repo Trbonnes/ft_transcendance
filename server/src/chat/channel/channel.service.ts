@@ -60,8 +60,11 @@ export class ChannelService {
     return this.channelMessageService.getByChannelId(channelId) // TODO maybe it's best practice to move this logic into the controller ?
   }
 
-  getMembers(channelId: string) {
-    return this.channelRepositery.findOne(channelId, { relations: ["members"] })
+  async getMembers(channelId: string) {
+    const data = await this.channelRepositery.findOne(channelId, { relations: ["members"] }) //TODO try catch block
+    if (data)
+      return data
+    return []
   }
 
   async getAllChannels(): Promise<Channel[]> {
