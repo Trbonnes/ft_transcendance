@@ -24,7 +24,9 @@ export default Vue.extend({
     }
   },
   mounted() {
+    console.log("Mounted the single vue")
     try {
+
       this.$store.dispatch("channel/joinChannel", this.id)
       this.$store.dispatch("channel/getMessages", this.id)
     }

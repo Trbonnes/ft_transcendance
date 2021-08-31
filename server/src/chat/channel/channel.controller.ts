@@ -98,6 +98,8 @@ export class ChannelController {
         return { status: 201, message: 'Joined channel' }
       const channel = await this.channelService.getById(dto.channelId, true); // the true includes the password
       if (channel.isPublic === false) {
+        if (!dto.password)
+          return new HttpException('Password needed', HttpStatus.UNAUTHORIZED);
         // TODO set password to sha256
         console.log(dto.password, channel.password);
         if (dto.password != channel.password)

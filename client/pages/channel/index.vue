@@ -14,7 +14,7 @@
             <label for="channelPrivatePassword" class="cursor-pointer label">
               Password required
               <input
-                v-model="channelPrivatePassword"
+                v-model="joinForm.password"
                 id="channelPrivatePassword"
                 type="password"
                 placeholder=""
@@ -73,7 +73,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Channel, CreateChannelDto } from '~/utils/types/channel'
+import { Channel, CreateChannelDto } from '~/utils/types'
 export default Vue.extend({
   data() {
     return {
@@ -83,6 +83,7 @@ export default Vue.extend({
       channelPrivatePassword: '' as string,
       joinForm : {
           channelId : '' as string,
+          password : '' as string,
           show : false as boolean
         }
     }
@@ -125,14 +126,21 @@ export default Vue.extend({
           console.log(error)
         })
     },
+    joinPrivate(event : any)
+    {
+      event.preventDefault()
+      let data : Channel = { id : this. joinForm.channelId, password : this.joinForm.password}
+      this.joinChannel(data)
+    },
     joinChannel(channel : Channel)
     {
-      this.$axios.$post("/channel/join", { channelId : channel.id })
+      console.log("Trying to join")
+      this.$axios.$post("/channel/join", { channelId : channel.id, password: channel.password })
       .then((rep : any) => {
         if (rep.status == 201)
         {
           this.$toast.success(rep.message)
-          this.$router.push(`/channel/${id}`)
+          this.$router.push(`/channel/${channel.id}`)
         }
         else
         {
@@ -147,6 +155,7 @@ export default Vue.extend({
     },
     toggleJoinForm(channelId = '')
     {
+      console.log("password propmt ")
       this.joinForm.channelId = channelId;
       this.joinForm.show = !this.joinForm.show;
       this.channelPrivatePassword = ''
