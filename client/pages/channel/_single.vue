@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <Conversation :messages="getMessages" @sendMessage="sendMessage" />
+  <div class="flex items-center justify-center">
+    <Conversation id="convo" :messages="getMessages" @sendMessage="sendMessage" />
   </div>
 </template>
 
@@ -55,4 +55,12 @@ export default Vue.extend({
 })
 </script>
 
-<style></style>
+<style>
+#convo
+{
+  min-width: 60vw;
+  max-width: 90vw;
+  overflow-y: hidden;
+}
+
+</style>

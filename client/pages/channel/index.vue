@@ -2,8 +2,9 @@
   <div class="flex flex-col items-center h-full">
     <div id="channelList" >
       <div v-for="c in getChannels" class="card bordered bg-gray-600 text-white">
-        <div @click="joinChannel(c)" class="card-body cursor-pointer w-full">
+        <div @click="joinChannel(c)" class="card-body cursor-pointer w-full flex flex-row items-center justify-between">
           <h1>{{c.name}}</h1> <!-- TODO not pretty -->
+          <font-awesome-icon title="You're the owner of the channel" v-if='c.owner == $auth.user.id' class="text-white" icon="crown"></font-awesome-icon>
         </div>
       </div>
     </div>

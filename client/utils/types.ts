@@ -25,6 +25,7 @@ interface Channel {
   isSticky: boolean
   createdDate: Date
   lastUpdated: Date
+  owner: any
   members: any[]
   messages: Message[]
 }

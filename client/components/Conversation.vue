@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col h-full" >
-    <div id="convo" class="flex flex-col">
+    <div id="inner" class="flex flex-col">
       <div v-for="c in messages" 
             class="p-3 m-0.5 rounded-xl inline-block"
             v-bind:class="[$auth.user.id === c.senderId ? 'text-white bg-blue-500 self-end' : ' text-black bg-gray-300 self-start']"
@@ -32,7 +32,7 @@ export default Vue.extend({
     }
   },
   updated() {
-    var container = this.$el.querySelector("#convo");
+    var container = this.$el.querySelector("#inner");
     container.scrollTop = container.scrollHeight;
   },
   mounted() {
@@ -56,7 +56,7 @@ export default Vue.extend({
 
 <style>
 
-#convo {
+#inner {
   height: 70vh;
   width: 100%;
   overflow-y: scroll;

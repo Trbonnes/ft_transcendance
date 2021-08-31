@@ -65,11 +65,12 @@ export class ChannelService {
   }
 
   async getAllChannels(): Promise<Channel[]> {
-    let data: Channel[];
+    let data: any[];
     try {
-      data = await this.channelRepositery.find();
+      data = await this.channelRepositery.find({ relations: ["owner"] })
       for (let index = 0; index < data.length; index++) {
         const c = data[index];
+        c.owner = c.owner.id
         delete c.password;
       }
     } catch (err) {
