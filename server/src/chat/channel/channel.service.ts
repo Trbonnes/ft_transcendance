@@ -34,6 +34,10 @@ export class ChannelService {
     return data;
   }
 
+  async saveChannel(channel: Channel) {
+    return this.channelRepositery.save(channel)
+  }
+
   async findUserInChannel(channelId: string, userId: string) {
     let data = await this.channelRepositery
       .createQueryBuilder('channel')

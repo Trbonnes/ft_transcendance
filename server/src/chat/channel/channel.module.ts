@@ -8,6 +8,8 @@ import { ChannelMessageService } from './channel-message/channel-message.service
 import { UsersModule } from 'src/users/users.module';
 import { ChannelMembershipService } from './channel-membership/channel-membership.service';
 import { ChannelMembership } from '../../entities/channel-membership.entity'
+import { IsChannelAdminGuard } from './is-channel-admin.guard'
+import { IsChannelMemberGuard } from './is-channel-member.guard'
 
 @Module({
   imports: [
@@ -15,8 +17,9 @@ import { ChannelMembership } from '../../entities/channel-membership.entity'
     TypeOrmModule.forFeature([ChannelMessage]),
     TypeOrmModule.forFeature([ChannelMembership]),
     UsersModule,
+    // ChannelAuthModule,
   ],
-  providers: [ChannelService, ChannelMessageService, ChannelMembershipService],
+  providers: [IsChannelAdminGuard, ChannelService, ChannelMessageService, ChannelMembershipService],
   controllers: [ChannelController],
   exports: [ChannelService, ChannelMessageService, ChannelMembershipService],
 })

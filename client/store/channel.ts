@@ -31,6 +31,16 @@ export default class ChannelModule extends VuexModule {
   }
 
   @Action
+  async update(data: { channelId: string; channelName: string; isPrivate: boolean; password: string }) {
+    return $axios.$post<Channel>(`/channel/${data.channelId}/update`,
+      {
+        channelName: data.channelName,
+        isPrivate: data.isPrivate,
+        newPassword: data.password
+      })
+  }
+
+  @Action
   async getMessages(channelId: string) {
     try {
       const data = await $axios.$get<Message[]>(`/channel/${channelId}/history`)
@@ -113,6 +123,11 @@ export default class ChannelModule extends VuexModule {
   @Mutation
   pushChannel(data: Channel) {
     Vue.set(this.channels, data.id, data)
+  }
+
+  @Mutation
+  updateChannel(channel: Channel) {
+    Vue.set(this.channels, channel.id, channel)
   }
 
   @Mutation

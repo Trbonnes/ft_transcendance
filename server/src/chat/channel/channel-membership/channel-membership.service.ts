@@ -19,8 +19,6 @@ export class ChannelMembershipService {
 
   async getMembers(cId: string) {
     const data = await this.membershipRepo.find({ where: { channelId: cId }, relations: ["user"] }) // TODO refactor names
-    console.log("Here is the data")
-    console.log(data)
     if (data)
       return data
     return []

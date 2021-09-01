@@ -5,6 +5,7 @@ import {
   Body,
   Param,
   HttpException,
+  BadRequestException,
   HttpStatus,
   UseGuards,
   Req,
@@ -16,6 +17,8 @@ import { Channel } from '../../entities/channel.entity';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { JoinChannelDto } from './dto/join-channel.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { IsChannelAdminGuard } from './is-channel-admin.guard'
+import { IsChannelMemberGuard } from './is-channel-member.guard'
 
 @Controller('channel')
 export class ChannelController {
@@ -36,7 +39,7 @@ export class ChannelController {
   }
 
   @Get(':channelId/history')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, IsChannelMemberGuard)
   async history(@Param('channelId') channelId: string) {
     try {
       return await this.channelService.getMessageHistory(channelId)
@@ -50,7 +53,7 @@ export class ChannelController {
   }
 
   @Get(':channelId/members')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, IsChannelMemberGuard)
   async getMembers(@Param('channelId') channelId: string) {
     try {
       return await this.membershipService.getMembers(channelId)
@@ -63,7 +66,7 @@ export class ChannelController {
   }
 
   @Post(':channelId/members/:userId/update')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, IsChannelAdminGuard)
   async updateMember(@Param('channelId') channelId: string,
     @Param('userId') userId: string,
     @Req() req: any,
@@ -80,6 +83,28 @@ export class ChannelController {
     } catch (error) {
       return new HttpException("Cannot update user", HttpStatus.BAD_REQUEST)
     }
+  }
+
+  @Post(':channelId/update')
+  @UseGuards(JwtAuthGuard, IsChannelAdminGuard)
+  async updateChannel(@Param('channelId') channelId: string,
+    @Req() req: any,
+    @Body() payload: { channelName: string; isPrivate: boolean; newPassword: string }) {
+    try {
+      let channel = await this.channelService.getById(channelId)
+      if (channel.isPublic === true && payload.isPrivate && payload.newPassword === "")
+        return new HttpException("Password cannot be empty", HttpStatus.BAD_REQUEST)
+      if (payload.channelName === "")
+        return new HttpException("Channel name cannot be empty", HttpStatus.BAD_REQUEST)
+      channel.isPublic = !payload.isPrivate
+      channel.name = payload.channelName
+      channel.password = payload.newPassword // TODO set password to sha
+      return this.channelService.saveChannel(channel)
+    } catch (error) {
+      return new BadRequestException()
+    }
+    // if (payload.newPassword)
+    //   return new HttpException("Password ")
   }
 
   @Post('create')
