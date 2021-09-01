@@ -92,6 +92,7 @@ export default Vue.extend({
     }
   },
   fetch() {
+    console.log("Fetching all channels")
     this.$store.dispatch('channel/fetchAll')
   },
   computed : {
@@ -118,11 +119,9 @@ export default Vue.extend({
       this.$store
         .dispatch('channel/create', data)
         .then((channel: Channel) => {
-          this.$store.dispatch('channel/fetchAll')
-          this.isPrivate = false
-          this.channelName = ''
-          this.channelPassword = ''
-          this.$router.back()
+          console.log("Channel received ", channel)
+          this.$toast.success("Channel created")
+          this.$router.push(`/channel/${channel.id}`)
         })
         .catch((error: any) => {
           console.log('There is an error')

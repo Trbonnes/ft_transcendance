@@ -15,13 +15,23 @@ export default class ChannelModule extends VuexModule {
   @Action
   async fetchAll() {
     console.log('Fetching all the channels')
-    let data: Channel[]
     try {
-      data = await $axios.$get<Channel[]>('/channel/all')
+      const data: Channel[] = await $axios.$get<Channel[]>('/channel/all')
       console.log(data)
       this.context.commit('setChannels', data)
     } catch (error: any) {
       // TODO proper error handling
+    }
+  }
+
+  @Action
+  async fetchOne(channelId: string) {
+    try {
+      const data = await $axios.$get<Channel>(`/channel/${channelId}`)
+      console.log("Here ios the single channel", data)
+      this.context.commit('setOne')
+    } catch (error) {
+      // TODO error handling 
     }
   }
 
@@ -113,11 +123,21 @@ export default class ChannelModule extends VuexModule {
 
   @Mutation
   setChannels(data: Channel[]) {
-    let tmp: ChanMap = {}
+    const keys = Object.keys(this.channels)
+    for (let i = 0; i < keys.length; i++) {
+      Vue.delete(this.channels, keys[i])
+    }
     for (let i = 0; i < data.length; i++) {
       const c = data[i];
       Vue.set(this.channels, c.id, c)
     }
+  }
+
+  @Mutation
+  setOne(data: Channel) {
+    console.log("trying to set one here")
+    Vue.set(this.channels, data.id, data)
+    console.log(this.channels)
   }
 
   @Mutation

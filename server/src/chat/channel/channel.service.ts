@@ -38,6 +38,10 @@ export class ChannelService {
     return this.channelRepositery.save(channel)
   }
 
+  async deleteChannel(channelId: string) {
+    return this.channelRepositery.delete(channelId)
+  }
+
   async findUserInChannel(channelId: string, userId: string) {
     let data = await this.channelRepositery
       .createQueryBuilder('channel')

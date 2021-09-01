@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Delete,
   Body,
   Param,
   HttpException,
@@ -31,6 +32,11 @@ export class ChannelController {
   @Get('all')
   all() {
     return this.channelService.getAllChannels();
+  }
+
+  @Get(':channelId')
+  async getOne(@Param('channelId') channelId: string) {
+    return this.channelService.getById(channelId)
   }
 
   @Get('search/:name')
@@ -103,8 +109,17 @@ export class ChannelController {
     } catch (error) {
       return new BadRequestException()
     }
-    // if (payload.newPassword)
-    //   return new HttpException("Password ")
+  }
+
+  @Delete(':channelId/delete')
+  @UseGuards(JwtAuthGuard, IsChannelAdminGuard)
+  async deleteChannel(@Param('channelId') channelId: string) {
+    try {
+      let data = await this.channelService.deleteChannel(channelId)
+      return { status: 201 } //TODO maybe change code ? 
+    } catch (error) {
+      return new HttpException("Cannot delete channel", HttpStatus.BAD_REQUEST)
+    }
   }
 
   @Post('create')

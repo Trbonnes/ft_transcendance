@@ -1,5 +1,6 @@
 <template>
   <div class="flex flex-col items-center justify-center">
+		<h1 class="flex mx-auto justify-center mt-10 m-5 text-3xl font-bold">{{getChannel.name}}</h1>
     <Conversation id="convo" :messages="getMessages" @sendMessage="sendMessage" />
     <div class="flex flex-row items-start">
       <a href="#members" @click="fetchMembers" class="btn btn-primary text-white">
@@ -29,7 +30,7 @@
         </a>
         <div id="edit" class="modal">
           <div class="modal-box">
-            <form @submit="checkForm">
+            <form @submit="updateChannel">
               <label for="channelName" class="cursor-pointer label">
                 Channel Name
                 <input
@@ -62,6 +63,22 @@
               </label>
               <input type="submit" value="Update channel" class="btn btn-primary" />
             </form>
+            <div class="modal-action">
+              <a href="#" class="btn">Close</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="getChannel.owner === $auth.user.id">
+      <a href="#delete" @click="deleteChannel" class="btn btn-secondary text-white">
+        <font-awesome-icon class="text-xl mx-1.5" icon="times"> </font-awesome-icon>Delete Channel
+      </a>
+      <div id="delete" class="modal">
+        <div class="modal-box">
+          Do you really want to delete the channel ?
+          <div class="flex flex-row w-full justify-start">
+            <a href="#" class="btn">Close</a>
             <div class="modal-action">
               <a href="#" class="btn">Close</a>
             </div>
@@ -106,16 +123,22 @@ export default Vue.extend({
       return data
     }
   },
-  mounted() {
-    console.log("Mounted the single vue")
+  async fetch()
+  {
+    console.log("Fetch hook called")
     try {
-      this.$store.dispatch("channel/joinChannel", this.id)
-      this.$store.dispatch("channel/getMessages", this.id)
+      await this.$store.dispatch("channel/joinChannel", this.id)
+      await this.$store.dispatch("channel/fetchOne", this.id)
+      await this.$store.dispatch("channel/getMessages", this.id)
+      console.log("Fetch actions called")
     }
     catch(error)
     {
-      // TODO handling error
+      this.$toast.error("Cannot fetch channel")
     } 
+  },
+  mounted() {
+    console.log("Mounted the single vue")
   },
   methods: {
     initForm()
@@ -123,11 +146,27 @@ export default Vue.extend({
       this.channelName = this.getChannel.name
       this.isPrivate = !this.getChannel.isPublic
     },
-    checkForm(event : any)
+    deleteChannel(event : any)
     {
       event.preventDefault()
-      console.log(this.channelName)
-      console.log(this.isPrivate)
+      this.$axios.$delete(`/channel/${this.getChannel.id}/delete`)
+      .then((rep : any) => {
+        if (rep.status == 201)
+        {
+          this.$toast.success("Channel deleted")
+          this.$store.dispatch("channel/fetchAll")
+          this.$router.push("/channel")
+        }
+        else
+          this.$toast.error(rep.message)
+       })
+      .catch(() => {
+        this.$toast.error("Cannot delete channel")
+       })
+    },
+    updateChannel(event : any)
+    {
+      event.preventDefault()
       if (this.channelName == "")
         this.$toast.error("Name cannot be empty")
       else

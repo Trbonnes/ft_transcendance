@@ -8,13 +8,13 @@ export class ChannelMembership {
   @PrimaryGeneratedColumn('uuid')
   id: string // TODO manage to make a compsite key
 
-  @ManyToOne(() => User, user => user.memberships)
+  @ManyToOne(() => User, user => user.memberships, { onDelete: 'CASCADE' })
   user: User
 
   @Column()
   userId: string
 
-  @ManyToOne(() => Channel, chan => chan.members)
+  @ManyToOne(() => Channel, chan => chan.members, { onDelete: 'CASCADE' })
   channel: Channel;
 
   @Column()
