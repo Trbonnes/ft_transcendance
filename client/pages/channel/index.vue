@@ -118,10 +118,16 @@ export default Vue.extend({
       }
       this.$store
         .dispatch('channel/create', data)
-        .then((channel: Channel) => {
-          console.log("Channel received ", channel)
-          this.$toast.success("Channel created")
-          this.$router.push(`/channel/${channel.id}`)
+        .then((data : any) => {
+          if (data.status)
+          {
+              this.$toast.error(data.message)
+          }
+          else
+          {
+            this.$toast.success("Channel created")
+            this.$router.push(`/channel/${data.id}`)
+          }
         })
         .catch((error: any) => {
           console.log('There is an error')
