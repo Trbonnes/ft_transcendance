@@ -76,14 +76,12 @@ export default class ChannelModule extends VuexModule {
   @Action
   joinChannel(channelId: string) {
     const sock = getSocket()
-    console.log(sock)
     sock.emit('joinChannel', channelId)
   }
 
   @Action
   sendMessage(dto: CreateMessageDto) {
     const sock = getSocket()
-    console.log(sock)
 
     sock.emit('channelMessage', dto)
   }
@@ -98,14 +96,12 @@ export default class ChannelModule extends VuexModule {
       })
     } catch (err: any) {
       console.log(err)
-      console.log(msg)
       // TODO error handlign properly
     }
   }
 
   @Mutation
   setMessages(payload: { channelId: string; data: Message[] }) {
-    console.log("setMessages")
     let c = this.channels[payload.channelId]
     if (c) {
       Vue.set(this.channels[payload.channelId], "messages", payload.data)
@@ -114,7 +110,6 @@ export default class ChannelModule extends VuexModule {
 
   @Mutation
   setMembers(payload: { channelId: string; data: Message[] }) {
-    console.log("setMembers")
     let c = this.channels[payload.channelId]
     if (c) {
       Vue.set(this.channels[payload.channelId], "members", payload.data)
@@ -135,9 +130,8 @@ export default class ChannelModule extends VuexModule {
 
   @Mutation
   setOne(data: Channel) {
-    console.log("trying to set one here")
+    console.log("Setting one channel", data)
     Vue.set(this.channels, data.id, data)
-    console.log(this.channels)
   }
 
   @Mutation
@@ -152,7 +146,6 @@ export default class ChannelModule extends VuexModule {
 
   @Mutation
   pushMessage(payload: { channelId: string; message: Message }) {
-    console.log('A new message has been received !')
     try {
       let c = this.channels[payload.channelId]
       if (c)
@@ -169,8 +162,6 @@ export default class ChannelModule extends VuexModule {
   get messages() {
     return (id: string) => {
       let c = this.channels[id]
-      console.log("Here we are")
-      console.log(c)
       if (c && c.messages) {
         return c.messages
       }

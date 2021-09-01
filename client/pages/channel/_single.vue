@@ -114,7 +114,6 @@ export default Vue.extend({
     getMessages()
     {
       let data = this.$store.getters["channel/messages"](this.id)
-      console.log("trying to call getter")
       return data
     },
     getMembers()
@@ -136,9 +135,6 @@ export default Vue.extend({
     {
       this.$toast.error("Cannot fetch channel")
     } 
-  },
-  mounted() {
-    console.log("Mounted the single vue")
   },
   methods: {
     initForm()
