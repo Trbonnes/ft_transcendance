@@ -105,7 +105,9 @@ export class ChannelController {
       channel.isPublic = !payload.isPrivate
       channel.name = payload.channelName
       channel.password = payload.newPassword // TODO set password to sha
-      return this.channelService.saveChannel(channel)
+      let data = await this.channelService.saveChannel(channel)
+      delete data.password
+      return data
     } catch (error) {
       return new BadRequestException()
     }

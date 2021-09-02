@@ -71,7 +71,6 @@
       </div>
     </div>
   </div>
-  </div>
 </template>
 
 <script lang="ts">
@@ -137,10 +136,10 @@ export default Vue.extend({
     joinPrivate(event : any)
     {
       event.preventDefault()
-      let data : Channel = { id : this. joinForm.channelId, password : this.joinForm.password}
+      let data = { id : this. joinForm.channelId, password : this.joinForm.password}
       this.joinChannel(data)
     },
-    joinChannel(channel : Channel)
+    joinChannel(channel : { id : string; password : string})
     {
       console.log("Trying to join")
       this.$axios.$post("/channel/join", { channelId : channel.id, password: channel.password })

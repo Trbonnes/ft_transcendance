@@ -177,7 +177,7 @@ export default Vue.extend({
           {
             this.$toast.success("Channel updated")
             this.$router.back()
-            this.$store.commit("channel/update", rep.data)
+            this.$store.commit("channel/updateChannel", rep.data)
           }
          })
         .catch(() => {

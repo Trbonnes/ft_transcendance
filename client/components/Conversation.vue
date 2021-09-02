@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Channel } from '~/utils/types/channel'
+import { Channel } from '~/utils/types'
 
 export default Vue.extend({
   props: ['messages'],
@@ -34,7 +34,8 @@ export default Vue.extend({
   },
   updated() {
     var container = this.$el.querySelector("#inner");
-    container.scrollTop = container.scrollHeight;
+    if (container)
+      container.scrollTop = container.scrollHeight;
   },
   mounted() {
   },
