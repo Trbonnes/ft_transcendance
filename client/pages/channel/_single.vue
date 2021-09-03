@@ -106,19 +106,19 @@ export default Vue.extend({
   computed: {
     getChannel()
     {
-      const data = this.$store.getters["channel/getOne"](this.id)
+      const data = this.$store.getters["channel/getOne"]((this as any).id)
       if (data)
         return data
       return ""
     },
     getMessages()
     {
-      let data = this.$store.getters["channel/messages"](this.id)
+      let data = this.$store.getters["channel/messages"]((this as any).id)
       return data
     },
     getMembers()
     {
-      let data = this.$store.getters["channel/members"](this.id)
+      let data = this.$store.getters["channel/members"]((this as any).id)
       return data
     }
   },
