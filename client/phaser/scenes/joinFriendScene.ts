@@ -3,6 +3,7 @@ import { io, Socket } from 'socket.io-client'
 import os from 'os'
 import { config } from '../phaserconfig'
 import { scenesList, activeScene, setActiveScene } from '../sceneManager'
+import createSocket from '../objects/CreateSocket'
 
 import Button from '../objects/ButtonObject'
 import Input from '../objects/InputField'
@@ -48,19 +49,7 @@ export default class JoinFriendScene extends Phaser.Scene {
     establishConnection(gateway: string) {
 
         console.log(os.hostname())
-        this.socket = io("http://" + os.hostname() + ":3000/" + gateway, {
-            extraHeaders: {
-                "Authorization": config.userToken,
-                "user_id": config.userId
-            },
-            transportOptions: {
-                cors : {
-                    origin: '*'
-                },
-                transports: ['websockets'],
-            },
-            query: { "spectate": "", "friend": this.id! },
-        })
+        this.socket = createSocket(gateway, "", this.id!)
 
         this.socket.on('OpponentFound', (response: {player: number, room: string}) => {
             this.game.domContainer.style.pointerEvents = 'auto'

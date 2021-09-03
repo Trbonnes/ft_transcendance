@@ -3,6 +3,7 @@ import { io, Socket } from 'socket.io-client'
 import os from 'os'
 import { config } from '../phaserconfig'
 import { scenesList, activeScene, setActiveScene } from '../sceneManager'
+import createSocket from '../objects/CreateSocket'
 
 import CopyField from '../objects/CopyField'
 
@@ -39,19 +40,7 @@ export default class WaitingBorderlessFriendScene extends Phaser.Scene {
         this.add.video(config.width / 2, config.height / 2, 'loading.webm').play(true).setLoop()
 
         console.log(os.hostname())
-        this.socket = io("http://" + os.hostname() + ":3000/borderless", {
-            extraHeaders: {
-                "Authorization": config.userToken,
-                "user_id": config.userId
-            },
-            transportOptions: {
-                cors : {
-                    origin: '*'
-                },
-                transports: ['websockets']
-            },
-            query: { "spectate": "", "friend": "true" },
-        })
+        this.socket = createSocket("borderless", "", "true")
 
         this.socket.on('gameId', (response: string) => {
             gameLink = "http://localhost/game/" + response
