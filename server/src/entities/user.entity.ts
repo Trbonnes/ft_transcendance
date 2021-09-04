@@ -74,6 +74,9 @@ export class User {
   @Column('text', { array: true, default: '{}' })
   public friends: string[];
 
+  @Column('text', { array: true, default: '{}'})
+  public blockedUsers: string[];
+
   @OneToMany(() => ChannelMembership, chan => chan.user)
   memberships: ChannelMembership[]
 

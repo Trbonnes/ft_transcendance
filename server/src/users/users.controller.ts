@@ -19,6 +19,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Logger } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Request, response } from 'express';
+import { request } from 'http';
 
 @Controller('users')
 export class UsersController {
@@ -81,5 +82,17 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
+  }
+
+  @Post('block')
+  @UseGuards(JwtAuthGuard)
+  blockUser(@Req() request, @Body() body: any) {
+    return this.usersService.addBlockedUser(request.user.id, body.toBlockId)
+  }
+
+  @Delete('block')
+  @UseGuards(JwtAuthGuard)
+  unblockUser(@Req() request, @Body() body: any) {
+    return this.usersService.removeBlockedUser(request.user.id, body.blockedUserId)
   }
 }

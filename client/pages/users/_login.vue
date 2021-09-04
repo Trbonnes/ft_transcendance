@@ -34,6 +34,12 @@
 				</div>
 				<div v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id">
 					<friend-button @update="updateFriend" :friendStatus="friendStatus"/>
+					<div v-if="isBlocked === false">
+						<button class="btn" @click="toggleBlock">Block</button>
+					</div>
+					<div v-else>
+						<button class="btn" @click="toggleBlock">Unblock</button>
+					</div>
 				</div>
 				<div class="flex w-full m-5 justify-center items-center">
 						<div class="card shadow m-3 flex flex-grow items-center">
@@ -142,6 +148,34 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 				return a.date - b.date ? -1 : 1
 			})
 		}
+		
+		get isBlocked(): boolean {
+			if ((this.$auth.user as any).blockedUsers.indexOf(this.user.id) === -1)
+				return false
+			else
+				return true
+		}
+
+		async toggleBlock() {
+			if (this.isBlocked === false) {
+				this.$axios.post(`/users/block`, {
+					toBlockId: this.user.id
+				}).then((result) => {
+					this.$toast.success("User blocked")
+					this.$auth.fetchUser()
+				})
+			}
+			else {
+				this.$axios.delete(`/users/block`, {
+					data: {
+						blockedId: this.user.id
+					}
+				}).then((result) => {
+					this.$toast.success("User unblocked")
+					this.$auth.fetchUser()
+				})
+			}
+		}
 
 
 		async updateFriend(friendStatus: FriendStatus) {
@@ -188,6 +222,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 
 		showuser() {
 			console.log(this.$auth.user)
+			console.log(this.isBlocked)
 		}
 
 		updateDisplayName() {

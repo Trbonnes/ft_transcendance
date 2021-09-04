@@ -194,7 +194,7 @@ export class UsersService {
       sender.friends = []
     if (!receipient.friends)
       receipient.friends = []
-    const alreadyFriends = sender.friends.indexOf(sender.id) !== -1
+    const alreadyFriends = sender.friends.indexOf(receipient.id) !== -1
     if (!alreadyFriends) {
       sender.friends.push(receipient.id)
       receipient.friends.push(sender.id)
@@ -218,6 +218,31 @@ export class UsersService {
     user.friends.splice(indexUser, 1)
     friend.friends.splice(indexFriend, 1)
     this.usersRepository.save(friend)
+    return this.usersRepository.save(user)
+  }
+
+  // add blocked user
+  async addBlockedUser(senderId: string, receipient: string): Promise<User | undefined> {
+    const sender = await this.usersRepository.findOne(senderId);
+    if (!sender.blockedUsers)
+      sender.blockedUsers = []
+    const alreadyBlocked = sender.blockedUsers.indexOf(receipient) !== -1
+    if (!alreadyBlocked) {
+      sender.blockedUsers.push(receipient)
+    }
+    return !alreadyBlocked ? this.usersRepository.save(sender) : undefined
+  }
+
+  async removeBlockedUser(userId: string, blockedUserId: string) {
+    const user = await this.usersRepository.findOne(userId)
+
+    const indexBlockedUser = user.blockedUsers.indexOf(blockedUserId)
+    if (indexBlockedUser === -1)
+      throw new HttpException({
+        error: `This user is not in your blocked users list`
+      }, HttpStatus.BAD_REQUEST)
+    user.blockedUsers.splice(indexBlockedUser, 1)
+    this.usersRepository.save(user)
     return this.usersRepository.save(user)
   }
 
