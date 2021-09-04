@@ -46,6 +46,9 @@ export default class JoinSpectateScene extends Phaser.Scene {
             //     this.id = joinInput.getValue()
                 this.establishConnection("game")
         })
+
+        let exitButton = new ExitObject(this, 120, 120, "Exit", this.socket)
+        exitButton.setDisplaySize(100, 100)
     }
 
     establishConnection(gateway: string) {
@@ -82,9 +85,6 @@ export default class JoinSpectateScene extends Phaser.Scene {
                 .setTint(0xff0000)
                 .setOrigin(0.5, 0.5)
         })
-
-        let exitButton = new ExitObject(this, 120, 120, "Exit", this.socket)
-        exitButton.setDisplaySize(100, 100)
 
     }
 
