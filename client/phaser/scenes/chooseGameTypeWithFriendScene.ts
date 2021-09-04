@@ -3,6 +3,7 @@ import { config } from '../phaserconfig'
 import { scenesList, activeScene, setActiveScene } from '../sceneManager'
 
 import Button from '../objects/ButtonObject'
+import ExitObject from '../objects/ExitObject'
 
 
 export default class ChooseGameTypeWithFriendScene extends Phaser.Scene {
@@ -36,6 +37,9 @@ export default class ChooseGameTypeWithFriendScene extends Phaser.Scene {
             Scene.scene.run(scenesList.LayoutScene, { type: scenesList.WaitingBorderlessFriendScene })
             Scene.scene.stop(scenesList.ChooseGameTypeWithFriendScene)
         }))
+        
+        let exitButton = new ExitObject(this, 120, 120, "Exit", undefined)
+        exitButton.setDisplaySize(100, 100)
     }
 
     update(/*time, delta*/) {}

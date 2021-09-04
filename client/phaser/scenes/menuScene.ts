@@ -36,13 +36,13 @@ export default class MenuScene extends Phaser.Scene {
             Scene.scene.stop(scenesList.MenuScene)
         }))
 
-        this.menu.push(new Button(this, config.width / 2 - 300, 800, "Spectate",
-        function(Scene: Phaser.Scene) {
-            Scene.scene.run(scenesList.LayoutScene, { type: scenesList.JoinSpectateScene })
-            Scene.scene.stop(scenesList.MenuScene)
-        }))
+        // this.menu.push(new Button(this, config.width / 2 - 300, 800, "Spectate",
+        // function(Scene: Phaser.Scene) {
+        //     Scene.scene.run(scenesList.LayoutScene, { type: scenesList.JoinSpectateScene })
+        //     Scene.scene.stop(scenesList.MenuScene)
+        // }))
 
-        this.menu.push(new Button(this, config.width / 2 + 300, 800, "  With\na friend",
+        this.menu.push(new Button(this, config.width / 2, 800, "  With\na friend",
         function(Scene: Phaser.Scene) {
             Scene.scene.run(scenesList.ChooseGameTypeWithFriendScene)
             Scene.scene.stop(scenesList.MenuScene)
