@@ -13,11 +13,11 @@
 					<button class="inline-flex text-white bg-grey border-0 py-0.5 px-2 focus:outline-none hover:bg-blue-700 rounded mb-3 text-xs italic"
 							v-if="this.$auth.loggedIn && (this.$auth.user.id === user.id || this.$auth.user.role === 'admin' || this.$auth.user.role === 'superAdmin')"
 							@click="toggleDisplayNameField">
-						Change display name </button>
+						Change display name (length: 2-16 chars)</button>
 					<div v-if="inputDisplayName">
 						<div class="form-control mb-3">
 							<div class="flex space-x-2 justify-center">
-								<input type="text" placeholder="Display Name" v-model="displayNameInput" class="input input-primary input-bordered"> 
+								<input type="text" maxlength="16" v-on:keypress="isAlphaNumerical($event)" placeholder="Display Name" v-model="displayNameInput" class="input input-primary input-bordered"> 
 							    <button @click="updateDisplayName" class="btn btn-primary">Save</button>
 							</div>
 						</div>
@@ -201,8 +201,17 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 				this.toggleDisplayNameField();
 			}).catch((err) => {
 				this.toggleDisplayNameField();
-				this.$toast.error("Name already taken")
+				this.$toast.error("Name already taken or length too short")
 			})
+		}
+
+		isAlphaNumerical($event: any) {
+      		let char = String.fromCharCode($event.keyCode)
+      		if (/^[A-Za-z0-9]+$/.test(char)) return true
+      		else {
+       			$event.preventDefault()
+        		this.$toast.error('Only alphanumerical characters, click to submit')
+      		}
 		}
 
 		updateAvatar(filename: any) {

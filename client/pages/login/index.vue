@@ -61,7 +61,7 @@
       </div>
       <div v-else class="">
         <label class="text-sm font-bold text-gray-700 tracking-wide"
-          >Test User Name (16 characters max.)</label
+          >Test User Name (length: 2-16 chars)</label
         >
         <input
           class="
