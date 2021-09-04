@@ -12,7 +12,7 @@
         <p class="mb-5">
           Accept the Ft_Transcendance Challenge and Become the Best Pong Player!
         </p>
-        <button class="btn btn-primary">Join a Game</button>
+        <NuxtLink to="/game" class="btn btn-primary">Join a Game</NuxtLink>
       </div>
     </div>
   </div>
@@ -31,7 +31,7 @@ export default Vue.extend({
     async userLogout() {
       try {
         let response = await this.$auth.logout()
-        this.$router.replace('/login')
+        this.$router.push('/login')
       } catch (err) {
         this.$toast.error('Logging out failed')
       }
