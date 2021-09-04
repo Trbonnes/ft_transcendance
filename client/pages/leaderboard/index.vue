@@ -3,7 +3,7 @@
 		<div>
 			<h1 class="flex mx-auto justify-center mt-10 m-5 text-3xl font-bold"> Mighty Challengers Ranked by Wins </h1>
 		</div>
-		<div class="" v-for="(user, rank) in sortedUsers" :key="`${user}.id`">
+		<div class="" v-for="(user, rank) in sortedUsers" :key="`${user.id}`">
 			<Usercard :user="user" :index="rank + 1"/>
 		</div>
 	</div>
@@ -30,6 +30,10 @@ import {Component} from 'nuxt-property-decorator'
 		async fetch() {
 			this.users = await this.$axios.$get('/users')
 		}
+
+		//show() {
+		//	console.log(this.sortedUsers);
+		//}
 
 		get sortedUsers() : any[] {
 			return this.users.sort((a, b) => {
