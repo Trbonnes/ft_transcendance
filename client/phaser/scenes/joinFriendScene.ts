@@ -7,6 +7,7 @@ import createSocket from '../objects/CreateSocket'
 
 import Button from '../objects/ButtonObject'
 import Input from '../objects/InputField'
+import ExitObject from '../objects/ExitObject'
 
 export default class JoinFriendScene extends Phaser.Scene {
     private socket?: Socket
@@ -44,6 +45,9 @@ export default class JoinFriendScene extends Phaser.Scene {
             // if (joinInput.getValue())
             this.establishConnection("game")
         })
+
+        let exitButton = new ExitObject(this, 120, 120, "Exit", this.socket)
+        exitButton.setDisplaySize(100, 100)
     }
 
     establishConnection(gateway: string) {
@@ -69,6 +73,15 @@ export default class JoinFriendScene extends Phaser.Scene {
                     .setTint(0xff0000)
                     .setOrigin(0.5, 0.5)
             }
+        })
+
+        this.socket.on('AlreadyConnected', () => {
+            this.cameras.main.shake(400)
+            this.add.text(config.width / 2, 600, "Error")
+                .setFontSize(65)
+                .setStroke('black', 3)
+                .setTint(0xff0000)
+                .setOrigin(0.5, 0.5)
         })
 
     }

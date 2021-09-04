@@ -6,6 +6,7 @@ import { scenesList, activeScene, setActiveScene } from '../sceneManager'
 import Button from '../objects/ButtonObject'
 import PongBar from '../objects/PongBar'
 import Ball from '../objects/BallObject'
+import ExitObject from '../objects/ExitObject'
 
 
 export default class SpectateScene extends Phaser.Scene {
@@ -51,6 +52,9 @@ export default class SpectateScene extends Phaser.Scene {
         this.add
         .image(config.width / 2, config.height / 2, this.layoutType + "_background.png")
         .setDisplaySize(config.width, config.height)
+
+        let exitButton = new ExitObject(this, 120, 120, "Exit", this.socket)
+        exitButton.setDisplaySize(100, 100)
         
         this.score = {
             left: 0,
