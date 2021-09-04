@@ -1,7 +1,5 @@
 <template>
-	<keep-alive>
-		<div id="gameCtnr"></div>
-	</keep-alive>
+	<div/>
 </template>
 
 <script lang="ts">

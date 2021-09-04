@@ -42,13 +42,23 @@ export class GameGateway {
       const token = data.headers.authorization.split(' ')[1]
       let authData = this.authService.validateTokenSync(token)
       if (authData == null) {
-        client.disconnect();
-        return;
+        client.disconnect()
+        return
       }
     } catch (error: any) {
       console.log(error)
-      client.disconnect();
+      client.disconnect()
     }
+
+    for (let gameRoom of this.rooms.keys()) {
+      if (userId == this.rooms.get(gameRoom).client0_id
+      || userId == this.rooms.get(gameRoom).client1_id) {
+        client.emit('AlreadyConnected')
+        client.disconnect()
+        return
+      }
+    }
+
     if (data.query['spectate']) {
       for (let gameRoom of this.rooms.keys()) {
         if (gameRoom == data.query['spectate']

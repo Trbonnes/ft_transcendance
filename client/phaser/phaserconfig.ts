@@ -4,8 +4,9 @@ import VueRouter from 'vue-router'
 import { scenesList, sceneLoader } from './sceneManager'
 import { assetLoader } from './assetsManager'
 
-
 export let router!: VueRouter
+
+export let game!: Phaser.Game
 
 export const config: Phaser.Types.Core.GameConfig & {
 	width: number
@@ -169,7 +170,14 @@ export function setup(_options: {
 				this.scene.run(scenesList.JoinSpectateScene, { type: "classical", id: config.spectate })
 			else
 				this.scene.run(scenesList.MenuScene)
-    }
+		
+			this.game.events.on('pause', () => {
+				console.log('pause')
+			})
+			this.game.events.on('resume', () => {
+				console.log('resume')
+			})
+    	}
 
 		update(/*time, delta*/) {}
 	}
@@ -179,11 +187,15 @@ export function setup(_options: {
 	config.userId = _options.userId
 	config.userToken = _options.userToken
 
-	let game: Phaser.Game
-
 	if (_options.gameId)
 		game = new Phaser.Game({ ...config, scene: InGame,  })
-	else
+	if (_options.spectate || _options.invite) {
+		if (game.isRunning)
+			game.destroy(true)
 		game = new Phaser.Game({ ...config, scene: HomeScene,  })
+	}
+	else if (!game || !game.isRunning)
+		game = new Phaser.Game({ ...config, scene: HomeScene,  })
+	
 	return game
 }
