@@ -6,6 +6,7 @@ export default function createSocket(namespace: string, spectate: string, friend
 
     console.log(os.hostname())
     let socket = io("http://" + os.hostname() + ":3000/" + namespace, {
+        forceNew: true,
         extraHeaders: {
             "Authorization": config.userToken,
             "user_id": config.userId
