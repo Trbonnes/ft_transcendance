@@ -8,6 +8,7 @@ export function createWebSocketPlugin(store: any, token: string) {
   console.log('Initializing the websocket ')
   console.log('Hostname: ' + os.hostname())
   socket = io('http://' + os.hostname() + ':3000/chat', {
+    forceNew: true,
     extraHeaders: {
       Authorization: token,
     },
@@ -33,7 +34,7 @@ export function createWebSocketPlugin(store: any, token: string) {
     console.log(data)
     store.dispatch('channel/message', data)
   })
-  store.subscribe((mutation: any) => {})
+  store.subscribe((mutation: any) => { })
 }
 
 export function getSocket(): Socket {
