@@ -47,7 +47,7 @@ export default class SpectateScene extends Phaser.Scene {
 
     create() {
         setActiveScene(scenesList.SpectateScene)
-        this.input.setDefaultCursor('none') // Not forget to this.input.setDefaultCursor('default') when stopping the scene
+        // this.input.setDefaultCursor('none') // Not forget to this.input.setDefaultCursor('default') when stopping the scene
         
         this.add
         .image(config.width / 2, config.height / 2, this.layoutType + "_background.png")
