@@ -166,10 +166,8 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 				})
 			}
 			else {
-				this.$axios.delete(`/users/block`, {
-					data: {
-						blockedId: this.user.id
-					}
+				this.$axios.post(`/users/unblock`, {
+					blockedId: this.user.id
 				}).then((result) => {
 					this.$toast.success("User unblocked")
 					this.$auth.fetchUser()

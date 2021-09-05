@@ -90,9 +90,9 @@ export class UsersController {
     return this.usersService.addBlockedUser(request.user.id, body.toBlockId)
   }
 
-  @Delete('block')
+  @Post('unblock')
   @UseGuards(JwtAuthGuard)
   unblockUser(@Req() request, @Body() body: any) {
-    return this.usersService.removeBlockedUser(request.user.id, body.blockedUserId)
+    return this.usersService.removeBlockedUser(request.user.id, body.blockedId)
   }
 }
