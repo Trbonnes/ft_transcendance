@@ -30,6 +30,14 @@ interface Channel {
   messages: Message[]
 }
 
+interface DirectChannel {
+  id: string
+  lastMessageUpdate: Date
+  user1: any
+  user2: any
+  messages: Message[]
+}
+
 interface CreateChannelDto {
   // no owner specified, will be deduced from the JWT auth token
   channelName: string
@@ -37,4 +45,4 @@ interface CreateChannelDto {
   channelPassword: string
 }
 
-export { CreateMessageDto, ChannelMessageDto, Message, Channel, CreateChannelDto }
+export { CreateMessageDto, ChannelMessageDto, Message, Channel, CreateChannelDto, DirectChannel }

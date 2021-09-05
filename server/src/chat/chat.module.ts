@@ -6,6 +6,7 @@ import { ChatGateway } from './app.chatgateway';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Channel } from 'src/entities/channel.entity';
+import { DirectChannelModule } from './direct-channel/direct-channel.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { Channel } from 'src/entities/channel.entity';
     AuthModule,
     UsersModule,
     TypeOrmModule.forFeature([Channel, User]),
+    DirectChannelModule,
   ],
   providers: [ChatGateway],
 })
-export class ChatModule {}
+export class ChatModule { }

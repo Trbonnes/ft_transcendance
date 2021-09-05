@@ -30,16 +30,19 @@ export class ChannelController {
 
   // Returns all channel for an user, can only be used by admin and the user who has the channels
   @Get('all')
+  @UseGuards(JwtAuthGuard)
   all() {
     return this.channelService.getAllChannels();
   }
 
   @Get(':channelId')
+  @UseGuards(JwtAuthGuard)
   async getOne(@Param('channelId') channelId: string) {
     return this.channelService.getById(channelId)
   }
 
   @Get('search/:name')
+  @UseGuards(JwtAuthGuard)
   async searchChannelByName(@Param('name') name: string) {
     return await this.channelService.searchByName(name);
   }

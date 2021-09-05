@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import { Plugin } from 'vuex'
 import { createWebSocketPlugin } from '~/store/plugins/websocket'
 import channel from '~/store/channel'
+import directChannel from '~/store/direct-channel'
 
 Vue.use(Vuex)
 
@@ -12,6 +13,7 @@ const store = () =>
     plugins: [createWebSocketPlugin as Plugin<any>], // plugin for websocket interaction when mutations
     modules: {
       channel, // TODO only launch when logged in maybe ?
+      directChannel
     },
     getters: {
       isLoggedIn: (state: any) => {
