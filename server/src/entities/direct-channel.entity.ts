@@ -4,31 +4,28 @@ import {
   Column,
   JoinColumn,
   Entity,
-  OneToOne,
+  ManyToOne,
   OneToMany,
-  Unique
+  Unique,
+  Index
 } from 'typeorm';
 import { User } from './user.entity';
 import { DirectMessage } from './direct-message.entity'
 
 @Entity()
-@Unique("pair", ["user1Id", "user2Id"])
 export class DirectChannel {
 
   @PrimaryGeneratedColumn('uuid') // generates unique id for each game
   id: string;
 
-  @Column()
-  lastMessageUpdate: Date;
-
-  @OneToOne(() => User)
+  @ManyToOne(() => User, (user) => user.direct)
   @JoinColumn()
   user1: User;
 
   @Column()
   user1Id: string;
 
-  @OneToOne(() => User)
+  @ManyToOne(() => User, (user) => user.direct)
   @JoinColumn()
   user2: User;
 

@@ -9,25 +9,34 @@ export class DirectChannelService {
 
   constructor(
     @InjectRepository(DirectChannel) private channelRepositery: Repository<DirectChannel>,
+    @InjectRepository(DirectMessage) private messageRepositery: Repository<DirectMessage>,
   ) { }
 
   getAllChannels(userId: string): Promise<DirectChannel[]> {
     return this.channelRepositery.find({
-      where: [{ user1: userId }, { user2: userId }],
-      order: { lastMessageUpdate: "DESC" },
+      where: [{ user1Id: userId }, { user2Id: userId }],
       relations: ["user1", "user2"]
     })
   }
 
   getOneByUsers(user1Id: string, user2Id: string) {
-    return this.channelRepositery.find({ where: [{ user1: user1Id, user2: user2Id }, { user1: user2Id, user2: user1Id }] })
+    return this.channelRepositery.findOne({ where: [{ user1Id: user1Id, user2Id: user2Id }, { user1Id: user2Id, user2Id: user1Id }] })
   }
 
   saveOne(user1: string, user2: string) {
     let data = new DirectChannel()
     data.user1Id = user1;
     data.user2Id = user2;
+    console.log(data)
     return this.channelRepositery.save(data)
+  }
+
+  saveMessage(channelId: string, userId: string, content: string) {
+    let message = new DirectMessage()
+    message.channelId = channelId
+    message.senderId = userId
+    message.content = content
+    return this.messageRepositery.save(message)
   }
 
   async getMessages(user1: string, user2: string) {

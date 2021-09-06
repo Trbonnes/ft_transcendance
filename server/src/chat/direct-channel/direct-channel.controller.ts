@@ -29,7 +29,6 @@ export class DirectChannelController {
     private readonly channelService: DirectChannelService,
   ) { }
 
-
   @Get('all')
   @UseGuards(JwtAuthGuard)
   async all(
@@ -40,7 +39,7 @@ export class DirectChannelController {
       let dto: DirectChannelDto[] = []
       for (let i = 0; i < channels.length; i++) {
         const c = channels[i];
-        let tmp: DirectChannelDto
+        let tmp: DirectChannelDto = { user: null, messages: [] }
         if (c.user1Id == req.user.id)
           tmp.user = c.user2
         else
@@ -48,8 +47,10 @@ export class DirectChannelController {
         tmp.messages = c.messages
         dto.push(tmp)
       }
+      console.log(dto)
       return dto
     } catch (error: any) {
+      console.log(error)
       return new HttpException("Cannot get channel list", HttpStatus.BAD_REQUEST)
     }
   }
@@ -59,14 +60,15 @@ export class DirectChannelController {
   async joinDirectChannel(@Req() req, @Param('userId') userId: string) { // only one user id, the other one is in the JWT
     if (userId == "")
       return new HttpException("Id cannot be empty", HttpStatus.BAD_REQUEST)
-
     // TODO check if blocked ?
     try {
-      let channel = this.channelService.getOneByUsers(req.user.id, userId)
-      if (channel)
-        return channel;
-      let data = await this.channelService.saveOne(req.user.id, userId)
-      return data
+      let channel = await this.channelService.getOneByUsers(req.user.id, userId)
+      console.log("Here's the found channel")
+      console.log(channel)
+      let data: DirectChannel
+      if (!channel)
+        data = await this.channelService.saveOne(req.user.id, userId)
+      return { status: 201, message: "Channel joined" }
     } catch (error: any) {
       return new HttpException("Cannot join direct channel", HttpStatus.BAD_REQUEST)
     }

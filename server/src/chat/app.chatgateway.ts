@@ -16,6 +16,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { ChannelService } from 'src/chat/channel/channel.service';
 import { ChannelMessageService } from 'src/chat/channel/channel-message/channel-message.service';
 import { ChannelMembershipService } from 'src/chat/channel/channel-membership/channel-membership.service';
+import { DirectChannelService } from 'src/chat/direct-channel/direct-channel.service';
 import { ChannelMessageDto } from './channel/dto/channel-message.dto';
 import { ChannelMessage } from 'src/entities/channel-message.entity';
 
@@ -32,6 +33,7 @@ export class ChatGateway {
     private readonly channelService: ChannelService,
     private readonly channelMessageService: ChannelMessageService,
     private readonly membershipService: ChannelMembershipService,
+    private readonly directService: DirectChannelService,
     private readonly auth: AuthService,
   ) {
     this.activeChannels = new Map<string, Channel>();
@@ -58,6 +60,7 @@ export class ChatGateway {
       }
       let user: User = await this.userService.findOne(data.id);
       this.activeClients.set(client.id, user);
+      client.join(user.id)
     } catch (error: any) {
       client.disconnect();
     }
@@ -80,6 +83,25 @@ export class ChatGateway {
         return  // TODO return error message ? 
       client.join(channelId);
       this.activeChannels.set(channelId, channel);
+    } catch (e) {
+      //TODO error handling
+      return;
+    }
+  }
+
+  @SubscribeMessage('sendDirect')
+  async sendDirect(
+    @MessageBody() payload: { userId: string, content: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    // TODO check for blocked
+    try {
+      let clientId = this.activeClients.get(client.id).id
+      let data = await this.directService.getOneByUsers(clientId, payload.userId)
+      if (data) {
+        await this.directService.saveMessage(data.id, clientId, payload.content)
+        client.to(payload.userId).emit("directMessage", { sender: clientId, content: payload.content })
+      }
     } catch (e) {
       //TODO error handling
       return;

@@ -18,7 +18,6 @@ export default class DirectChannelModule extends VuexModule {
   async fetchAll() {
     try {
       let data = await $axios.$get<DirectChannel[]>('/direct-channel/all')
-      console.log("This is the channels fetched", data)
       this.context.commit('setChannels', data)
     }
     catch (error: any) {
@@ -39,13 +38,9 @@ export default class DirectChannelModule extends VuexModule {
   }
 
   @Action
-  async joinDirectChannel(userId: string) {
-    try {
-      let data = await $axios.$post<DirectChannel>(`/direct-channel/${userId}`)
-      this.context.commit('setOne', data)
-    } catch (error) {
-      // TODO error handling component
-    }
+  async joinChannel(userId: string) {
+    console.log("Calling joinChannel")
+    return $axios.$post<DirectChannel>(`/direct-channel/${userId}`)
   }
 
   @Action
@@ -57,16 +52,30 @@ export default class DirectChannelModule extends VuexModule {
     }
   }
 
+  @Action
+  async join(userId: string) {
+    const sock = getSocket()
+    sock.emit('joinDirect', userId)
+  }
+
+  @Action history(userId: string) {
+    let data = $axios.$get(`/direct-channel/${userId}/history`)
+    console.log("History ", data)
+  }
+
   @Mutation
   setChannels(data: DirectChannel[]) {
+    console.log("Here we are in setChannel")
+    console.log(data)
     const keys = Object.keys(this.channels)
     for (let i = 0; i < keys.length; i++) {
       Vue.delete(this.channels, keys[i])
     }
     for (let i = 0; i < data.length; i++) {
       const c = data[i];
-      Vue.set(this.channels, c.id, c)
+      Vue.set(this.channels, c.user.id, c)
     }
+    console.log(this.channels)
   }
 
   @Mutation
