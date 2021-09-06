@@ -137,11 +137,11 @@ export default class GameScene extends Phaser.Scene {
     update(/*time, delta*/) {
 
         while (this.input.mousePointer.y > this.myBar!.bar.y) {
-            this.myBar!.updatePosition(1)
+            //this.myBar!.updatePosition(1)
             this.socket!.emit('MoveBar', {id: this.room, y: this.myBar!.bar.y})
         }
         while (this.input.mousePointer.y < this.myBar!.bar.y) {
-            this.myBar!.updatePosition(-1)
+            //this.myBar!.updatePosition(-1)
             this.socket!.emit('MoveBar', {id: this.room, y: this.myBar!.bar.y})
         }
 

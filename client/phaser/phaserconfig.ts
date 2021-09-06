@@ -187,7 +187,7 @@ export function setup(_options: {
 	config.userId = _options.userId
 	config.userToken = _options.userToken
 
-	if (_options.gameId)
+	if ((!game || !game.isRunning) && _options.gameId)
 		game = new Phaser.Game({ ...config, scene: InGame,  })
 	if (_options.spectate || _options.invite) {
 		if (game.isRunning)

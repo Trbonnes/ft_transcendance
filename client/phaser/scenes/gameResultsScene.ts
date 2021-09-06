@@ -30,7 +30,7 @@ export default class GameResultsScene extends Phaser.Scene {
                 .setOrigin(0.5, 0.5)
         }
         else if (!this.winner) {
-            this.add.text(config.width / 2, 120, "You LOOSE !")
+            this.add.text(config.width / 2, 120, "You LOSE !")
                 .setFontSize(65)
                 .setStroke('black', 3)
                 .setTint(0xff0000)
