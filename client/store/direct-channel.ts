@@ -48,6 +48,15 @@ export default class DirectChannelModule extends VuexModule {
     }
   }
 
+  @Action
+  async searchUser(username: string) {
+    try {
+      return await $axios.$get(`/users/search/${username}`)
+    } catch (error: any) {
+      //TODO error handling
+    }
+  }
+
   @Mutation
   setChannels(data: DirectChannel[]) {
     const keys = Object.keys(this.channels)

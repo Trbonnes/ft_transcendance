@@ -47,23 +47,23 @@ export class UsersService {
     user.victory += 1
     user.level = Math.floor(user.victory / 5)
     this.usersRepository.save(user)
-  } 
+  }
 
   async incrementLosses(id: string | string[]) {
     const user = await this.usersRepository.findOneOrFail({ where: { id } });
     user.defeat += 1
     this.usersRepository.save(user)
-  } 
-  
+  }
+
   async setCurrentGame(id: string, game_id: string) {
-      let user = await this.usersRepository.findOneOrFail({ where: { id } });
-      user.game_id = game_id
-      if (game_id == "")
-        user.inGame = false
-      else
-        user.inGame = true
-      return await this.usersRepository.save(user)
-    }
+    let user = await this.usersRepository.findOneOrFail({ where: { id } });
+    user.game_id = game_id
+    if (game_id == "")
+      user.inGame = false
+    else
+      user.inGame = true
+    return await this.usersRepository.save(user)
+  }
 
   async findOnebyEmail(email: string): Promise<User> {
     Logger.log(email);
@@ -83,7 +83,13 @@ export class UsersService {
   async searchByName(name: string): Promise<any> {
     const manager = getManager();
     const res = manager.query(
-      'select id, name leven from "user" order by levenshtein(($1), "user".name) limit 10',
+      `
+        select id, name from (
+          select "user".id as id, "displayName" as name,  levenshtein(($1), "displayName") as leven
+            from "user"
+            order by leven limit 10
+        ) as sub where sub.leven < 20
+      `,
       [name],
     );
     return res;
@@ -129,16 +135,16 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-      const user = await this.usersRepository.findOneOrFail({ where: { id } });
-      // this.usersRepository.update(user, updateUserDto);
-      return this.usersRepository.save({ ...user, ...updateUserDto })
-        .catch(() => {
-          throw new HttpException({
-            message: [
-              `This display name is already taken. Please choose another one.`
-            ]
-          }, HttpStatus.BAD_REQUEST)
-        })
+    const user = await this.usersRepository.findOneOrFail({ where: { id } });
+    // this.usersRepository.update(user, updateUserDto);
+    return this.usersRepository.save({ ...user, ...updateUserDto })
+      .catch(() => {
+        throw new HttpException({
+          message: [
+            `This display name is already taken. Please choose another one.`
+          ]
+        }, HttpStatus.BAD_REQUEST)
+      })
   }
 
   async remove(id: string) {
