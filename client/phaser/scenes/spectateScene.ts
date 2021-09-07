@@ -126,18 +126,25 @@ export default class SpectateScene extends Phaser.Scene {
 
     update(/*time, delta*/) {
 
-        while (this.leftBarUpdate! > this.leftBar!.bar.y) {
-            this.leftBar!.updatePosition(1)
-        }
-        while (this.leftBarUpdate! < this.leftBar!.bar.y) {
-            this.leftBar!.updatePosition(-1)
-        }
+        if (!this.game.canvas.parentElement?.style.display) {
+            while (this.leftBarUpdate! > this.leftBar!.bar.y) {
+                this.leftBar!.updatePosition(1)
+            }
+            while (this.leftBarUpdate! < this.leftBar!.bar.y) {
+                this.leftBar!.updatePosition(-1)
+            }
 
-        while (this.rightBarUpdate! > this.rightBar!.bar.y) {
-            this.rightBar!.updatePosition(1)
+            while (this.rightBarUpdate! > this.rightBar!.bar.y) {
+                this.rightBar!.updatePosition(1)
+            }
+            while (this.rightBarUpdate! < this.rightBar!.bar.y) {
+                this.rightBar!.updatePosition(-1)
+            }
         }
-        while (this.rightBarUpdate! < this.rightBar!.bar.y) {
-            this.rightBar!.updatePosition(-1)
+        else {
+            this.socket!.disconnect()
+            this.scene.run(scenesList.MenuScene)
+            this.scene.stop(this)
         }
     }
 }
