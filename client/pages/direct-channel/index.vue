@@ -25,13 +25,13 @@
         </div>
       </div>
       <div>
-        <div v-for="c in getAll" @click="joinChannel(c.user.id)" class="cursor-pointer p-3 my-1 flex flex-row items-center justify-between rounded-xl bg-gray-300 hover:bg-gray-400">
-          <img class="w-16 h-16 rounded-full" :src="c.user.avatar" :alt="c.user.displayName">
-          <span>{{c.user.displayName}}</span>
+        <div v-for="user in getAll" @click="joinChannel(user.id)" class="cursor-pointer p-3 my-1 flex flex-row items-center justify-between rounded-xl bg-gray-300 hover:bg-gray-400">
+          <img class="w-16 h-16 rounded-full" :src="user.avatar" :alt="user.displayName">
+          <span>{{user.displayName}}</span>
         </div>
       </div>
     </div>
-    <Conversation id="convo" :messages="[]" @sendMessage="sendMessage" />
+    <Conversation v-if="currentChannel" id="convo" :messages="getMessages" @sendMessage="sendMessage" />
   </div>
 </template>
 
@@ -54,6 +54,15 @@ export default Vue.extend({
     getAll(){
       let data = this.$store.getters["directChannel/all"]
       console.log("Geting the data")
+      console.log(data)
+      return data
+    },
+    getMessages()
+    {
+      if (this.currentChannel === '')
+        return []
+      let data = this.$store.getters["directChannel/messages"](this.currentChannel)
+      console.log("Returned data from getter")
       console.log(data)
       return data
     }
@@ -82,17 +91,25 @@ export default Vue.extend({
         return
       try
       {
-        await this.$store.dispatch('directChannel/join', userId)
-        this.currentChannel = userId
         await this.$store.dispatch('directChannel/history', userId)
+        this.currentChannel = userId
       }
       catch(error : any)
       {
-        this.$toast.error("Cannot retrieve channel information")
+        this.$toast.error("Cannot message history")
       }
     },
-    sendMessage(content : string)
-    {}, 
+    async sendMessage(content : string)
+    {
+      try
+      {
+        let data = await this.$store.dispatch('directChannel/sendMessage',  { userId : this.currentChannel, content : content })
+      }
+      catch(error : any)
+      {
+        this.$toast.error("Cannot message history")
+      }
+    }, 
     addDirectChannel(e : any)
     {
         e.preventDefault()

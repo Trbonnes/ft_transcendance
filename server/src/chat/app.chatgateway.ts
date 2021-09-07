@@ -95,12 +95,14 @@ export class ChatGateway {
     @ConnectedSocket() client: Socket,
   ) {
     // TODO check for blocked
+    if (payload.userId === "")
+      return
     try {
       let clientId = this.activeClients.get(client.id).id
       let data = await this.directService.getOneByUsers(clientId, payload.userId)
       if (data) {
-        await this.directService.saveMessage(data.id, clientId, payload.content)
-        client.to(payload.userId).emit("directMessage", { sender: clientId, content: payload.content })
+        let message = await this.directService.saveMessage(data.id, clientId, payload.content)
+        this.server.in(payload.userId).emit("directChannel/directMessage", message)
       }
     } catch (e) {
       //TODO error handling

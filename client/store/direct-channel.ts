@@ -53,14 +53,24 @@ export default class DirectChannelModule extends VuexModule {
   }
 
   @Action
-  async join(userId: string) {
-    const sock = getSocket()
-    sock.emit('joinDirect', userId)
+  async sendMessage(payload: { userId: string; content: string }) {
+    try {
+      const socket = getSocket()
+      socket.emit("sendDirect", payload)
+    } catch (error: any) {
+      // TODO error handling
+    }
   }
 
-  @Action history(userId: string) {
-    let data = $axios.$get(`/direct-channel/${userId}/history`)
-    console.log("History ", data)
+  @Action
+  async history(userId: string) {
+    try {
+      let data = await $axios.$get(`/direct-channel/${userId}/history`)
+      this.context.commit('setMessages', { userId: userId, data: data })
+      console.log("History ", data)
+    } catch (error: any) {
+      // TODO error handling
+    }
   }
 
   @Mutation
@@ -73,9 +83,44 @@ export default class DirectChannelModule extends VuexModule {
     }
     for (let i = 0; i < data.length; i++) {
       const c = data[i];
-      Vue.set(this.channels, c.user.id, c)
+      console.log("Here is the element ", c)
+      console.log("Here is the id ", c.id)
+      Vue.set(this.channels, c.id, c)
     }
     console.log(this.channels)
+  }
+
+  @Mutation
+  setMessages(payload: { userId: string; data: Message[] }) {
+    let c = this.channels[payload.userId]
+    if (c) {
+      Vue.set(this.channels[payload.userId], "messages", payload.data)
+    }
+  }
+
+  @Action
+  message(msg: Message) {
+    try {
+      console.log("Pushing new message")
+      this.context.commit('pushMessage', {
+        userId: msg.senderId,
+        message: msg,
+      })
+    } catch (err: any) {
+      console.log(err)
+      // TODO error handlign properly
+    }
+  }
+
+  @Mutation
+  pushMessage(payload: { userId: string; message: Message }) {
+    try {
+      let c = this.channels[payload.userId]
+      if (c)
+        c.messages.push(payload.message)
+      Vue.set(this.channels, payload.userId, c) // TODO not optimized
+    } catch (error) {
+    }
   }
 
   @Mutation
@@ -85,5 +130,17 @@ export default class DirectChannelModule extends VuexModule {
 
   get all() {
     return this.channels
+  }
+
+  get messages() {
+    return (id: string) => {
+      console.log("Channel list ")
+      console.log(this.channels)
+      let c = this.channels[id]
+      if (c && c.messages) {
+        return c.messages
+      }
+      return []
+    }
   }
 }

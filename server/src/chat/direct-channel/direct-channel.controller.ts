@@ -17,11 +17,6 @@ import { User } from '../../entities/user.entity'
 import { DirectChannelService } from './direct-channel.service'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
-interface DirectChannelDto {
-  user: User;
-  messages: DirectMessage[];
-}
-
 @Controller('direct-channel')
 export class DirectChannelController {
 
@@ -36,15 +31,14 @@ export class DirectChannelController {
   ) {
     try {
       let channels = await this.channelService.getAllChannels(req.user.id)
-      let dto: DirectChannelDto[] = []
+      let dto: User[] = []
       for (let i = 0; i < channels.length; i++) {
         const c = channels[i];
-        let tmp: DirectChannelDto = { user: null, messages: [] }
+        let tmp = new User()
         if (c.user1Id == req.user.id)
-          tmp.user = c.user2
+          tmp = c.user2
         else
-          tmp.user = c.user1
-        tmp.messages = c.messages
+          tmp = c.user1
         dto.push(tmp)
       }
       console.log(dto)
@@ -63,8 +57,6 @@ export class DirectChannelController {
     // TODO check if blocked ?
     try {
       let channel = await this.channelService.getOneByUsers(req.user.id, userId)
-      console.log("Here's the found channel")
-      console.log(channel)
       let data: DirectChannel
       if (!channel)
         data = await this.channelService.saveOne(req.user.id, userId)
