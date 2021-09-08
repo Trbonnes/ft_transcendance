@@ -7,7 +7,7 @@
         <font-awesome-icon class="text-xl mx-1.5" icon="users"> </font-awesome-icon> Members
       </a>
       <div id="members"  class="modal">
-        <div class="modal-box">
+        <div class="modal-box ">
           <div class="flex flex-col max-h-96 overflow-y-scroll">
             <div :class="{'bg-green-400' : m.user.id === $auth.user.id}" class="p-3 my-1 flex flex-row items-center justify-between rounded-xl bg-gray-300" v-for='m in getMembers'> 
               <img class="w-16 h-16 rounded-full" :src="m.user.avatar" :alt="m.user.displayName">
@@ -208,10 +208,6 @@ export default Vue.extend({
         {
             console.log(error)// TODO error handling
         })
-    },
-    makeAdmin(userId : string)
-    {
-        
     },
     sendMessage(msgContent: string) {
       const dto: CreateMessageDto = {
