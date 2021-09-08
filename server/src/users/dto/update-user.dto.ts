@@ -21,4 +21,13 @@ export class UpdateUserDto {
 
 	@IsOptional()
 	avatarFileName: string
+
+	@IsOptional()
+	victory: number
+
+	@IsOptional()
+	defeat: number
+
+	@IsOptional()
+	level: number
 }

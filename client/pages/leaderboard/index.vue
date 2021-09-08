@@ -23,12 +23,23 @@ import {Component} from 'nuxt-property-decorator'
 		mounted() {
 			if (this.$auth.loggedIn)
 				this.$auth.fetchUser()
+			this.updateStats();
 		}
 
 		users: any[] = []
 		
 		async fetch() {
 			this.users = await this.$axios.$get('/users')
+		}
+
+		async updateStats() {
+			let allUsers = await this.$axios.$get('/users');
+			for (var user of allUsers) {
+				if ((user as any).id !== undefined) {
+					await this.$axios.$get(`/game/user/${(user as any).id}`);
+				}
+			}
+			this.users = await this.$axios.$get('/users');
 		}
 
 		//show() {

@@ -34,6 +34,19 @@ export class GameService {
     return game;
   }
 
+  async findStatsByUserId(id: string) {
+    const games = await this.findAll();
+    Logger.log(games);
+    let victories = games.filter((game) => game.winner_id === id).length;
+    let defeats = games.filter((game) => game.loser_id === id).length;
+    let level = Math.floor(victories / 5);
+    return {
+      victory: victories,
+      defeat: defeats,
+      level: level
+    }
+  }
+
   async update(game_id: string, winner_id: string, loser_id: string) {
     let game = await this.gameRepository.findOne( { where: {game_id} } )
 

@@ -95,6 +95,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		mounted() {
 			if (this.$auth.loggedIn) 
 				this.$auth.fetchUser()
+			this.updateUserStats()
 		}
 
 		toggleDisplayNameField() {
@@ -127,6 +128,11 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 
 		async fetchUser() {
 			this.user = await this.$axios.$get(`/users/${this.user.id}`)
+		}
+
+		async updateUserStats() {
+			await this.$axios.get(`/game/user/${this.user.id}`)
+			await this.fetchUser();
 		}
 
 		get friendStatus(): FriendStatus {
@@ -218,9 +224,12 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 			await this.fetchRequests()
 		}
 
-		showuser() {
+		async showuser() {
 			console.log(this.$auth.user)
 			console.log(this.isBlocked)
+			let user = await this.$axios.$get(`/game/user/${this.user.id}`)
+			console.log(user);
+			
 		}
 
 		updateDisplayName() {
