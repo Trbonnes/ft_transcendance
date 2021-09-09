@@ -162,15 +162,11 @@ export class GameGateway {
       if (gameRoom == serverSideClient[1]) {
         if (client.id == this.rooms.get(gameRoom).client0.id) {
           this.gameService.update(gameRoom, this.rooms.get(gameRoom).client1_id, this.rooms.get(gameRoom).client0_id)
-          this.usersService.incrementWins(this.rooms.get(gameRoom).client1_id)
-          this.usersService.incrementLosses(this.rooms.get(gameRoom).client0_id)
           this.rooms.get(gameRoom).disconnection = true
           break
         }
         else if (client.id == this.rooms.get(gameRoom).client1.id) {
           this.gameService.update(gameRoom, this.rooms.get(gameRoom).client0_id, this.rooms.get(gameRoom).client1_id)
-          this.usersService.incrementWins(this.rooms.get(gameRoom).client0_id)
-          this.usersService.incrementLosses(this.rooms.get(gameRoom).client1_id)
           this.rooms.get(gameRoom).disconnection = true
           break
         }
@@ -269,20 +265,10 @@ export class GameGateway {
       this.handleBall(gameId)
     }
     else {
-      if (this.rooms.get(gameId).player0.score == 6) {
-        const ret = this.gameService.update(gameId, this.rooms.get(gameId).client0_id, this.rooms.get(gameId).client1_id)
-        console.log("P1 won")
-        console.log(ret)
-        this.usersService.incrementWins(this.rooms.get(gameId).client0_id)
-        this.usersService.incrementLosses(this.rooms.get(gameId).client1_id)
-      }
-      else {
-        const ret = this.gameService.update(gameId, this.rooms.get(gameId).client1_id, this.rooms.get(gameId).client0_id)
-        console.log("P2 won")
-        console.log(ret)
-        this.usersService.incrementWins(this.rooms.get(gameId).client1_id)
-        this.usersService.incrementLosses(this.rooms.get(gameId).client0_id)
-      }
+      if (this.rooms.get(gameId).player0.score == 6)
+        this.gameService.update(gameId, this.rooms.get(gameId).client0_id, this.rooms.get(gameId).client1_id)
+      else 
+        this.gameService.update(gameId, this.rooms.get(gameId).client1_id, this.rooms.get(gameId).client0_id)
       this.server.to(this.rooms.get(gameId).id)
         .emit('End', {
           scoreP0: this.rooms.get(gameId).player0.score,
