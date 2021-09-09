@@ -4,14 +4,12 @@ import { io, Socket } from 'socket.io-client'
 
 let socket: Socket
 
-export function createWebSocketPlugin(store: any, token: string) {
+export function createWebSocketPlugin(store: any) {
   console.log('Initializing the websocket ')
   console.log('Hostname: ' + os.hostname())
   socket = io('http://' + os.hostname() + ':3000/chat', {
     forceNew: true,
-    extraHeaders: {
-      Authorization: token,
-    },
+    autoConnect: false,
     transportOptions: {
       cors: {
         origin: '*',

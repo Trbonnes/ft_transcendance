@@ -20,13 +20,9 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { createWebSocketPlugin } from '../store/plugins/websocket'
 
 export default Vue.extend({
   middleware: 'auth',
-  mounted() {
-    createWebSocketPlugin(this.$store, this.$auth.strategy.token.get()) // TODO make more easy solution
-  },
   methods: {
     async userLogout() {
       try {

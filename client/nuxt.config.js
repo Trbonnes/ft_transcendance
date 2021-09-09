@@ -38,7 +38,7 @@ export default {
   ],
 
   router: {
-    //middleware: ['auth']
+    middleware: ['init-chat-socket']
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules
