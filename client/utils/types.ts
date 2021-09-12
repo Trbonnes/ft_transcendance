@@ -33,8 +33,7 @@ interface Channel {
 interface DirectChannel {
   id: string
   lastMessageUpdate: Date
-  user1: any
-  user2: any
+  user: any
   messages: Message[]
 }
 

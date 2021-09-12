@@ -17,6 +17,12 @@ import { User } from '../../entities/user.entity'
 import { DirectChannelService } from './direct-channel.service'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
+interface DirectChannelDto {
+  id: string
+  user: User
+  messages: DirectMessage[]
+}
+
 @Controller('direct-channel')
 export class DirectChannelController {
 
@@ -31,17 +37,15 @@ export class DirectChannelController {
   ) {
     try {
       let channels = await this.channelService.getAllChannels(req.user.id)
-      let dto: User[] = []
+      let dto: DirectChannelDto[] = []
       for (let i = 0; i < channels.length; i++) {
         const c = channels[i];
-        let tmp = new User()
-        if (c.user1Id == req.user.id)
-          tmp = c.user2
-        else
-          tmp = c.user1
-        dto.push(tmp)
+        dto.push({
+          id: c.id,
+          user: (req.user.id == c.user1Id ? c.user2 : c.user1),
+          messages: []
+        })
       }
-      console.log(dto)
       return dto
     } catch (error: any) {
       console.log(error)
@@ -66,13 +70,14 @@ export class DirectChannelController {
     }
   }
 
-  @Get(':userId/history')
+  @Get(':channelId/history')
   @UseGuards(JwtAuthGuard)
-  async getHistory(@Req() req, @Param('userId') userId: string) { // only one user id, the other one is in the JWT
+  async getHistory(@Req() req, @Param('channelId') channelId: string) { // only one user id, the other one is in the JWT
     try {
-      let data = await this.channelService.getMessages(req.user.id, userId)
+      let data = await this.channelService.getMessages(channelId)
       return data
     } catch (error) {
+      console.log(error)
       return new HttpException("Cannot retrieve messages", HttpStatus.BAD_REQUEST)
     }
   }

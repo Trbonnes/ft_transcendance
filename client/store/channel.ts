@@ -14,10 +14,8 @@ export default class ChannelModule extends VuexModule {
 
   @Action
   async fetchAll() {
-    console.log('Fetching all the channels')
     try {
       const data: Channel[] = await $axios.$get<Channel[]>('/channel/all')
-      console.log(data)
       this.context.commit('setChannels', data)
     } catch (error: any) {
       // TODO proper error handling
@@ -28,8 +26,7 @@ export default class ChannelModule extends VuexModule {
   async fetchOne(channelId: string) {
     try {
       const data = await $axios.$get<Channel>(`/channel/${channelId}`)
-      console.log("Here ios the single channel", data)
-      this.context.commit('setOne')
+      this.context.commit('setOne', data)
     } catch (error) {
       // TODO error handling 
     }
@@ -55,10 +52,9 @@ export default class ChannelModule extends VuexModule {
     try {
       const data = await $axios.$get<Message[]>(`/channel/${channelId}/history`)
       this.context.commit("setMessages", { channelId, data })
-      console.log("Changed messages")
     }
     catch (error: any) {
-      console.log(error)
+      // TODO error handling
     }
   }
 
@@ -69,7 +65,6 @@ export default class ChannelModule extends VuexModule {
       this.context.commit("setMembers", { channelId, data })
     } catch (error: any) {
       // TODO error handling
-      console.log(error)
     }
   }
 
@@ -95,7 +90,6 @@ export default class ChannelModule extends VuexModule {
         message: msg,
       })
     } catch (err: any) {
-      console.log(err)
       // TODO error handlign properly
     }
   }
@@ -130,7 +124,6 @@ export default class ChannelModule extends VuexModule {
 
   @Mutation
   setOne(data: Channel) {
-    console.log("Setting one channel", data)
     Vue.set(this.channels, data.id, data)
   }
 
@@ -181,6 +174,7 @@ export default class ChannelModule extends VuexModule {
 
   get getOne() {
     return (id: string) => {
+      console.log(this.channels[id])
       return this.channels[id]
     }
   }

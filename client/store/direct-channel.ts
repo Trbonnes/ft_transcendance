@@ -5,14 +5,11 @@ import { $axios } from '~/utils/api'
 import { getSocket } from '~/store/plugins/websocket'
 import Vue from 'vue'
 
-interface ChanMap {
-  [key: string]: DirectChannel
-}
-
 @Module({ namespaced: true })
 export default class DirectChannelModule extends VuexModule {
 
-  public channels: ChanMap = {}
+  public channels: DirectChannel[] = []
+
 
   @Action
   async fetchAll() {
@@ -23,7 +20,6 @@ export default class DirectChannelModule extends VuexModule {
     catch (error: any) {
       // TODO error handling component
     }
-
   }
 
   @Action
@@ -63,49 +59,20 @@ export default class DirectChannelModule extends VuexModule {
   }
 
   @Action
-  async history(userId: string) {
+  async history(channelId: string) {
     try {
-      let data = await $axios.$get(`/direct-channel/${userId}/history`)
-      this.context.commit('setMessages', { userId: userId, data: data })
-      console.log("History ", data)
+      let data = await $axios.$get<Message[]>(`/direct-channel/${channelId}/history`)
+      this.context.commit('setMessages', { channelId: channelId, data: data })
     } catch (error: any) {
       // TODO error handling
     }
   }
 
-  @Mutation
-  setChannels(data: DirectChannel[]) {
-    console.log("Here we are in setChannel")
-    console.log(data)
-    const keys = Object.keys(this.channels)
-    for (let i = 0; i < keys.length; i++) {
-      Vue.delete(this.channels, keys[i])
-    }
-    for (let i = 0; i < data.length; i++) {
-      const c = data[i];
-      console.log("Here is the element ", c)
-      console.log("Here is the id ", c.id)
-      Vue.set(this.channels, c.id, c)
-    }
-    console.log(this.channels)
-  }
-
-  @Mutation
-  setMessages(payload: { userId: string; data: Message[] }) {
-    let c = this.channels[payload.userId]
-    if (c) {
-      Vue.set(this.channels[payload.userId], "messages", payload.data)
-    }
-  }
-
   @Action
-  message(msg: Message) {
+  async message(msg: Message) {
     try {
       console.log("Pushing new message")
-      this.context.commit('pushMessage', {
-        userId: msg.senderId,
-        message: msg,
-      })
+      this.context.commit('pushMessage', msg)
     } catch (err: any) {
       console.log(err)
       // TODO error handlign properly
@@ -113,13 +80,28 @@ export default class DirectChannelModule extends VuexModule {
   }
 
   @Mutation
-  pushMessage(payload: { userId: string; message: Message }) {
+  setChannels(data: DirectChannel[]) {
+    this.channels = []
+    for (let i = 0; i < data.length; i++)
+      this.channels.push(data[i])
+  }
+
+  @Mutation
+  setMessages(payload: { channelId: string; data: Message[] }) {
+    let c = this.channels.find(c => c.id === payload.channelId)
+    if (c)
+      Vue.set(c, "messages", payload.data)
+  }
+
+
+  @Mutation
+  pushMessage(message: Message) {
     try {
-      let c = this.channels[payload.userId]
+      let c = this.channels.find(c => c.id === message.channelId)
       if (c)
-        c.messages.push(payload.message)
-      Vue.set(this.channels, payload.userId, c) // TODO not optimized
+        c.messages.push(message)
     } catch (error) {
+      console.log(error)// TODO error handling ? 
     }
   }
 
@@ -133,14 +115,20 @@ export default class DirectChannelModule extends VuexModule {
   }
 
   get messages() {
-    return (id: string) => {
-      console.log("Channel list ")
-      console.log(this.channels)
-      let c = this.channels[id]
+    return (channelId: string) => {
+      let c = this.channels.find(c => c.id === channelId)
       if (c && c.messages) {
         return c.messages
       }
       return []
+    }
+  }
+
+  get user() {
+    return (channelId: string) => {
+      let c = this.channels.find(c => c.id === channelId)
+      if (c)
+        return c.user
     }
   }
 }

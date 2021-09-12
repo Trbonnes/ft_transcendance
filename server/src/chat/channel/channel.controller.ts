@@ -38,7 +38,17 @@ export class ChannelController {
   @Get(':channelId')
   @UseGuards(JwtAuthGuard)
   async getOne(@Param('channelId') channelId: string) {
-    return this.channelService.getById(channelId)
+    try {
+
+      let data = await this.channelService.getById(channelId)
+      console.log(data)
+      return data
+    } catch (error) {
+      return new HttpException(
+        'Can\t fetch channel',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   @Get('search/:name')
@@ -162,7 +172,7 @@ export class ChannelController {
     try {
       if (await this.membershipService.isMember(dto.channelId, req.user.id))
         return { status: 201, message: 'Joined channel' }
-      const channel = await this.channelService.getById(dto.channelId, true); // the true includes the password
+      const channel = await this.channelService.getById(dto.channelId); // the true includes the password
       if (channel.isPublic === false) {
         if (!dto.password)
           return new HttpException('Password needed', HttpStatus.UNAUTHORIZED);

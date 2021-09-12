@@ -55,13 +55,8 @@ export class ChannelService {
     return data;
   }
 
-  getById(channelId: string, includePassword = false) {
-    let builder = this.channelRepositery
-      .createQueryBuilder('channel')
-      .select('channel', 'channel')
-      .where('channel.id = :channelId', { channelId });
-    if (includePassword) builder.addSelect('channel.password');
-    return builder.getOneOrFail(); // TODO should i add or fail ?
+  getById(channelId: string) {
+    return this.channelRepositery.findOneOrFail(channelId, { relations: ["owner.id"] })
   }
 
   getMessageHistory(channelId: string) {

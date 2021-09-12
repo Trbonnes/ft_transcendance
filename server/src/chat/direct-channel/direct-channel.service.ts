@@ -39,12 +39,11 @@ export class DirectChannelService {
     return this.messageRepositery.save(message)
   }
 
-  async getMessages(user1: string, user2: string) {
+  async getMessages(channelId: string) {
     let data = await this.channelRepositery.findOne(
       {
         where: [
-          { user1Id: user1, user2Id: user2 },
-          { user1Id: user2, user2Id: user1 }
+          { id: channelId }
         ],
         relations: ["messages"]
       })

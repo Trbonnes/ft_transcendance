@@ -100,9 +100,11 @@ export class ChatGateway {
     try {
       let clientId = this.activeClients.get(client.id).id
       let data = await this.directService.getOneByUsers(clientId, payload.userId)
+      console.log("Here is the data ", data)
       if (data) {
         let message = await this.directService.saveMessage(data.id, clientId, payload.content)
-        this.server.in(payload.userId).emit("directChannel/directMessage", message)
+        this.server.to(payload.userId).emit("directChannel/directMessage", message)
+        client.emit("directChannel/directMessage", message)
       }
     } catch (e) {
       //TODO error handling

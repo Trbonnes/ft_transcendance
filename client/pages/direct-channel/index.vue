@@ -25,9 +25,9 @@
         </div>
       </div>
       <div>
-        <div v-for="user in getAll" @click="joinChannel(user.id)" class="cursor-pointer p-3 my-1 flex flex-row items-center justify-between rounded-xl bg-gray-300 hover:bg-gray-400">
-          <img class="w-16 h-16 rounded-full" :src="user.avatar" :alt="user.displayName">
-          <span>{{user.displayName}}</span>
+        <div :class="{ 'bg-gray-400' : channel.id === currentChannel }" v-for="channel in getAll" @click="joinChannel(channel.id)" class="cursor-pointer p-3 my-1 flex flex-row items-center justify-between rounded-xl bg-gray-300 hover:bg-gray-500">
+          <img class="w-16 h-16 rounded-full" :src="channel.user.avatar" :alt="channel.user.displayName">
+          <span>{{channel.user.displayName}}</span>
         </div>
       </div>
     </div>
@@ -61,10 +61,16 @@ export default Vue.extend({
     {
       if (this.currentChannel === '')
         return []
-      let data = this.$store.getters["directChannel/messages"](this.currentChannel)
+      let tmp : any = this.currentChannel
+      let data = this.$store.getters["directChannel/messages"](tmp)
       console.log("Returned data from getter")
       console.log(data)
       return data
+    },
+    currentUser()
+    {
+      let tmp : any = this .currentChannel
+      return this.$store.getters["directChannel/user"](tmp)
     }
   },
   methods : {
@@ -103,7 +109,7 @@ export default Vue.extend({
     {
       try
       {
-        let data = await this.$store.dispatch('directChannel/sendMessage',  { userId : this.currentChannel, content : content })
+        let data = await this.$store.dispatch('directChannel/sendMessage',  { userId : this.currentUser.id, content : content })
       }
       catch(error : any)
       {

@@ -33,11 +33,10 @@ export default Vue.extend({
     }
   },
   updated() {
-    var container = this.$el.querySelector("#inner");
-    if (container)
-      container.scrollTop = container.scrollHeight;
+    this.scrollBottom()
   },
   mounted() {
+    this.scrollBottom()
   },
   computed: {},
   methods: {
@@ -52,6 +51,12 @@ export default Vue.extend({
         this.message = ''
       }
     },
+    scrollBottom()
+    {
+      var container = this.$el.querySelector("#inner");
+      if (container)
+        container.scrollTop = container.scrollHeight;
+    }
   },
 })
 </script>

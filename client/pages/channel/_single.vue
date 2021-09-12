@@ -124,12 +124,10 @@ export default Vue.extend({
   },
   async fetch()
   {
-    console.log("Fetch hook called")
     try {
       await this.$store.dispatch("channel/joinChannel", this.id)
       await this.$store.dispatch("channel/fetchOne", this.id)
       await this.$store.dispatch("channel/getMessages", this.id)
-      console.log("Fetch actions called")
     }
     catch(error)
     {
@@ -206,7 +204,7 @@ export default Vue.extend({
         })
         .catch((error : any) =>
         {
-            console.log(error)// TODO error handling
+            // TODO error handling
         })
     },
     sendMessage(msgContent: string) {

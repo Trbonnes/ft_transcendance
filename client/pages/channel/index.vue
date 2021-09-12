@@ -91,7 +91,6 @@ export default Vue.extend({
     }
   },
   fetch() {
-    console.log("Fetching all channels")
     this.$store.dispatch('channel/fetchAll')
   },
   computed : {
@@ -129,8 +128,6 @@ export default Vue.extend({
           }
         })
         .catch((error: any) => {
-          console.log('There is an error')
-          console.log(error)
         })
     },
     joinPrivate(event : any)
@@ -141,7 +138,6 @@ export default Vue.extend({
     },
     joinChannel(channel : { id : string; password : string})
     {
-      console.log("Trying to join")
       this.$axios.$post("/channel/join", { channelId : channel.id, password: channel.password })
       .then((rep : any) => {
         if (rep.status == 201)
@@ -157,12 +153,10 @@ export default Vue.extend({
         }
       })
       .catch((error) => {
-        console.log(error) //TODO error handling
       })
     },
     toggleJoinForm(channelId = '')
     {
-      console.log("password propmt ")
       this.joinForm.channelId = channelId;
       this.joinForm.show = !this.joinForm.show;
       this.channelPrivatePassword = ''
