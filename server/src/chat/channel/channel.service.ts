@@ -56,7 +56,7 @@ export class ChannelService {
   }
 
   getById(channelId: string) {
-    return this.channelRepositery.findOneOrFail(channelId, { relations: ["owner.id"] })
+    return this.channelRepositery.findOneOrFail(channelId, { relations: ["owner"] })
   }
 
   getMessageHistory(channelId: string) {

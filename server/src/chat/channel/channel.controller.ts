@@ -45,7 +45,7 @@ export class ChannelController {
       return data
     } catch (error) {
       return new HttpException(
-        'Can\t fetch channel',
+        'Can\'t fetch channel',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -183,6 +183,7 @@ export class ChannelController {
       }
       this.membershipService.create(dto.channelId, req.user.id)
     } catch (error) {
+      console.log(error)
       return new HttpException("Can't join channel", HttpStatus.BAD_REQUEST);
     }
     return { status: 201, message: 'Joined channel' };
