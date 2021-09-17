@@ -26,6 +26,7 @@ export default class ChannelModule extends VuexModule {
   async fetchOne(channelId: string) {
     try {
       const data = await $axios.$get<Channel>(`/channel/${channelId}`)
+      console.log("Here is the data fetched ", data)
       this.context.commit('setOne', data)
     } catch (error) {
       // TODO error handling 
@@ -125,6 +126,7 @@ export default class ChannelModule extends VuexModule {
   @Mutation
   setOne(data: Channel) {
     Vue.set(this.channels, data.id, data)
+    console.log(this.channels)
   }
 
   @Mutation
@@ -174,6 +176,7 @@ export default class ChannelModule extends VuexModule {
 
   get getOne() {
     return (id: string) => {
+      console.log(id)
       console.log(this.channels[id])
       return this.channels[id]
     }

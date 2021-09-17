@@ -12,8 +12,8 @@
             <div :class="{'bg-green-400' : m.user.id === $auth.user.id}" class="p-3 my-1 flex flex-row items-center justify-between rounded-xl bg-gray-300" v-for='m in getMembers'> 
               <img class="w-16 h-16 rounded-full" :src="m.user.avatar" :alt="m.user.displayName">
               <span>{{m.user.displayName}}</span>
-              <font-awesome-icon v-if="getChannel.owner === m.user.id"  class="text-xl mx-1.5" icon="crown"> </font-awesome-icon>
-              <div v-if="getChannel.owner === $auth.user.id && m.user.id !== $auth.user.id" class="flex flex-row">
+              <font-awesome-icon v-if="getChannel.owner.id === m.user.id"  class="text-xl mx-1.5" icon="crown"> </font-awesome-icon>
+              <div v-if="getChannel && getChannel.owner.id === $auth.user.id && m.user.id !== $auth.user.id" class="flex flex-row">
                 <span @click="updateMember(m.user.id, true, false)" class="btn btn-accent mx-1">Admin</span>
                 <span  class="btn mx-1" @click="updateMember(m.user.id, false, false)">Ban</span>
               </div>
@@ -24,7 +24,7 @@
           </div>
         </div>
       </div>
-      <div v-if="getChannel.owner === $auth.user.id">
+      <div v-if="getChannel && getChannel.owner.id === $auth.user.id">
         <a href="#edit" @click="initForm" class="btn btn-primary text-white">
           <font-awesome-icon class="text-xl mx-1.5" icon="pen"> </font-awesome-icon> Edit
         </a>
@@ -70,7 +70,7 @@
         </div>
       </div>
     </div>
-    <div v-if="getChannel.owner === $auth.user.id">
+    <div v-if="getChannel && getChannel.owner.id === $auth.user.id">
       <a href="#delete" @click="deleteChannel" class="btn btn-secondary text-white">
         <font-awesome-icon class="text-xl mx-1.5" icon="times"> </font-awesome-icon>Delete Channel
       </a>
@@ -107,6 +107,7 @@ export default Vue.extend({
     getChannel()
     {
       const data = this.$store.getters["channel/getOne"]((this as any).id)
+      console.log("Get Channel`", data)
       if (data)
         return data
       return ""
@@ -114,20 +115,22 @@ export default Vue.extend({
     getMessages()
     {
       let data = this.$store.getters["channel/messages"]((this as any).id)
+      console.log("Get Messages`", data)
       return data
     },
     getMembers()
     {
       let data = this.$store.getters["channel/members"]((this as any).id)
+      console.log("Get Members`", data)
       return data
     }
   },
   async fetch()
   {
     try {
-      await this.$store.dispatch("channel/joinChannel", this.id)
-      await this.$store.dispatch("channel/fetchOne", this.id)
-      await this.$store.dispatch("channel/getMessages", this.id)
+      await this.$store.dispatch("channel/joinChannel", (this as any).id)
+      await this.$store.dispatch("channel/fetchOne", (this as any).id)
+      await this.$store.dispatch("channel/getMessages", (this as any).id)
     }
     catch(error)
     {
