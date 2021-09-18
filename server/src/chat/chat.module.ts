@@ -17,5 +17,6 @@ import { DirectChannelModule } from './direct-channel/direct-channel.module';
     DirectChannelModule,
   ],
   providers: [ChatGateway],
+  exports: [ChatGateway]
 })
 export class ChatModule { }

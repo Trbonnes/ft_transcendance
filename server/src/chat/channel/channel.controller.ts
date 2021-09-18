@@ -15,17 +15,21 @@ import { ChannelService } from './channel.service';
 import { ChannelMembershipService } from './channel-membership/channel-membership.service';
 import { ChannelMembership } from '../../entities/channel-membership.entity';
 import { Channel } from '../../entities/channel.entity';
+import { ChannelTimeout } from '../../entities/channel-timeout.entity'
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { JoinChannelDto } from './dto/join-channel.dto';
+import { TimeoutDto } from './dto/timeout.dto'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { IsChannelAdminGuard } from './is-channel-admin.guard'
 import { IsChannelMemberGuard } from './is-channel-member.guard'
+import { ChatGateway } from '../app.chatgateway'
 
 @Controller('channel')
 export class ChannelController {
   constructor(
     private readonly channelService: ChannelService,
-    private readonly membershipService: ChannelMembershipService
+    private readonly membershipService: ChannelMembershipService,
+    private readonly chatGateway: ChatGateway
   ) { }
 
   // Returns all channel for an user, can only be used by admin and the user who has the channels
@@ -39,7 +43,6 @@ export class ChannelController {
   @UseGuards(JwtAuthGuard)
   async getOne(@Param('channelId') channelId: string) {
     try {
-
       let data = await this.channelService.getById(channelId)
       console.log(data)
       return data
@@ -75,7 +78,9 @@ export class ChannelController {
   @UseGuards(JwtAuthGuard, IsChannelMemberGuard)
   async getMembers(@Param('channelId') channelId: string) {
     try {
-      return await this.membershipService.getMembers(channelId)
+      let data = await this.membershipService.getMembers(channelId)
+      console.log(data)
+      return data
     } catch (error) {
       return new HttpException(
         'Cannot retrieve members',
@@ -97,7 +102,7 @@ export class ChannelController {
       if (mem.isAdmin === false) {
         return new HttpException("You're not an administrator !", HttpStatus.FORBIDDEN)
       }
-      (await this.membershipService.update(channelId, userId, payload.isAdmin, payload.isBanned))
+      (await this.membershipService.update(channelId, userId, payload.isAdmin))
 
     } catch (error) {
       return new HttpException("Cannot update user", HttpStatus.BAD_REQUEST)
@@ -164,6 +169,24 @@ export class ChannelController {
       throw error;
     }
     return data;
+  }
+
+  @Post(':channelId/ban')
+  @UseGuards(JwtAuthGuard, IsChannelAdminGuard)
+  async banUser(@Param('channelId') channelId: string, @Req() req, @Body() dto: TimeoutDto) {
+    try {
+      if (dto.end >= dto.start)
+        return new HttpException("Request malformed", HttpStatus.BAD_REQUEST);
+      let membership = await this.membershipService.getOne(channelId, dto.userId)
+      if (!membership)
+        return new HttpException("User is not in channel", HttpStatus.BAD_REQUEST);
+      let data = await this.membershipService.banOne(membership.id, dto.start, dto.end)
+      let ret = await this.chatGateway.banUser(channelId, dto.userId)
+      return data
+    }
+    catch (error: any) {
+      return new HttpException("Can't ban user", HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Post('join')

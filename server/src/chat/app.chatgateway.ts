@@ -7,7 +7,7 @@ import {
   WsResponse,
 } from '@nestjs/websockets';
 import { EntityNotFoundError } from 'typeorm';
-import { UseGuards, Req } from '@nestjs/common';
+import { UseGuards, Req, Injectable } from '@nestjs/common';
 import { Socket, Server, Namespace } from 'socket.io';
 import { Channel } from './../entities/channel.entity';
 import { User } from './../entities/user.entity';
@@ -20,9 +20,9 @@ import { DirectChannelService } from 'src/chat/direct-channel/direct-channel.ser
 import { ChannelMessageDto } from './channel/dto/channel-message.dto';
 import { ChannelMessage } from 'src/entities/channel-message.entity';
 
+
 @WebSocketGateway({
   namespace: 'chat',
-
   cors: {
     origin: '*',
   },
@@ -48,6 +48,10 @@ export class ChatGateway {
 
   private activeChannels: Map<string, Channel>;
   private activeClients: Map<string, User>;
+
+  async sendTest(data: string) {
+    this.server.emit("testMessage", data)
+  }
 
   async handleConnection(client: Socket, ...args: any[]) {
     try {
@@ -100,7 +104,6 @@ export class ChatGateway {
     try {
       let clientId = this.activeClients.get(client.id).id
       let data = await this.directService.getOneByUsers(clientId, payload.userId)
-      console.log("Here is the data ", data)
       if (data) {
         let message = await this.directService.saveMessage(data.id, clientId, payload.content)
         this.server.to(payload.userId).emit("directChannel/directMessage", message)
@@ -117,7 +120,6 @@ export class ChatGateway {
     @MessageBody() dto: ChannelMessageDto,
     @ConnectedSocket() client: Socket,
   ) {
-    console.log("message received")
     if (!dto.content || dto.content.trim() === '') return;
     if (client.rooms.has(dto.channelId)) {
       let data: ChannelMessage;
@@ -152,5 +154,14 @@ export class ChatGateway {
         throw error;
       }
     }
+  }
+
+  async banUser(channelId: string, userId: string) {
+
+    let user = this.activeClients.get(userId)
+    if (!user)
+      return
+    console.log("This user is trying to be banned")
+    this.server.to(user.id).emit("channel/ban", "You've been bannedy ou cunt")
   }
 }

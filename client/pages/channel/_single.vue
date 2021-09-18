@@ -14,8 +14,8 @@
               <span>{{m.user.displayName}}</span>
               <font-awesome-icon v-if="getChannel.owner.id === m.user.id"  class="text-xl mx-1.5" icon="crown"> </font-awesome-icon>
               <div v-if="getChannel && getChannel.owner.id === $auth.user.id && m.user.id !== $auth.user.id" class="flex flex-row">
-                <span @click="updateMember(m.user.id, true, false)" class="btn btn-accent mx-1">Admin</span>
-                <span  class="btn mx-1" @click="updateMember(m.user.id, false, false)">Ban</span>
+                <span @click="" class="btn btn-accent mx-1">Admin</span>
+                <span  class="btn mx-1" @click="banMember(m.user.id)">Ban</span>
               </div>
             </div>
           </div>
@@ -92,6 +92,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { CreateMessageDto, Message } from '~/utils/types'
+import { getSocket } from '~/store/plugins/websocket'
 
 export default Vue.extend({
   // fetch channel given the id and pass the data to the Conversation component
@@ -102,6 +103,14 @@ export default Vue.extend({
       isPrivate: false as boolean,
       channelPassword: '' as string,
     }
+  },
+  created()
+  {
+    let sock = getSocket()
+    sock.on("channel/banned", () => {
+      console.log("You've been banned")
+
+    })
   },
   computed: {
     getChannel()
@@ -190,25 +199,25 @@ export default Vue.extend({
     {
       this.$store.dispatch("channel/getMembers", this.id) // TODO loading animation ?
     },
-    updateMember(userToUpdate : string, makeAdmin = false, ban = false)
+    banMember(memberId: string, time = -1) // time in minute, the default value is the max value for forever ban
     {
-        this.$axios.$post(`/channel/${this.id}/members/${userToUpdate}/update`,
-          { channelId : this.id, userId : userToUpdate, isAdmin : makeAdmin, isBanned : ban})
-        .then((rep : any) => {
-          if (rep.status == 201) 
-          {
-            this.$toast.success("Member updated")
-            this.$router.back()
-          }
-          else
-          {
-            this.$toast.error(rep.message)
-          }
-        })
-        .catch((error : any) =>
-        {
-            // TODO error handling
-        })
+      let start = new Date().getTime()
+      let end = 0
+      if (time == -1)
+        end = -1
+      else
+        end = start + time * 60
+      this.$axios.post(`/channel/${this.id}/ban`, { userId : memberId, start : start, end : end})
+      .then((data : any) => {
+        if (data.status != 201)
+          this.$toast.error(data.message)
+        else
+          this.$toast.success("User banned")
+      })
+      .catch((error : any) => {
+          console.log(error)
+          this.$toast.error("Cannot ban member")
+      })
     },
     sendMessage(msgContent: string) {
       const dto: CreateMessageDto = {

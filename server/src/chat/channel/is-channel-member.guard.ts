@@ -18,10 +18,12 @@ export class IsChannelMemberGuard implements CanActivate {
       channelId = req.params.channelId
     else
       return false
-    return this.memService.getOne(channelId, req.user.id).then((data: ChannelMembership) => {
+    return this.memService.getOne(channelId, req.user.id).then(async (data: ChannelMembership) => {
       if (!data)
         return false
-      if (data.isBanned == true)
+      let isBanned = await this.memService.isBanned(channelId, req.user.id)
+      console.log(isBanned)
+      if (isBanned)
         return false
       return true
     })

@@ -1,6 +1,7 @@
-import { Entity, Column, ManyToOne, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, OneToOne, ManyToOne, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Channel } from './channel.entity'
 import { User } from './user.entity'
+import { ChannelTimeout } from './channel-timeout.entity'
 
 @Entity()
 export class ChannelMembership {
@@ -23,6 +24,7 @@ export class ChannelMembership {
   @Column()
   isAdmin: boolean
 
-  @Column()
-  isBanned: boolean
+  @OneToOne(() => ChannelTimeout, timeout => timeout.membership, { onDelete: 'CASCADE' })
+  timeout: ChannelTimeout
+
 }
