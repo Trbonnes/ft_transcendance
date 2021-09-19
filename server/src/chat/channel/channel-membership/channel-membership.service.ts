@@ -21,14 +21,14 @@ export class ChannelMembershipService {
 
   async isBanned(cId: string, uId: string) {
     const data = await this.membershipRepo.findOne({ userId: uId, channelId: cId })
-    console.log(data)
     if (data && data.timeout)
       return true
     return false
   }
 
   async getMembers(cId: string) {
-    const data = await this.membershipRepo.find({ where: { channelId: cId }, relations: ["user"] }) // TODO refactor names
+    const data = await this.membershipRepo.find({ where: { channelId: cId }, relations: ["user", "timeout"] }) // TODO refactor names
+
     if (data)
       return data
     return []
@@ -52,16 +52,15 @@ export class ChannelMembershipService {
     this.membershipRepo.save(mem)
   }
 
-  async banOne(membershipId: string, start: number, end: number) {
-    console.log(start, end)
+  async banOne(membershipId: string, duration: number) {
     let timeout = new ChannelTimeout()
-    timeout.start = new Date(start)
-    if (end === -1)
-      timeout.end = new Date(8640000000000000)// max timestamp
-    else
-      timeout.end = new Date(end * 60000)
+    timeout.start = new Date()
+    timeout.end = new Date(timeout.start.getTime() + duration * 60000)
     timeout.membershipId = membershipId
     return this.timeoutRepo.save(timeout)
   }
 
+  async unbanOne(membershipId: string) {
+    return this.timeoutRepo.delete({ membershipId: membershipId })
+  }
 }

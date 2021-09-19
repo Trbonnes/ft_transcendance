@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, CreateDateColumn, PrimaryGeneratedColumn, ManyToOne, OneToOne } from "typeorm";
+import { Entity, Column, PrimaryColumn, JoinColumn, CreateDateColumn, PrimaryGeneratedColumn, ManyToOne, OneToOne } from "typeorm";
 import { ChannelMembership } from './channel-membership.entity'
 
 @Entity()
@@ -7,7 +7,8 @@ export class ChannelTimeout {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @OneToOne(() => ChannelMembership, channel => channel.timeout)
+  @OneToOne(() => ChannelMembership, mem => mem.timeout)
+  @JoinColumn()
   membership: ChannelMembership
 
   @Column()

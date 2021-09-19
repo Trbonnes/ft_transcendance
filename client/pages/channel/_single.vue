@@ -13,9 +13,12 @@
               <img class="w-16 h-16 rounded-full" :src="m.user.avatar" :alt="m.user.displayName">
               <span>{{m.user.displayName}}</span>
               <font-awesome-icon v-if="getChannel.owner.id === m.user.id"  class="text-xl mx-1.5" icon="crown"> </font-awesome-icon>
-              <div v-if="getChannel && getChannel.owner.id === $auth.user.id && m.user.id !== $auth.user.id" class="flex flex-row">
+              <div v-if="getChannel && getChannel.owner.id === $auth.user.id && m.user.id !== $auth.user.id && !isActiveTimeout(m.timeout)" class="flex flex-row">
                 <span @click="" class="btn btn-accent mx-1">Admin</span>
                 <span  class="btn mx-1" @click="banMember(m.user.id)">Ban</span>
+              </div>
+              <div v-else-if="isActiveTimeout(m.timeout)">
+                <div v-if="m.timeout.start === m.timeout.end"></div>
               </div>
             </div>
           </div>
@@ -98,19 +101,31 @@ export default Vue.extend({
   // fetch channel given the id and pass the data to the Conversation component
   data() {
     return {
-      id: this.$route.params.single,
-      channelName: '' as string,
-      isPrivate: false as boolean,
+      id: this.$route.params.single, channelName: '' as string, isPrivate: false as boolean,
       channelPassword: '' as string,
+      dateNow : Date.now()
     }
   },
   created()
   {
     let sock = getSocket()
-    sock.on("channel/banned", () => {
-      console.log("You've been banned")
-
-    })
+    let exitChannel = (channelId : string) => {
+      console.log(this.id, channelId)
+      if (this.id == channelId)
+      {
+        this.$toast.info("You've lost access to the channel")
+        this.$router.push("/channel")
+      }
+    }
+    sock.on("channel/banned", exitChannel)
+    sock.on("channel/destroyed", exitChannel)
+    setInterval(() => this.dateNow = Date.now(), 1000 * 60)
+  },
+  destroyed()
+  {
+    let sock = getSocket()
+    sock.off("channel/banned")
+    sock.off("channel/destroyed")
   },
   computed: {
     getChannel()
@@ -132,7 +147,15 @@ export default Vue.extend({
       let data = this.$store.getters["channel/members"]((this as any).id)
       console.log("Get Members`", data)
       return data
-    }
+    },
+    isActiveTimeout(timeout : { start : string, end : string})
+    {
+      if (timeout.start === timeout.end)
+        return true
+      if (Date.parse(timeout.end) < this.dateNow)
+        return true
+      return false
+    },
   },
   async fetch()
   {
@@ -179,7 +202,7 @@ export default Vue.extend({
       {
         this.$store.dispatch("channel/update", { channelId : this.getChannel.id, channelName : this.channelName, isPrivate : this.isPrivate, password : this.channelPassword })  
         .then((rep : any) => {
-          if (rep.status && rep.status != 201)
+          if (rep.datastatus && rep.status != 201)
           {
             this.$toast.error(rep.message)
           }
@@ -199,20 +222,17 @@ export default Vue.extend({
     {
       this.$store.dispatch("channel/getMembers", this.id) // TODO loading animation ?
     },
-    banMember(memberId: string, time = -1) // time in minute, the default value is the max value for forever ban
+    banMember(memberId: string, time = 0) // time in minute, the default value is the max value for forever ban
     {
       let start = new Date().getTime()
       let end = 0
-      if (time == -1)
-        end = -1
-      else
-        end = start + time * 60
-      this.$axios.post(`/channel/${this.id}/ban`, { userId : memberId, start : start, end : end})
-      .then((data : any) => {
-        if (data.status != 201)
-          this.$toast.error(data.message)
+      this.$axios.post(`/channel/${this.id}/ban`, { userId : memberId, duration : time})
+      .then((rep : any) => {
+        if (rep.data.status && rep.data.status != 201)
+          this.$toast.error(rep.data.message)
         else
           this.$toast.success("User banned")
+        this.fetchMembers()
       })
       .catch((error : any) => {
           console.log(error)

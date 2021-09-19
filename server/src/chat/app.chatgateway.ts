@@ -38,9 +38,6 @@ export class ChatGateway {
   ) {
     this.activeChannels = new Map<string, Channel>();
     this.activeClients = new Map<string, User>();
-    // setInterval(() => {
-    //   console.log(this.activeChannels);
-    // }, 2000);
   }
 
   @WebSocketServer()
@@ -53,7 +50,7 @@ export class ChatGateway {
     this.server.emit("testMessage", data)
   }
 
-  async handleConnection(client: Socket, ...args: any[]) {
+  async handleConnection(client: Socket) {
     try {
       let token = client.handshake.headers.authorization.split(' ')[1];
       let data = await this.auth.validateToken(token);
@@ -157,11 +154,10 @@ export class ChatGateway {
   }
 
   async banUser(channelId: string, userId: string) {
+    this.server.to(userId).emit("channel/banned", channelId)
+  }
 
-    let user = this.activeClients.get(userId)
-    if (!user)
-      return
-    console.log("This user is trying to be banned")
-    this.server.to(user.id).emit("channel/ban", "You've been bannedy ou cunt")
+  async destroyedChannel(channelId: string) {
+    this.server.to(channelId).emit("channel/destroyed", channelId)
   }
 }

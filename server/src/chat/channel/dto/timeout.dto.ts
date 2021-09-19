@@ -4,7 +4,5 @@ export class TimeoutDto {
   @IsNotEmpty()
   userId: string;
   @IsNumber()
-  start: number
-  @IsNumber()
-  end: number
+  duration: number
 }

@@ -44,7 +44,6 @@ export class ChannelController {
   async getOne(@Param('channelId') channelId: string) {
     try {
       let data = await this.channelService.getById(channelId)
-      console.log(data)
       return data
     } catch (error) {
       return new HttpException(
@@ -79,7 +78,6 @@ export class ChannelController {
   async getMembers(@Param('channelId') channelId: string) {
     try {
       let data = await this.membershipService.getMembers(channelId)
-      console.log(data)
       return data
     } catch (error) {
       return new HttpException(
@@ -136,6 +134,7 @@ export class ChannelController {
   async deleteChannel(@Param('channelId') channelId: string) {
     try {
       let data = await this.channelService.deleteChannel(channelId)
+      this.chatGateway.destroyedChannel(channelId)
       return { status: 201 } //TODO maybe change code ? 
     } catch (error) {
       return new HttpException("Cannot delete channel", HttpStatus.BAD_REQUEST)
@@ -175,17 +174,34 @@ export class ChannelController {
   @UseGuards(JwtAuthGuard, IsChannelAdminGuard)
   async banUser(@Param('channelId') channelId: string, @Req() req, @Body() dto: TimeoutDto) {
     try {
-      if (dto.end >= dto.start)
+      if (dto.duration < 1)
         return new HttpException("Request malformed", HttpStatus.BAD_REQUEST);
       let membership = await this.membershipService.getOne(channelId, dto.userId)
       if (!membership)
         return new HttpException("User is not in channel", HttpStatus.BAD_REQUEST);
-      let data = await this.membershipService.banOne(membership.id, dto.start, dto.end)
+      if (membership.timeout && membership.timeout.end < new Date())
+        await this.membershipService.unbanOne(membership.id)
+      await this.membershipService.banOne(membership.id, dto.duration)
       let ret = await this.chatGateway.banUser(channelId, dto.userId)
-      return data
+      return ret
     }
     catch (error: any) {
-      return new HttpException("Can't ban user", HttpStatus.BAD_REQUEST);
+      return new HttpException("Cannot ban user", HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Post(':channelId/unban')
+  @UseGuards(JwtAuthGuard, IsChannelAdminGuard)
+  async unbanUser(@Param('channelId') channelId: string, @Req() req, @Body() dto: TimeoutDto) {
+    try {
+      let membership = await this.membershipService.getOne(channelId, dto.userId)
+      if (!membership)
+        return new HttpException("User is not in channel", HttpStatus.BAD_REQUEST);
+      this.membershipService.unbanOne(membership.id)
+      return { status: 201, message: 'User ubanned' };
+    }
+    catch (error: any) {
+      return new HttpException("Cannot ban user", HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -200,13 +216,11 @@ export class ChannelController {
         if (!dto.password)
           return new HttpException('Password needed', HttpStatus.UNAUTHORIZED);
         // TODO set password to sha256
-        console.log(dto.password, channel.password);
         if (dto.password != channel.password)
           return new HttpException('Invalid password', HttpStatus.BAD_REQUEST);
       }
       this.membershipService.create(dto.channelId, req.user.id)
     } catch (error) {
-      console.log(error)
       return new HttpException("Can't join channel", HttpStatus.BAD_REQUEST);
     }
     return { status: 201, message: 'Joined channel' };
