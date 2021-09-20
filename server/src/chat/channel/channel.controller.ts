@@ -192,7 +192,7 @@ export class ChannelController {
 
   @Post(':channelId/unban')
   @UseGuards(JwtAuthGuard, IsChannelAdminGuard)
-  async unbanUser(@Param('channelId') channelId: string, @Req() req, @Body() dto: TimeoutDto) {
+  async unbanUser(@Param('channelId') channelId: string, @Req() req, @Body() dto: { userId: string }) {
     try {
       let membership = await this.membershipService.getOne(channelId, dto.userId)
       if (!membership)

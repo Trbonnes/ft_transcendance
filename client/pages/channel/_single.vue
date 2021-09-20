@@ -9,7 +9,7 @@
       <div id="members"  class="modal">
         <div class="modal-box ">
           <div class="flex flex-col max-h-96 overflow-y-scroll">
-            <member-card @banMember="banMember" v-for='m in getMembers' v-bind:currentDate="dateNow" v-bind:membership="m" v-bind:channel="getChannel"/>
+            <member-card @banMember="banMember" @unbanMember="unbanMember" v-for='m in getMembers' v-bind:currentDate="dateNow" v-bind:membership="m" v-bind:channel="getChannel"/>
           </div>
           <div class="modal-action">
             <a href="#" class="btn">Close</a>
@@ -247,6 +247,7 @@ export default Vue.extend({
       {
         //TODO error handling
       }
+
     },
   },
 })
