@@ -9,18 +9,7 @@
       <div id="members"  class="modal">
         <div class="modal-box ">
           <div class="flex flex-col max-h-96 overflow-y-scroll">
-            <div :class="{'bg-green-400' : m.user.id === $auth.user.id}" class="p-3 my-1 flex flex-row items-center justify-between rounded-xl bg-gray-300" v-for='m in getMembers'> 
-              <img class="w-16 h-16 rounded-full" :src="m.user.avatar" :alt="m.user.displayName">
-              <span>{{m.user.displayName}}</span>
-              <font-awesome-icon v-if="getChannel.owner.id === m.user.id"  class="text-xl mx-1.5" icon="crown"> </font-awesome-icon>
-              <div v-if="getChannel && getChannel.owner.id === $auth.user.id && m.user.id !== $auth.user.id && !isActiveTimeout(m.timeout)" class="flex flex-row">
-                <span @click="" class="btn btn-accent mx-1">Admin</span>
-                <span  class="btn mx-1" @click="banMember(m.user.id)">Ban</span>
-              </div>
-              <div v-else-if="isActiveTimeout(m.timeout)">
-                <div v-if="m.timeout.start === m.timeout.end"></div>
-              </div>
-            </div>
+            <member-card @banMember="banMember" v-for='m in getMembers' v-bind:currentDate="dateNow" v-bind:membership="m" v-bind:channel="getChannel"/>
           </div>
           <div class="modal-action">
             <a href="#" class="btn">Close</a>
@@ -103,7 +92,7 @@ export default Vue.extend({
     return {
       id: this.$route.params.single, channelName: '' as string, isPrivate: false as boolean,
       channelPassword: '' as string,
-      dateNow : Date.now()
+      dateNow : new Date()
     }
   },
   created()
@@ -119,13 +108,14 @@ export default Vue.extend({
     }
     sock.on("channel/banned", exitChannel)
     sock.on("channel/destroyed", exitChannel)
-    setInterval(() => this.dateNow = Date.now(), 1000 * 60)
+    this.timer = setInterval(() => {this.dateNow = new Date}, 1000)
   },
   destroyed()
   {
     let sock = getSocket()
     sock.off("channel/banned")
     sock.off("channel/destroyed")
+    clearInterval(this.timer)
   },
   computed: {
     getChannel()
@@ -147,15 +137,7 @@ export default Vue.extend({
       let data = this.$store.getters["channel/members"]((this as any).id)
       console.log("Get Members`", data)
       return data
-    },
-    isActiveTimeout(timeout : { start : string, end : string})
-    {
-      if (timeout.start === timeout.end)
-        return true
-      if (Date.parse(timeout.end) < this.dateNow)
-        return true
-      return false
-    },
+    }
   },
   async fetch()
   {
@@ -202,7 +184,7 @@ export default Vue.extend({
       {
         this.$store.dispatch("channel/update", { channelId : this.getChannel.id, channelName : this.channelName, isPrivate : this.isPrivate, password : this.channelPassword })  
         .then((rep : any) => {
-          if (rep.datastatus && rep.status != 201)
+          if (rep.data.status && rep.status != 201)
           {
             this.$toast.error(rep.message)
           }
@@ -222,11 +204,9 @@ export default Vue.extend({
     {
       this.$store.dispatch("channel/getMembers", this.id) // TODO loading animation ?
     },
-    banMember(memberId: string, time = 0) // time in minute, the default value is the max value for forever ban
+    banMember(data : { memberId: string, time : number}) // time in minute, the default value is the max value for forever ban
     {
-      let start = new Date().getTime()
-      let end = 0
-      this.$axios.post(`/channel/${this.id}/ban`, { userId : memberId, duration : time})
+      this.$axios.post(`/channel/${this.id}/ban`, { userId : data.memberId, duration : data.time})
       .then((rep : any) => {
         if (rep.data.status && rep.data.status != 201)
           this.$toast.error(rep.data.message)
@@ -237,6 +217,21 @@ export default Vue.extend({
       .catch((error : any) => {
           console.log(error)
           this.$toast.error("Cannot ban member")
+      })
+    },
+    unbanMember(memberId: string) // time in minute, the default value is the max value for forever ban
+    {
+      this.$axios.post(`/channel/${this.id}/unban`, { userId : memberId })
+      .then((rep : any) => {
+        if (rep.data.status && rep.data.status != 201)
+          this.$toast.error(rep.data.message)
+        else
+          this.$toast.success("User unbanned")
+        this.fetchMembers()
+      })
+      .catch((error : any) => {
+          console.log(error)
+          this.$toast.error("Cannot unban member")
       })
     },
     sendMessage(msgContent: string) {
@@ -252,7 +247,6 @@ export default Vue.extend({
       {
         //TODO error handling
       }
-
     },
   },
 })

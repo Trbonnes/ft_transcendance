@@ -17,7 +17,6 @@ import { ChannelMembership } from '../../entities/channel-membership.entity';
 import { Channel } from '../../entities/channel.entity';
 import { ChannelTimeout } from '../../entities/channel-timeout.entity'
 import { CreateChannelDto } from './dto/create-channel.dto';
-import { JoinChannelDto } from './dto/join-channel.dto';
 import { TimeoutDto } from './dto/timeout.dto'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { IsChannelAdminGuard } from './is-channel-admin.guard'
@@ -174,7 +173,7 @@ export class ChannelController {
   @UseGuards(JwtAuthGuard, IsChannelAdminGuard)
   async banUser(@Param('channelId') channelId: string, @Req() req, @Body() dto: TimeoutDto) {
     try {
-      if (dto.duration < 1)
+      if (dto.duration < 0)
         return new HttpException("Request malformed", HttpStatus.BAD_REQUEST);
       let membership = await this.membershipService.getOne(channelId, dto.userId)
       if (!membership)
@@ -186,6 +185,7 @@ export class ChannelController {
       return ret
     }
     catch (error: any) {
+      console.log(error)
       return new HttpException("Cannot ban user", HttpStatus.BAD_REQUEST);
     }
   }
@@ -197,6 +197,8 @@ export class ChannelController {
       let membership = await this.membershipService.getOne(channelId, dto.userId)
       if (!membership)
         return new HttpException("User is not in channel", HttpStatus.BAD_REQUEST);
+      if (!membership.timeout)
+        return new HttpException("User is not banned", HttpStatus.BAD_REQUEST);
       this.membershipService.unbanOne(membership.id)
       return { status: 201, message: 'User ubanned' };
     }
@@ -205,13 +207,16 @@ export class ChannelController {
     }
   }
 
-  @Post('join')
+  @Post(':channelId/join')
   @UseGuards(JwtAuthGuard)
-  async joinChannel(@Req() req, @Body() dto: JoinChannelDto) {
+  async joinChannel(@Req() req, @Param('channelId') channelId: string, @Body() dto: { password: string }) {
     try {
-      if (await this.membershipService.isMember(dto.channelId, req.user.id))
+      if (await this.membershipService.isMember(channelId, req.user.id)) {
+        if (await this.membershipService.isBanned(channelId, req.user.id))
+          return new HttpException("You are banned from this channel", HttpStatus.FORBIDDEN);
         return { status: 201, message: 'Joined channel' }
-      const channel = await this.channelService.getById(dto.channelId); // the true includes the password
+      }
+      const channel = await this.channelService.getById(channelId); // the true includes the password
       if (channel.isPublic === false) {
         if (!dto.password)
           return new HttpException('Password needed', HttpStatus.UNAUTHORIZED);
@@ -219,7 +224,7 @@ export class ChannelController {
         if (dto.password != channel.password)
           return new HttpException('Invalid password', HttpStatus.BAD_REQUEST);
       }
-      this.membershipService.create(dto.channelId, req.user.id)
+      this.membershipService.create(channelId, req.user.id)
     } catch (error) {
       return new HttpException("Can't join channel", HttpStatus.BAD_REQUEST);
     }

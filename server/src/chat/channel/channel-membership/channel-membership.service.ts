@@ -20,9 +20,14 @@ export class ChannelMembershipService {
   }
 
   async isBanned(cId: string, uId: string) {
-    const data = await this.membershipRepo.findOne({ userId: uId, channelId: cId })
-    if (data && data.timeout)
-      return true
+    const data = await this.membershipRepo.findOne({ where: { userId: uId, channelId: cId }, relations: ["timeout"] })
+    if (data && data.timeout) {
+      if (data.timeout.start != data.timeout.end && data.timeout.end < new Date()) {
+        this.timeoutRepo.delete(data.timeout.id)
+        return false
+      }
+      return true;
+    }
     return false
   }
 
@@ -35,7 +40,7 @@ export class ChannelMembershipService {
   }
 
   async getOne(channelId: string, userId: string) {
-    return this.membershipRepo.findOneOrFail({ channelId: channelId, userId: userId })
+    return this.membershipRepo.findOneOrFail({ where: { channelId: channelId, userId: userId }, relations: ["user", "timeout"] })
   }
 
   async update(channelId: string, userId: string, isAdmin: boolean) {
@@ -61,6 +66,7 @@ export class ChannelMembershipService {
   }
 
   async unbanOne(membershipId: string) {
+    console.log("We should unban here")
     return this.timeoutRepo.delete({ membershipId: membershipId })
   }
 }

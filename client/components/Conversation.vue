@@ -2,7 +2,7 @@
   <div class="flex flex-col h-full" >
     <div id="inner" class="flex flex-col">
       <div v-for="c in messages" 
-            class="p-3 m-0.5 rounded-xl inline-block"
+            class="p-3 m-0.5 rounded-xl inline-block max-w-full break-all"
             v-bind:class="[$auth.user.id === c.senderId ? 'text-white bg-blue-500 self-end' : ' text-black bg-gray-300 self-start']"
       >
         {{ c.content }}

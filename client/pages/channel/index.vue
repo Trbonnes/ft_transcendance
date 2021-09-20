@@ -138,8 +138,9 @@ export default Vue.extend({
     },
     joinChannel(channel : { id : string; password : string})
     {
-      this.$axios.$post("/channel/join", { channelId : channel.id, password: channel.password })
+      this.$axios.$post(`/channel/${channel.id}/join`, {  password: channel.password })
       .then((rep : any) => {
+        console.log(rep)
         if (rep.status == 201)
         {
           this.$toast.success(rep.message)

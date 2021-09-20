@@ -66,11 +66,6 @@ export class ChatGateway {
       client.disconnect();
     }
     console.log('WS Connect', { id: client.id });
-    // let test : UsersService
-    //
-    // const user : User = await test.findOne({id : })
-    // let user = this.userService.
-    // client.disconnect()
   }
 
   @SubscribeMessage('joinChannel')
@@ -80,7 +75,9 @@ export class ChatGateway {
   ) {
     let channel: Channel;
     try {
-      if ((await this.membershipService.isMember(channelId, this.activeClients.get(client.id).id)) == false)
+      const id = this.activeClients.get(client.id).id;
+      if (await this.membershipService.isMember(channelId, id) == false
+        || await this.membershipService.isBanned(channelId, id) == true)
         return  // TODO return error message ? 
       client.join(channelId);
       this.activeChannels.set(channelId, channel);
