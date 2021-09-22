@@ -24,7 +24,7 @@ export default Vue.extend({
 				invite: null,
 				spectate: null,
 				store: this.$store,
-				friendId : ""})
+				friendId : this.$route.query.friendId || ""})
 		}
 	},
 

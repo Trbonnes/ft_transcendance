@@ -170,6 +170,7 @@ export function setup(_options: {
 			this.add.image(config.width / 2, config.height / 2, "global_background.png")
 					.setDisplaySize(config.width, config.height)
 
+			console.log("Her is the friend Id : ", config.friendId)
 
 			if(config.invite)
 				this.scene.run(scenesList.JoinFriendScene, { type: "classical", id: config.invite })
@@ -195,6 +196,7 @@ export function setup(_options: {
 	config.userToken = _options.userToken
 	config.store = _options.store
 	config.friendId = _options.friendId
+
 
 	if ((!game || !game.isRunning) && _options.gameId)
 		game = new Phaser.Game({ ...config, scene: InGame,  })

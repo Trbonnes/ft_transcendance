@@ -18,6 +18,7 @@ export function createWebSocketPlugin(store: any) {
     },
   })
 
+
   socket.on('connect', () => {
     console.log('We are connected to the backend !')
   })

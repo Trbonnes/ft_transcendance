@@ -55,7 +55,7 @@ export default class WaitingBorderlessFriendScene extends Phaser.Scene {
             //         'font-size': '20px',
             //     }
             // ).setDisplaySize(700, 40)
-            config.store.dispatch("directChannel/sendMessage", {userId : "", content: gameLink})
+            config.store.dispatch("directChannel/sendMessage", {userId : config.friendId, content: gameLink})
         })
 
         this.socket.on('OpponentFound', (response: {player: number, room: string}) => {

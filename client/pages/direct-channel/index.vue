@@ -32,7 +32,10 @@
       </div>
     </div>
     <Conversation v-if="currentChannel" id="convo" :messages="getMessages" @sendMessage="sendMessage" />
-    <span class="btn btn-primary" v-if="!isBlocked" @click="blockUser">Block User</span>
+    <div v-if="currentChannel" class="flex flex-col">
+      <span class="btn btn-primary" v-if="!isBlocked" @click="blockUser">Block User</span>
+      <span class="btn btn-secondary" v-if="!isBlocked" @click="defyUser">Defy</span>
+    </div>
   </div>
 </template>
 
@@ -79,6 +82,11 @@ export default Vue.extend({
     }
   },
   methods : {
+    defyUser()
+    {
+      console.log("Defy ")
+      this.$router.push(`/game?friendId=${this.currentUser.id}`)
+    },
     async selectOne(id : string){
       try
       {
