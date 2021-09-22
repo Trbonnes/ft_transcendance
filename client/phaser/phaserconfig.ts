@@ -203,7 +203,7 @@ export function setup(_options: {
 	if ((!game || !game.isRunning) && _options.gameId)
 		game = new Phaser.Game({ ...config, scene: InGame,  })
 	if (_options.spectate || _options.invite || _options.friendId) {
-		if (game.isRunning)
+		if (game)
 			game.destroy(true)
 		game = new Phaser.Game({ ...config, scene: HomeScene,  })
 	}
