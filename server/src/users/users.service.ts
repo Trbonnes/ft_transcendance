@@ -227,4 +227,15 @@ export class UsersService {
     return this.usersRepository.save(user)
   }
 
+  async blockUser(blockerId: string, blockedId: string) {
+    let blocker = await this.usersRepository.findOne({ where: { id: blockerId }, relations: ["blockedUsers"] })
+    let blocked = await this.usersRepository.findOne({ id: blockedId })
+    blocker.blockedUsers.push(blocked)
+    return this.usersRepository.save(blocker)
+  }
+
+  getSelf(id: string) {
+    return this.usersRepository.findOne({ where: { id: id }, relations: ["blockedUsers"] });
+  }
+
 }

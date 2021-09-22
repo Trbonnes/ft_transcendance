@@ -12,6 +12,7 @@ import {
   Req,
   HttpException,
   HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,7 +23,7 @@ import { Request, response } from 'express';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post('register')
   //@UsePipes(ValidationPipe)
@@ -44,7 +45,7 @@ export class UsersController {
       Logger.log("in findAllorByLogin");
       if (!user)
         throw new HttpException({
-          message: [ `This user does not exist.`]
+          message: [`This user does not exist.`]
         }, HttpStatus.BAD_REQUEST)
       return user;
     }
@@ -82,4 +83,16 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
+
+  @Post(':id/block')
+  @UseGuards(JwtAuthGuard)
+  async blockUser(@Req() req, @Param('id') id: string) {
+    try {
+      this.usersService.blockUser(req.user.id, id) // blocker, blocked
+      return { status: 201, message: "User blocked" }
+    } catch (error) {
+      return new HttpException("Cannot block User", HttpStatus.BAD_REQUEST)
+    }
+  }
+
 }

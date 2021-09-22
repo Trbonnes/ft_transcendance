@@ -83,9 +83,10 @@ export class User {
   direct: DirectChannel[]
 
   @OneToMany(() => User, user => user.blocker)
-  blockedUser: User[]
+  @JoinTable()
+  blockedUsers: User[]
 
-  @ManyToOne(() => User, user => user.blockedUser)
+  @ManyToOne(() => User, user => user.blockedUsers)
   blocker: User
 
   @Column({ default: '' })

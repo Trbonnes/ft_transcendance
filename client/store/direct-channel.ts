@@ -9,6 +9,7 @@ import Vue from 'vue'
 export default class DirectChannelModule extends VuexModule {
 
   public channels: DirectChannel[] = []
+  public notifications : { [ channelId : string ] : number } = {}
 
 
   @Action
@@ -73,6 +74,7 @@ export default class DirectChannelModule extends VuexModule {
     try {
       console.log("Pushing new message")
       this.context.commit('pushMessage', msg)
+      this.context.commit('pushNotification', msg.channelId)
     } catch (err: any) {
       console.log(err)
       // TODO error handlign properly
@@ -93,7 +95,6 @@ export default class DirectChannelModule extends VuexModule {
       Vue.set(c, "messages", payload.data)
   }
 
-
   @Mutation
   pushMessage(message: Message) {
     try {
@@ -103,6 +104,15 @@ export default class DirectChannelModule extends VuexModule {
     } catch (error) {
       console.log(error)// TODO error handling ? 
     }
+  }
+
+  @Mutation
+  pushNotification(channelId : string)
+  {
+    if (this.notifications[channelId])
+      Vue.set(this.notifications, channelId, this.notifications.channelId + 1)
+    else
+      Vue.set(this.notifications, channelId, 0)
   }
 
   @Mutation

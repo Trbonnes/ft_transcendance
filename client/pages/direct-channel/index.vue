@@ -32,6 +32,7 @@
       </div>
     </div>
     <Conversation v-if="currentChannel" id="convo" :messages="getMessages" @sendMessage="sendMessage" />
+    <span class="btn btn-primary" v-if="!isBlocked" @click="blockUser">Block User</span>
   </div>
 </template>
 
@@ -69,8 +70,12 @@ export default Vue.extend({
     },
     currentUser()
     {
-      let tmp : any = this .currentChannel
+      let tmp : any = this.currentChannel
       return this.$store.getters["directChannel/user"](tmp)
+    },
+    isBlocked()
+    {
+      return false
     }
   },
   methods : {
@@ -136,6 +141,11 @@ export default Vue.extend({
         }
         this.lock = false
       }
+    },
+    blockUser()
+    {
+      console.log(this.currentUser)
+      // this.$store.dispatch("user/blockUser", )
     }
   }
 })

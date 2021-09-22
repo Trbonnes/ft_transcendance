@@ -56,7 +56,12 @@ export class ChannelService {
   }
 
   getById(channelId: string) {
-    return this.channelRepositery.findOneOrFail(channelId, { relations: ["owner"] })
+    return this.channelRepositery
+      .createQueryBuilder('channel')
+      .addSelect('channel.password')
+      .leftJoinAndSelect('channel.owner', 'user')
+      .where('channel.id = :channelId', { channelId: channelId }).getOneOrFail()
+    // return this.channelRepositery.findOneOrFail(channelId, { relations: ["owner"], selectj})
   }
 
   getMessageHistory(channelId: string) {
