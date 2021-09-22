@@ -200,7 +200,7 @@ export class UsersService {
       sender.friends = []
     if (!receipient.friends)
       receipient.friends = []
-    const alreadyFriends = sender.friends.indexOf(sender.id) !== -1
+    const alreadyFriends = sender.friends.indexOf(receipient.id) !== -1
     if (!alreadyFriends) {
       sender.friends.push(receipient.id)
       receipient.friends.push(sender.id)
@@ -239,3 +239,4 @@ export class UsersService {
   }
 
 }
+

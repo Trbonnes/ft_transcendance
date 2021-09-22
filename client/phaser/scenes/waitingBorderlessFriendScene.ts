@@ -28,7 +28,7 @@ export default class WaitingBorderlessFriendScene extends Phaser.Scene {
         let gameLink: string
         let copyField: CopyField
 
-        this.game.domContainer.style.pointerEvents = 'all'
+        // this.game.domContainer.style.pointerEvents = 'all'
 
         console.log(this.layoutType)
 
@@ -45,16 +45,17 @@ export default class WaitingBorderlessFriendScene extends Phaser.Scene {
 
         this.socket.on('gameId', (response: string) => {
             gameLink = "http://localhost/game/" + response
-            copyField = new CopyField(
-                this,
-                config.width / 2,
-                config.height / 2 + 250,
-                gameLink,
-                {
-                    'text-align': 'center',
-                    'font-size': '20px',
-                }
-            ).setDisplaySize(700, 40)
+            // copyField = new CopyField(
+            //     this,
+            //     config.width / 2,
+            //     config.height / 2 + 250,
+            //     gameLink,
+            //     {
+            //         'text-align': 'center',
+            //         'font-size': '20px',
+            //     }
+            // ).setDisplaySize(700, 40)
+            config.store.dispatch("directChannel/sendMessage", {userId : "", content: gameLink})
         })
 
         this.socket.on('OpponentFound', (response: {player: number, room: string}) => {

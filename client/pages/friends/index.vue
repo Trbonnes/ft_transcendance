@@ -4,7 +4,7 @@
 			<div>
 				<h1 class="flex mx-auto justify-center mt-10 m-5 text-3xl font-bold"> Friend Requests </h1>
 			</div>
-			<div class="" v-for="(request, number) in receivedRequests" :key="`${request}.sender.id`">
+			<div class="" v-for="(request, number) in receivedRequests" :key="`${request.sender.id}`">
 				<Usercard :user="request.sender" :index="number + 1"/>
 			</div>
 		</div>

@@ -15,6 +15,8 @@ export const config: Phaser.Types.Core.GameConfig & {
 	spectate: string | null
 	userId: string
 	userToken: string
+	store: any
+	friendId : string
 } = {
 	// https://photonstorm.github.io/phaser3-docs/Phaser.Core.Config.html https://rexrainbow.github.io/phaser3-rex-notes/docs/site/game/
 	type: Phaser.WEBGL,
@@ -107,6 +109,8 @@ export const config: Phaser.Types.Core.GameConfig & {
 	spectate: null,
 	userId: "",
 	userToken: "",
+	store: null,
+	friendId: ""
 }
 
 export function setup(_options: {
@@ -114,7 +118,9 @@ export function setup(_options: {
 	userToken: string,
 	gameId: string,
 	invite: string | null,
-	spectate: string | null}): Phaser.Game {
+	spectate: string | null,
+	store : any
+	friendId : string}): Phaser.Game {
 
 	class InGame extends Phaser.Scene {
 		constructor(Config: Phaser.Types.Scenes.SettingsConfig) {
@@ -164,6 +170,7 @@ export function setup(_options: {
 			this.add.image(config.width / 2, config.height / 2, "global_background.png")
 					.setDisplaySize(config.width, config.height)
 
+
 			if(config.invite)
 				this.scene.run(scenesList.JoinFriendScene, { type: "classical", id: config.invite })
 			else if (config.spectate)
@@ -186,8 +193,10 @@ export function setup(_options: {
 	config.spectate = _options.spectate
 	config.userId = _options.userId
 	config.userToken = _options.userToken
+	config.store = _options.store
+	config.friendId = _options.friendId
 
-	if (_options.gameId)
+	if ((!game || !game.isRunning) && _options.gameId)
 		game = new Phaser.Game({ ...config, scene: InGame,  })
 	if (_options.spectate || _options.invite) {
 		if (game.isRunning)

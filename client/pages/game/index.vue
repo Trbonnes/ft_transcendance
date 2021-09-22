@@ -22,7 +22,9 @@ export default Vue.extend({
 				userToken: token,
 				gameId: user.game_id,
 				invite: null,
-				spectate: null})
+				spectate: null,
+				store: this.$store,
+				friendId : ""})
 		}
 	},
 

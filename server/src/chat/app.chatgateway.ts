@@ -92,6 +92,7 @@ export class ChatGateway {
     @MessageBody() payload: { userId: string, content: string },
     @ConnectedSocket() client: Socket,
   ) {
+    console.log("We should receive something")
     // TODO check for blocked
     if (payload.userId === "")
       return

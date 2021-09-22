@@ -135,21 +135,28 @@ export default class GameScene extends Phaser.Scene {
     }
 
     update(/*time, delta*/) {
+        if (!this.game.canvas.parentElement?.style.display) {
 
-        while (this.input.mousePointer.y > this.myBar!.bar.y) {
-            this.myBar!.updatePosition(1)
-            this.socket!.emit('MoveBar', {id: this.room, y: this.myBar!.bar.y})
-        }
-        while (this.input.mousePointer.y < this.myBar!.bar.y) {
-            this.myBar!.updatePosition(-1)
-            this.socket!.emit('MoveBar', {id: this.room, y: this.myBar!.bar.y})
-        }
+            while (this.input.mousePointer.y > this.myBar!.bar.y) {
+                this.myBar!.updatePosition(1)
+                this.socket!.emit('MoveBar', {id: this.room, y: this.myBar!.bar.y})
+            }
+            while (this.input.mousePointer.y < this.myBar!.bar.y) {
+                this.myBar!.updatePosition(-1)
+                this.socket!.emit('MoveBar', {id: this.room, y: this.myBar!.bar.y})
+            }
 
-        while (this.opponentUpdateY! > this.opponentBar!.bar.y) {
-            this.opponentBar!.updatePosition(1)
+            while (this.opponentUpdateY! > this.opponentBar!.bar.y) {
+                this.opponentBar!.updatePosition(1)
+            }
+            while (this.opponentUpdateY! < this.opponentBar!.bar.y) {
+                this.opponentBar!.updatePosition(-1)
+            }
         }
-        while (this.opponentUpdateY! < this.opponentBar!.bar.y) {
-            this.opponentBar!.updatePosition(-1)
+        else {
+            this.socket!.disconnect()
+            this.scene.run(scenesList.MenuScene)
+            this.scene.stop(this)
         }
     }
 }

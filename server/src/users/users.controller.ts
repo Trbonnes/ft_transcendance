@@ -20,6 +20,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Logger } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Request, response } from 'express';
+import { request } from 'http';
 
 @Controller('users')
 export class UsersController {
@@ -59,12 +60,6 @@ export class UsersController {
   findOne(@Param('id') id: string) {
     return this.usersService.findOneById(id);
   }
-
-  //@Patch('update/:id')
-  //@UseGuards(JwtAuthGuard)
-  //update(@Req() request, @Body() updateUserDto: UpdateUserDto) {
-  //  return this.usersService.update(request.user.id, updateUserDto);
-  //}
 
   @Get('id/:id')
   @UseGuards(JwtAuthGuard)
