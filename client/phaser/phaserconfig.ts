@@ -174,6 +174,8 @@ export function setup(_options: {
 
 			if(config.invite)
 				this.scene.run(scenesList.JoinFriendScene, { type: "classical", id: config.invite })
+			else if(config.friendId)
+				this.scene.run(scenesList.ChooseGameTypeWithFriendScene)
 			else if (config.spectate)
 				this.scene.run(scenesList.JoinSpectateScene, { type: "classical", id: config.spectate })
 			else
@@ -200,7 +202,7 @@ export function setup(_options: {
 
 	if ((!game || !game.isRunning) && _options.gameId)
 		game = new Phaser.Game({ ...config, scene: InGame,  })
-	if (_options.spectate || _options.invite) {
+	if (_options.spectate || _options.invite || _options.friendId) {
 		if (game.isRunning)
 			game.destroy(true)
 		game = new Phaser.Game({ ...config, scene: HomeScene,  })
