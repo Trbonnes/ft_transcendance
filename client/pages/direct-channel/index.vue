@@ -1,7 +1,6 @@
 <template>
   <div class="flex flex-row items-start">
     <div>
-      <h1>Liste des trucs</h1>
       <div>
         <a href="#search-dm" class="btn btn-primary">Add</a>
         <div id="search-dm" class="modal">
@@ -11,13 +10,20 @@
                   <label class="label">
                     <span class="label-text">Username</span>
                   </label> 
-                  <input type="text" @keypress="fetchList" v-model="usernameSearch" placeholder="username" class="input input-bordered">
-                  <ul v-if="search && search.length > 0 && usernameSearch !== ''" tabindex="0"
-                    class="p-2 shadow-3xl menu dropdown-open bg-base-100 rounded-box w-52">
-                    <li v-for="user in search">
-                      <a @click="selectOne(user.id)">{{user.name}}</a>
-                    </li>
-                  </ul>
+                  <div class="relative w-full border-red-700 border-8" @blur="() => this.search = []">
+                    <input type="text" @focus="fetchList" @keyup="fetchList" v-model="usernameSearch" placeholder="username" class="input h-16 input-bordered w-full mb-2">
+                    <ul v-if="search && search.length > 0" tabindex="0"
+                      class="absolute w-full left-0 top-16 p-2 shadow-2xl menu dropdown-open bg-base-100 rounded-box w-52">
+                      <li v-for="user in search">
+                        <a @click="selectOne(user.id)">
+                          <img class="w-14" :src="user.avatar" alt="avatar">
+                          <span>
+                            {{user.name}}
+                          </span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
               </div>
             </form> 
             <a href="#" class="btn btn">Close</a>
@@ -91,13 +97,9 @@ export default Vue.extend({
       try
       {
         let data = await this.$store.dispatch('directChannel/joinChannel', id)
-        console.log(data)
-        if (data.status == 201)
-          this.$toast.success(data.message)
-        else 
-          throw new Error()
         this.$store.dispatch('directChannel/fetchAll')
         this.$router.back()
+        this.joinChannel(data.id)
       }
       catch (error : any)
       {
@@ -115,7 +117,7 @@ export default Vue.extend({
       }
       catch(error : any)
       {
-        this.$toast.error("Cannot message history")
+        this.$toast.error("Cannot get message history")
       }
     },
     async sendMessage(content : string)
@@ -133,15 +135,19 @@ export default Vue.extend({
     {
         e.preventDefault()
     },
-    async fetchList()
+    async fetchList(event : any)
     { 
-      if (!this.lock && this.usernameSearch.trim() != '')
+      if (event.code === "Backspace" && this.usernameSearch === '')
+      {
+        this.search = []
+        return 
+      }
+      if (!this.lock)
       {
         this.lock = true;
         try {
           let data = await this.$store.dispatch("directChannel/searchUser", this.usernameSearch.trim())
           this.search = data
-          console.log(data)
         }
         catch (error: any)
         {

@@ -72,20 +72,13 @@ export class UsersService {
     if (user) return user;
     throw new HttpException('No user with this email', HttpStatus.NOT_FOUND);
   }
-  //async findOnebyCaracteristic(caracteristic: string): Promise<User> {
-  //  Logger.log(carac);
-  //  Logger.log('in findOnebyCaracteristic');
-  //  const user = await this.usersRepository.findOne({ carac });
-  //  if (user) return user;
-  //  throw new HttpException('No user with this email', HttpStatus.NOT_FOUND);
-  //}
 
   async searchByName(name: string): Promise<any> {
     const manager = getManager();
     const res = manager.query(
       `
-        select id, name from (
-          select "user".id as id, "displayName" as name,  levenshtein(($1), "displayName") as leven
+        select id, name, avatar from (
+          select "user".id as id, "displayName" as name, "avatar" as avatar,  levenshtein(($1), "displayName") as leven
             from "user"
             order by leven limit 10
         ) as sub where sub.leven < 20

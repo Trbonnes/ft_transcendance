@@ -13,6 +13,7 @@ import {
   HttpException,
   HttpStatus,
   HttpCode,
+  HttpModule,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -58,7 +59,11 @@ export class UsersController {
   // @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOneById(id);
+    try {
+      return this.usersService.findOneById(id);
+    } catch (error) {
+      return new HttpException("Can't get user", HttpStatus.BAD_REQUEST)
+    }
   }
 
   @Get('id/:id')

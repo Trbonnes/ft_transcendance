@@ -60,11 +60,11 @@ export class DirectChannelController {
       return new HttpException("Id cannot be empty", HttpStatus.BAD_REQUEST)
     // TODO check if blocked ?
     try {
-      let channel = await this.channelService.getOneByUsers(req.user.id, userId)
-      let data: DirectChannel
+      let channel: DirectChannel
+      channel = await this.channelService.getOneByUsers(req.user.id, userId)
       if (!channel)
-        data = await this.channelService.saveOne(req.user.id, userId)
-      return { status: 201, message: "Channel joined" }
+        channel = await this.channelService.saveOne(req.user.id, userId)
+      return channel
     } catch (error: any) {
       return new HttpException("Cannot join direct channel", HttpStatus.BAD_REQUEST)
     }

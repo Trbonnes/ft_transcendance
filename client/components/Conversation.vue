@@ -42,6 +42,10 @@ export default Vue.extend({
   },
   computed: {},
   methods: {
+    // urlify(text) {
+    //   var urlRegex = /(https?:\/\/[^\s]+)/g;
+    //   return text.replace(urlRegex, '<a href="$1">$1</a>')
+    // },
     listenKey(e: any) {
       // key code for enter key
       if (e.keyCode === 13) this.sendMessage()

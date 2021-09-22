@@ -43,6 +43,8 @@ export default class DirectChannelModule extends VuexModule {
   @Action
   async searchUser(username: string) {
     try {
+      if (username === "")
+        username = "0" // oscour je sais pas ce que je fais
       return await $axios.$get(`/users/search/${username}`)
     } catch (error: any) {
       //TODO error handling
@@ -54,6 +56,7 @@ export default class DirectChannelModule extends VuexModule {
     try {
       const socket = getSocket()
       socket.emit("sendDirect", payload)
+      console.log("here we are sending anoehter message ", payload)
     } catch (error: any) {
       // TODO error handling
     }
