@@ -1,6 +1,7 @@
 <template>
   <div class="flex flex-col h-full" >
     <div id="inner" class="flex flex-col">
+      <div v-if="messages.length === 0" class="flex flex-row iterms-center justify-center"><span class="text-gray-400">Say hello to your new friend !</span></div>
       <div v-for="c in messages" 
             class="p-3 m-0.5 rounded-xl inline-block max-w-full break-all"
             v-bind:class="[$auth.user.id === c.senderId ? 'text-white bg-blue-500 self-end' : ' text-black bg-gray-300 self-start']"
@@ -10,6 +11,7 @@
     </div>
     <div class="flex flex-row">
       <input
+        ref="textinput"
         type="text"
         @keyup="listenKey"
         v-model="message"
@@ -23,7 +25,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Channel } from '~/utils/types'
 
 export default Vue.extend({
   props: ['messages'],
@@ -37,6 +38,7 @@ export default Vue.extend({
   },
   mounted() {
     this.scrollBottom()
+    this.$refs.textinput.focus()
   },
   computed: {},
   methods: {

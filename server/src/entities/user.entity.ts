@@ -6,6 +6,7 @@ import {
   Entity,
   OneToMany,
   ManyToMany,
+  ManyToOne,
   OneToOne,
   JoinTable,
   JoinColumn,
@@ -80,6 +81,12 @@ export class User {
 
   @OneToMany(() => ChannelMembership, chan => chan.user)
   direct: DirectChannel[]
+
+  @OneToMany(() => User, user => user.blocker)
+  blockedUser: User[]
+
+  @ManyToOne(() => User, user => user.blockedUser)
+  blocker: User
 
   @Column({ default: '' })
   game_id: string;

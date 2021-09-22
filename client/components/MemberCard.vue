@@ -5,8 +5,8 @@
             <img class="w-16 h-16 rounded-full" :src="membership.user.avatar" :alt="membership.user.displayName">
             <span>{{membership.user.displayName}}</span>
             <div v-if="channel.owner.id === $auth.user.id && membership.user.id !== $auth.user.id && !isActiveTimeout" class="flex flex-row">
-                <span  class="btn btn-accent mx-1">Admin</span>
-                <span  @click="$emit('banMember', {memberId : membership.user.id, time : time})" class="btn mx-1">Ban</span>
+                <span @click="$emit('makeAdmin', membership.user.id )" class="btn btn-accent mx-1">Admin</span>
+                <span @click="$emit('banMember', {memberId : membership.user.id, time : time})" class="btn mx-1">Ban</span>
             </div>
             <div class="font-bold text-red-700" v-else-if="isActiveTimeout">
               Banned for {{timeoutValue}}

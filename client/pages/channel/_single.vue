@@ -9,7 +9,7 @@
       <div id="members"  class="modal">
         <div class="modal-box ">
           <div class="flex flex-col max-h-96 overflow-y-scroll">
-            <member-card @banMember="banMember" @unbanMember="unbanMember" v-for='m in getMembers' v-bind:currentDate="dateNow" v-bind:membership="m" v-bind:channel="getChannel"/>
+            <member-card @makeAdmin="makeAdmin" @banMember="banMember" @unbanMember="unbanMember" v-for='m in getMembers' v-bind:currentDate="dateNow" v-bind:membership="m" v-bind:channel="getChannel"/>
           </div>
           <div class="modal-action">
             <a href="#" class="btn">Close</a>
@@ -203,6 +203,21 @@ export default Vue.extend({
     fetchMembers()
     {
       this.$store.dispatch("channel/getMembers", this.id) // TODO loading animation ?
+    },
+    makeAdmin(userId : string)
+    {
+      this.$axios.post(`/channel/${this.id}/members/${userId}/makeAdmin`)
+      .then((rep : any) => {
+        if (rep.data.status && rep.data.status != 201)
+          this.$toast.error(rep.data.message)
+        else
+          this.$toast.success("Member is now admin")
+        this.fetchMembers()
+      })
+      .catch((error : any) => {
+          console.log(error)
+          this.$toast.error("Cannot update member")
+      })
     },
     banMember(data : { memberId: string, time : number}) // time in minute, the default value is the max value for forever ban
     {

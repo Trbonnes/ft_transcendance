@@ -74,6 +74,9 @@ export class DirectChannelController {
   @UseGuards(JwtAuthGuard)
   async getHistory(@Req() req, @Param('channelId') channelId: string) { // only one user id, the other one is in the JWT
     try {
+      let channel = await this.channelService.getOneByUser(req.user.id)
+      if (!channel)
+        return new HttpException("You cannot retrive the messages", HttpStatus.FORBIDDEN)
       let data = await this.channelService.getMessages(channelId)
       return data
     } catch (error) {

@@ -23,6 +23,10 @@ export class DirectChannelService {
     return this.channelRepositery.findOne({ where: [{ user1Id: user1Id, user2Id: user2Id }, { user1Id: user2Id, user2Id: user1Id }] })
   }
 
+  getOneByUser(userId: string) {
+    return this.channelRepositery.findOne({ where: [{ user1Id: userId }, { user2Id: userId }] })
+  }
+
   saveOne(user1: string, user2: string) {
     let data = new DirectChannel()
     data.user1Id = user1;

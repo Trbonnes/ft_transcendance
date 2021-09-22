@@ -86,21 +86,13 @@ export class ChannelController {
     }
   }
 
-  @Post(':channelId/members/:userId/update')
+  @Post(':channelId/members/:userId/makeAdmin')
   @UseGuards(JwtAuthGuard, IsChannelAdminGuard)
   async updateMember(@Param('channelId') channelId: string,
     @Param('userId') userId: string,
-    @Req() req: any,
-    @Body() payload: { isAdmin: boolean; isBanned: boolean }) {
+    @Req() req: any) {
     try {
-      const mem = await this.membershipService.getOne(channelId, req.user.id)
-      if (!mem)
-        return new HttpException("You're not a member of the channel", HttpStatus.FORBIDDEN)
-      if (mem.isAdmin === false) {
-        return new HttpException("You're not an administrator !", HttpStatus.FORBIDDEN)
-      }
-      (await this.membershipService.update(channelId, userId, payload.isAdmin))
-
+      return this.membershipService.update(channelId, userId, true)
     } catch (error) {
       return new HttpException("Cannot update user", HttpStatus.BAD_REQUEST)
     }

@@ -28,11 +28,9 @@ export function createWebSocketPlugin(store: any) {
     console.log(`connect_error due to ${err.message}`)
   })
   socket.on('channel/message', (data) => {
-    console.log(data)
     store.dispatch('channel/message', data)
   })
   socket.on('directChannel/directMessage', (data) => {
-    console.log(data)
     store.dispatch('directChannel/message', data)
   })
   store.subscribe((mutation: any) => { })
