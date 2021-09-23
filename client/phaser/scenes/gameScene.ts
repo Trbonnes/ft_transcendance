@@ -59,14 +59,25 @@ export default class GameScene extends Phaser.Scene {
         }
 
         let scoreBoard = this.add.text(config.width / 2, 50, this.score.left.toString() + "  |  " + this.score.right.toString()).setOrigin(0.5, 0.5).setTint(0x00ff00).setFontSize(60).setFontStyle('Bold')
+        let indentification: Phaser.GameObjects.Text
 
         if(this.player == 0) {
             this.myBar = new PongBar(this, this.layoutType!)
             this.opponentBar = new PongBar(this, this.layoutType!, 1)
+            indentification =  this.add.text(config.width / 2 - 300, config.height / 2, "<- YOU")
+            .setFontSize(65)
+            .setStroke('black', 3)
+            .setTint(0x0000ff)
+            .setOrigin(0.5, 0.5)
         }
         else {
             this.myBar = new PongBar(this, this.layoutType!, 1)
             this.opponentBar = new PongBar(this, this.layoutType!)
+            indentification = this.add.text(config.width / 2 + 300, config.height / 2, "YOU ->")
+            .setFontSize(65)
+            .setStroke('black', 3)
+            .setTint(0xff0000)
+            .setOrigin(0.5, 0.5)
         }
         this.opponentUpdateY = this.opponentBar!.bar.y
 
@@ -84,6 +95,9 @@ export default class GameScene extends Phaser.Scene {
         })
 
         this.socket!.on('Goal', (data: {scoreP0: number, scoreP1: number}) => {
+            if (indentification)
+                indentification.destroy()
+
             this.score.left = data.scoreP0
             this.score.right = data.scoreP1
             scoreBoard.setText(this.score.left.toString() + "  |  " + this.score.right.toString())
