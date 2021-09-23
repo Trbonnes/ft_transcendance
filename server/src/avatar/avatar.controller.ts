@@ -13,6 +13,7 @@ export class AvatarController {
 	constructor(private avatarService: AvatarService) {}
 
 	@Get(":file")
+	@UseGuards(JwtAuthGuard)
 	async findOne(@Param('file') file:string, @Res() res: Response) {
 		const fs = require("fs");
 		if (fs.existsSync(`./uploads/${file}`))
