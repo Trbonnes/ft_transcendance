@@ -60,9 +60,9 @@
 				</div>
 				<button @click="showuser"> click to show user debug </button>
 				<div class="">
-					<h1 class="flex mx-auto justify-center mt-10 m-5 text-3xl font-bold"> Your game history </h1>
+					<h1 class="flex mx-auto justify-center mt-10 m-5 text-3xl font-bold"> Game history </h1>
 					<div v-if="playedGames.length <= 0">
-						<p class="flex mx-auto justify-center text-xl font-bold"> You don't have any game</p>
+						<p class="flex mx-auto justify-center text-xl font-bold"> No games found</p>
 					</div>
 					<div v-else>
 						<div class="items-center" v-for="(game) in playedGames" :key="`${game}.id`">

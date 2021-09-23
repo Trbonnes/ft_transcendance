@@ -39,6 +39,7 @@ export class UsersController {
     return this.usersService.searchByName(name);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAllOrByLogin(@Req() req: Request) {
     if (req.query.login) {

@@ -4,10 +4,10 @@
 		<div class="card shadow flex flex-grow w-full">
 		  <div class="card-body flex flex-grow w-full items-center" :class="{'bg-green-500 bg-opacity-75':isWinner, 'bg-red-500 bg-opacity-75':!isWinner}">
 				<div v-if="isWinner">
-					<p class="italic text-xs"> You Won ! </p>
+					<p class="italic text-xs"> Won ! </p>
 				</div>
 				<div v-else class="italic text-xs">
-					<p> You Lost :( </p>
+					<p> Lost :( </p>
 				</div>
 			  <div class="flex">
 				<div class="avatar">
