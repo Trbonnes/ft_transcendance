@@ -3,6 +3,7 @@ import { config } from '../phaserconfig'
 import { scenesList, activeScene, setActiveScene } from '../sceneManager'
 
 import Button from '../objects/ButtonObject'
+import Video from '../objects/VideoObject'
 
 export default class GameResultsScene extends Phaser.Scene {
     private winner?: number //0->lost 1->won 2->Opponent Disconnected
@@ -40,7 +41,8 @@ export default class GameResultsScene extends Phaser.Scene {
             this.add.text(config.width / 2, config.height / 2, 'Opponent Disconnected').setOrigin(0.5, 0.5).setTint(0x00ff00).setFontSize(80).setFontStyle('Bold')
         else
             this.add.text(config.width / 2, config.height / 2, this.score!.left.toString() + "  |  " + this.score!.right.toString()).setOrigin(0.5, 0.5).setTint(0x00ff00).setFontSize(80).setFontStyle('Bold')
-        this.add.video(config.width / 2, 50, 'confetti.webm').play(true).setLoop()
+        
+        new Video(this, config.width / 2, 50, 'confetti.webm')
 
         new Button(this, config.width / 2, 850, " Still\nplaying?",
         function(Scene: Phaser.Scene) {

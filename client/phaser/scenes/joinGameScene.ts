@@ -5,6 +5,7 @@ import { config } from '../phaserconfig'
 import { scenesList, activeScene, setActiveScene } from '../sceneManager'
 import createSocket from '../objects/CreateSocket'
 import ExitObject from '../objects/ExitObject'
+import Video from '../objects/VideoObject'
 
 export default class JoinGameScene extends Phaser.Scene {
   private socket?: Socket
@@ -31,7 +32,7 @@ export default class JoinGameScene extends Phaser.Scene {
       .setTint(0x000000)
       .setOrigin(0.5, 0.5)
 
-    this.add.video(config.width / 2, config.height / 2, 'loading.webm').play(true).setLoop()
+    new Video(this, config.width / 2, config.height / 2, 'loading.webm')
 
     console.log(os.hostname())
     this.socket = createSocket("game", "", "")

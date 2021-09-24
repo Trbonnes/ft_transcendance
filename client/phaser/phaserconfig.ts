@@ -150,13 +150,6 @@ export function setup(_options: {
 				this.scene.run(scenesList.JoinSpectateScene, { type: "classical", id: config.spectate })
 			else
 				this.scene.run(scenesList.MenuScene)
-		
-			this.game.events.on('pause', () => {
-				console.log('pause')
-			})
-			this.game.events.on('resume', () => {
-				console.log('resume')
-			})
     	}
 
 		update(/*time, delta*/) {}
