@@ -26,7 +26,6 @@ export const scenesList = {
     WaitingFriendScene: 'WaitingFriendScene',
     WaitingBorderlessFriendScene: 'WaitingBorderlessFriendScene',
     JoinFriendScene: 'JoinFriendScene',
-
 }
 
 export var activeScene: string = scenesList.HomeScene

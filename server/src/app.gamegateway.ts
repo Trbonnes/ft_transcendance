@@ -29,13 +29,12 @@ export class GameGateway {
   @WebSocketServer()
   protected server: Namespace
   
-  handleConnection(client: Socket, ...args: any[]) {
+  async handleConnection(client: Socket, ...args: any[]) {
     console.log('WS Connect', { id: client.id })
     
     let data = client.handshake
     let joined = false
     
-    // const id = client.handshake.headers.get('user_id')
     const userId = client.handshake.headers.user_id as string;
     
     try {
