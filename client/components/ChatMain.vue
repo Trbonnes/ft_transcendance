@@ -36,7 +36,6 @@ export default Vue.extend({
         toggleChat()
         {
             this.chatHidden = !this.chatHidden
-            console.log(this.chatHidden)
         }
     }
 })

@@ -3,9 +3,9 @@
     <div class="bg-white">
       <ChatGoBack @click.native='$emit("back")'/>
       <div>
-        <div class="flex flex-col">
-          <form @submit="checkForm">
-            <label for="channelName" class=" flex flex-col cursor-pointer label">
+        <div class="flex flex-col font-bold">
+          <form class="flex items-center justify-center flex-col" @submit="checkForm">
+            <label for="channelName" class="label">
               <span>
                   Enter an channel name
               </span>
@@ -17,8 +17,7 @@
                 class="input input-bordered"
               />
             </label>
-
-            <label for="isPrivate" class="cursor-pointer label">
+            <label for="isPrivate" class="label">
               Private channel
               <input
                 v-model="isPrivate"
@@ -27,7 +26,7 @@
                 class="checkbox checkbox-primary"
               />
             </label>
-            <label for="channelPassword" class=" flex flex-col cursor-pointer label">
+            <label for="channelPassword" class="label">
               <span>
                   Enter a password
               </span>
@@ -51,7 +50,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Channel, CreateChannelDto } from '~/utils/types'
+
 export default Vue.extend({
   data() {
     return {
@@ -68,7 +67,8 @@ export default Vue.extend({
         this.$toast.error('Channel name cannot be empty')
       else if (this.isPrivate && this.channelPassword === '')
         this.$toast.error('Channel password cannot be empty')
-      else this.createChannel()
+      // else
+      // this.createChannel()
     },
     // createChannel() {
     //   const data: CreateChannelDto = { // TODO remove DTO, kinda overkill, types that are used only one time don't need to be defined elsewhere
@@ -95,3 +95,9 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style>
+form label{
+  @apply w-9/12 cursor-pointer flex flex-col items-start justify-start !important;
+}
+</style>

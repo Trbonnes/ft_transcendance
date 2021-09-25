@@ -2,11 +2,12 @@
 <template>
     <div class="w-full flex flex-col items-center justify-around">
         <ChannelList />
-        <div class="relative sideComponent" :class='[showJoin || showCreate ? "show" : "hidden"]'>
-            <CreateChannel v-on:back='showCreate = false' id="joinForm" v-if="showCreate"/>
-            <JoinPrivate v-on:back='showJoin = false' v-if="showJoin"/>
+        <div class="relative sideComponent" :class='{"show" : showCreate || showJoin}'>
+            <CreateChannel v-on:back='showCreate = false' class="w-full h-full"/>
+            <JoinPrivate v-on:back='showJoin = false' class="w-full h-full"/>
+            <!-- TODO make it not render the component on the side maybe ? -->
         </div>
-        <span class="cursor-pointer flex flex-row items-center justify-center h-7 text-xl font-bold" @click='showJoin = true'>
+        <span class="cursor-pointer flex flex-row items-center justify-center h-7 text-xl font-bold" @click='showCreate = true'>
             Create channel
           <font-awesome-icon title="Create channel" icon="plus-square"></font-awesome-icon>
         </span>
@@ -26,6 +27,10 @@ export default Vue.extend({
     },
     methods : 
     {
+        toggelShowCreate()
+        {
+            this.showCreate = !this.showCreate
+        }
     }
 })
 </script>
@@ -35,21 +40,11 @@ export default Vue.extend({
         top: 0;
         height: 100%;
         width: 100%;
-        left:0%;
+        left:100%;
         transition: all .2s;
         @apply absolute;
     }
-    .sideComponent.hidden{
-        transition: all .2s;
-        left: 100%;
-    }
     .sideComponent.show{
-        transition: all .2s;
         left: 0%;
-    }
-    #joinForm
-    {
-        height: 100%;
-        width: 100%;
     }
 </style>
