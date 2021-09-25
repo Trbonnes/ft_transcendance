@@ -38,7 +38,7 @@ export default Vue.extend({
   },
   mounted() {
     this.scrollBottom()
-    this.$refs.textinput.focus()
+    (this.$refs.textinput as any).focus()
   },
   computed: {},
   methods: {
