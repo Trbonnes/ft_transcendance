@@ -46,7 +46,7 @@
               <NuxtLink to="/channel">Channels</NuxtLink>
             </li>
             <li>
-              <NuxtLink to="/direc-channel">Direct Messages</NuxtLink>
+              <NuxtLink to="/direct-channel">Direct Messages</NuxtLink>
             </li>
           </ul>
         </div>
