@@ -29,13 +29,14 @@ export default Vue.extend({
     computed: {
         isActiveTimeout()
         {
-            return this.membership.timeout && new Date(this.membership.timeout.end) >= this.currentDate
+            return (this.membership as any).timeout && new Date((this.membership as any).timeout.end) >= this.currentDate
         },
         timeoutValue()
         {
-            if (this.membership.timeout.start === this.membership.timeout.end)
+            if ((this.membership as any).timeout.start === (this.membership as any).timeout.end)
                 return "forever"
-            let diffSeconds = Math.round((new Date(this.membership.timeout.end) - this.currentDate) / 1000)
+            let diffDate = (new Date((this.membership as any).timeout.end) as any) - (this.currentDate as any)
+            let diffSeconds = Math.round(diffDate / 1000)
             if (diffSeconds > 60)
                 return Math.ceil(diffSeconds/60) + "min"
             return diffSeconds + "s"

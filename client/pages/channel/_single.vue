@@ -24,7 +24,7 @@
           </div>
         </div>
       </div>
-      <div v-if="getChannel && getChannel.owner.id === $auth.user.id">
+      <div v-if="getChannel && $auth && $auth.user && getChannel.owner.id === $auth.user.id">
         <a href="#edit" @click="initForm" class="btn btn-primary text-white">
           <font-awesome-icon class="text-xl mx-1.5" icon="pen"> </font-awesome-icon> Edit
         </a>
@@ -70,7 +70,7 @@
         </div>
       </div>
     </div>
-    <div v-if="getChannel && getChannel.owner.id === $auth.user.id">
+    <div v-if="getChannel && $auth && $auth.user && getChannel.owner.id === $auth.user.id">
       <a href="#delete" @click="deleteChannel" class="btn btn-secondary text-white">
         <font-awesome-icon class="text-xl mx-1.5" icon="times"> </font-awesome-icon>Delete Channel
       </a>
@@ -114,16 +114,19 @@ export default Vue.extend({
         this.$router.push("/channel")
       }
     }
-    sock.on("channel/banned", exitChannel)
-    sock.on("channel/destroyed", exitChannel)
-    this.timer = setInterval(() => {this.dateNow = new Date}, 1000)
+    if (sock.connected)
+    {
+      sock.on("channel/banned", exitChannel)
+      sock.on("channel/destroyed", exitChannel)
+    }
+    (this as any).timer = setInterval(() => {this.dateNow = new Date}, 1000)
   },
   destroyed()
   {
     let sock = getSocket()
     sock.off("channel/banned")
     sock.off("channel/destroyed")
-    clearInterval(this.timer)
+    clearInterval((this as any).timer)
   },
   computed: {
     getChannel()
