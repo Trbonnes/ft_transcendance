@@ -9,7 +9,9 @@
             :currentDate="currentDate"
             @banMember="banMember"
             @makeAdmin="makeAdmin"
+            @unmakeAdmin="unmakeAdmin"
             @unbanMember="unbanMember"
+            @makeOwner="makeOwner"
             />
     </div>
 </template>
@@ -31,7 +33,6 @@ export default Vue.extend({
     },
     created()
     {
-        console.log("We are live")
         this.timer = setInterval(() => { this.currentDate = new Date(); console.log("Interval")} , 1000)
     },
     destroyed()
@@ -49,10 +50,41 @@ export default Vue.extend({
         {
           this.$store.dispatch("channel/getMembers", this.channel.id) // TODO loading animation ?
         },
+        makeOwner(userId : string) // TODO maybe synthetize this in only one function
+        {
+          this.$axios.post(`/channel/${this.channel.id}/members/${userId}/makeOwner`)
+          .then((rep : any) => {
+            if (rep.data.status && rep.data.status != 201)
+              this.$toast.error(rep.data.message)
+            else
+              this.$toast.success("Ownership transfered")
+            this.fetchMembers()
+          })
+          .catch((error : any) => {
+              console.log(error)
+              this.$toast.error("Cannot update member")
+          })
+        },
+        unmakeAdmin(userId : string) // TODO maybe synthetize this in only one function
+        {
+          this.$axios.post(`/channel/${this.channel.id}/members/${userId}/unmakeAdmin`)
+          .then((rep : any) => {
+            if (rep.data.status && rep.data.status != 201)
+              this.$toast.error(rep.data.message)
+            else
+              this.$toast.success("Member is not an admin anymore")
+            this.fetchMembers()
+          })
+          .catch((error : any) => {
+              console.log(error)
+              this.$toast.error("Cannot update member")
+          })
+        },
         makeAdmin(userId : string)
         {
           this.$axios.post(`/channel/${this.channel.id}/members/${userId}/makeAdmin`)
           .then((rep : any) => {
+            console.log(rep)
             if (rep.data.status && rep.data.status != 201)
               this.$toast.error(rep.data.message)
             else

@@ -141,7 +141,7 @@ export default Vue.extend({
 #main
 {
     position: fixed;
-    width: 20vw;
+    width: 40vw;
     height: 100vh;
     top: 0;
     right: 0vw;
@@ -153,7 +153,7 @@ export default Vue.extend({
 
 #main.hidden-right
 {
-    right: -20vw;
+    right: -40vw;
 }
 
 #chatMain 

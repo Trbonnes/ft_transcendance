@@ -42,6 +42,9 @@ export class Channel {
   @JoinColumn()
   owner: User;
 
+  @Column()
+  ownerId: string;
+
   @OneToMany(() => ChannelMessage, (msg) => msg.channel)
   messages: ChannelMessage[];
 

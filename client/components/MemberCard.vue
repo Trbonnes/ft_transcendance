@@ -3,16 +3,22 @@
         <div class="p-3 my-1 flex flex-row items-center justify-between rounded-xl bg-gray-300"
             :class="{'bg-green-400' : membership.user.id === $auth.user.id}">
             <img class="w-16 h-16 rounded-full" :src="membership.user.avatar" :alt="membership.user.displayName">
-            <span>{{membership.user.displayName}}</span>
+            <span>
+                <font-awesome-icon v-if="membership.userId === channel.owner.id"  class="text-xl mx-1.5" icon="crown"> </font-awesome-icon>
+                <font-awesome-icon v-else-if="membership.isAdmin"  class="text-xl mx-1.5" icon="user-shield"> </font-awesome-icon>
+                {{membership.user.displayName}}
+            </span>
             <div v-if="isCurrentAdmin && membership.user.id !== $auth.user.id && !isActiveTimeout" class="flex flex-row">
-                <span @click="$emit('makeAdmin', membership.user.id )" class="btn btn-accent mx-1">Admin</span>
-                <span @click="$emit('banMember', {memberId : membership.user.id, time : time})" class="btn mx-1">Ban</span>
+                <span v-if="membership.isAdmin && channel.owner.id !== membership.userId" @click="$emit('makeOwner', membership.user.id)" class="btn btn-accent mx-1">Transfer</span>
+                <span v-if="!membership.isAdmin" @click="$emit('makeAdmin', membership.user.id )" class="btn btn-accent mx-1">Admin</span>
+                <span v-else-if="membership.isAdmin && membership.userId !== channel.owner.id" @click="$emit('unmakeAdmin', membership.user.id )" class="btn btn-secondary mx-1">Remove Admin</span>
+                <span v-if="membership.user.id !== channel.owner.id" @click="$emit('banMember', {memberId : membership.user.id, time : time})" class="btn mx-1">Ban</span>
             </div>
             <div class="font-bold text-red-700" v-else-if="isActiveTimeout">
               Banned for {{timeoutValue}}
               <span v-if="isCurrentAdmin"  @click="$emit('unbanMember', membership.user.id)" class="btn mx-1">Unban</span>
             </div>
-            <font-awesome-icon v-if="channel.owner.id === membership.user.id"  class="text-xl mx-1.5" icon="crown"> </font-awesome-icon>
+            <div v-else></div>
         </div>
     </div>
 </template>

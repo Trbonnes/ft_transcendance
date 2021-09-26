@@ -10,6 +10,7 @@ import {
   HttpStatus,
   UseGuards,
   Req,
+  HttpCode,
 } from '@nestjs/common';
 import { ChannelService } from './channel.service';
 import { ChannelMembershipService } from './channel-membership/channel-membership.service';
@@ -98,6 +99,45 @@ export class ChannelController {
     }
   }
 
+  @Post(':channelId/members/:userId/unmakeAdmin')
+  @UseGuards(JwtAuthGuard, IsChannelAdminGuard)
+  async unmakeAdmin(@Param('channelId') channelId: string,
+    @Param('userId') userId: string,
+    @Req() req: any) {
+    try {
+      const channel = await this.channelService.getById(channelId)
+      if (channel.owner.id === userId)
+        return new HttpException("Cannot remove owner as admin", HttpStatus.FORBIDDEN)
+      return this.membershipService.update(channelId, userId, false)
+    } catch (error) {
+      return new HttpException("Cannot update user", HttpStatus.BAD_REQUEST)
+    }
+  }
+
+  @Post(':channelId/members/:userId/makeOwner')
+  @UseGuards(JwtAuthGuard, IsChannelAdminGuard)
+  async makeOwner(@Param('channelId') channelId: string,
+    @Param('userId') userId: string,
+    @Req() req: any) {
+    try {
+      let channel = await this.channelService.getById(channelId)
+      if (channel.owner.id !== req.user.id)
+        return new HttpException("You are not the owner", HttpStatus.FORBIDDEN)
+      if (req.user.id === userId)
+        return new HttpException("User is already the owner", HttpStatus.FORBIDDEN)
+      const mem = await this.membershipService.getOne(channelId, userId)
+      if (!mem)
+        return new HttpException("User is not a member", HttpStatus.BAD_REQUEST)
+      if (!mem.isAdmin)
+        return new HttpException("User is not an admin", HttpStatus.BAD_REQUEST)
+      delete channel.owner
+      channel.ownerId = userId
+      this.channelService.saveChannel(channel)
+    } catch (error) {
+      return new HttpException("Cannot update user", HttpStatus.BAD_REQUEST)
+    }
+  }
+
   @Post(':channelId/update')
   @UseGuards(JwtAuthGuard, IsChannelAdminGuard)
   async updateChannel(@Param('channelId') channelId: string,
@@ -123,8 +163,11 @@ export class ChannelController {
 
   @Delete(':channelId/delete')
   @UseGuards(JwtAuthGuard, IsChannelAdminGuard)
-  async deleteChannel(@Param('channelId') channelId: string) {
+  async deleteChannel(@Req() req: any, @Param('channelId') channelId: string) {
     try {
+      const channel = await this.channelService.getById(channelId)
+      if (req.user.id !== channel.ownerId)
+        return new HttpException("Only the owner can delete the channel", HttpStatus.UNAUTHORIZED)
       let data = await this.channelService.deleteChannel(channelId)
       this.chatGateway.destroyedChannel(channelId)
       return { status: 201 } //TODO maybe change code ? 
@@ -171,6 +214,9 @@ export class ChannelController {
       let membership = await this.membershipService.getOne(channelId, dto.userId)
       if (!membership)
         return new HttpException("User is not in channel", HttpStatus.BAD_REQUEST);
+      const channel = await this.channelService.getById(channelId)
+      if (channel.ownerId === dto.userId)
+        return new HttpException("Cannot ban owner", HttpStatus.FORBIDDEN);
       if (membership.timeout && membership.timeout.end < new Date())
         await this.membershipService.unbanOne(membership.id)
       await this.membershipService.banOne(membership.id, dto.duration)
