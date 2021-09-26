@@ -22,6 +22,7 @@ import { Logger } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Request, response } from 'express';
 import { request } from 'http';
+// import { UserAdminGuard } from './UserAdmin.guard';
 
 @Controller('users')
 export class UsersController {
@@ -75,6 +76,7 @@ export class UsersController {
 
   @Patch('update/:id')
   @UseGuards(JwtAuthGuard)
+  // @UseGuards(UserAdminGuard)
   adminUpdate(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto)
   }

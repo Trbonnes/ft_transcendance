@@ -20,7 +20,7 @@ import { ChatModule } from '../chat.module'
     UsersModule,
     forwardRef(() => ChatModule)
   ],
-  providers: [IsChannelMemberGuard, IsChannelAdminGuard, ChannelService, ChannelMessageService, ChannelMembershipService],
+  providers: [IsChannelMemberGuard, IsChannelAdminGuard, IsChannelAdminGuard, ChannelService, ChannelMessageService, ChannelMembershipService],
   controllers: [ChannelController],
   exports: [ChannelService, ChannelMessageService, ChannelMembershipService],
 })
