@@ -4,6 +4,10 @@
   			<div class="container mx-auto flex px-5 py-24 items-center justify-center flex-col">
     			<img class="lg:w-1/6 md:w-2/6 w-4/6 mb-1 object-cover object-center rounded " alt="hero" :src="user.avatar">
 				<button class="inline-flex text-white bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-xs italic mb-3"
+						v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id && user.game_id"
+						@click="spectateUser">
+					Spectate </button>
+				<button class="inline-flex text-white bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-xs italic mb-3"
 						v-if="this.$auth.loggedIn && (this.$auth.user.id === user.id || this.$auth.user.role === 'admin' || this.$auth.user.role === 'superAdmin')"
 						@click="toggleAvatarUploader">
 					Change avatar </button>
@@ -289,6 +293,15 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 			}).catch((error) => {
 				this.$toast.error("Could not change user's role")
 			})
+		}
+
+		async spectateUser() {
+			await this.fetchUser();
+			if (this.user.game_id)
+			// Link is incorrect 
+				this.$router.push(`/game/${this.user.game_id}`)
+			else
+				this.$toast.error("This players' game is over.")
 		}
 		
 	}
