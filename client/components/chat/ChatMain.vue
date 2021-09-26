@@ -40,14 +40,6 @@ export default Vue.extend({
             timer : null as any
         }
     },
-    mounted(){
-        this.timer = setInterval( this.refresh, 30000)
-        console.log(this.channelRoute)
-    },
-    destroyed()
-    {
-        clearInterval(this.timer)
-    },
     computed : {
         currentRoute()
         {
@@ -68,7 +60,8 @@ export default Vue.extend({
     methods : {
         back()
         {
-            this.channelRoute.pop()
+            if (this.channelRoute.length > 1)
+                this.channelRoute.pop()
         },
         next(data : {comp : string, props?: [{[key: string] : any}]})
         {
@@ -85,15 +78,7 @@ export default Vue.extend({
         toggleChat()
         {
             this.chatHidden = !this.chatHidden
-            this.refresh()
         },
-        refresh()
-        {
-            if (this.chatHidden === false)
-            {
-                this.$store.dispatch('channel/fetchAll')
-            }
-        }
     }
 })
 </script>

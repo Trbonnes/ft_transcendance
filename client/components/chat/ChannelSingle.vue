@@ -1,6 +1,9 @@
 <template>
-    <div class="bg-white">
-        <ChatConversation :messages="getMessages" />
+    <div class="bg-white relative">
+        <ChatConversation :messages="getMessages" @sendMessage="sendMessage" />
+        <span @click='$emit("next", {comp : "ChatMemberList", props : { channel : getChannel}})' class="btn btn-primary text-white">
+          <font-awesome-icon class="text-xl mx-1.5" icon="users"> </font-awesome-icon> Members
+        </span>
     </div>
 </template>
 
@@ -12,13 +15,6 @@ import { getSocket } from '~/store/plugins/websocket'
 export default Vue.extend({
   // fetch channel given the id and pass the data to the Conversation component
   props : ['channelId'],
-  data() {
-    return {
-    //   channelName: '' as string, isPrivate: false as boolean,
-    //   channelPassword: '' as string,
-    //   dateNow : new Date()
-    }
-  },
   created()
   {
     let sock = getSocket()
@@ -33,13 +29,13 @@ export default Vue.extend({
     }
     // (this as any).timer = setInterval(() => {this.dateNow = new Date}, 1000)
   },
-//   destroyed()
-//   {
-//     let sock = getSocket()
-//     sock.off("channel/banned")
-//     sock.off("channel/destroyed")
-//     clearInterval((this as any).timer)
-//   },
+  destroyed()
+  {
+    let sock = getSocket()
+    sock.off("channel/banned")
+    sock.off("channel/destroyed")
+    // clearInterval((this as any).timer)
+  },
   computed: {
     getChannel()
     {
@@ -65,15 +61,36 @@ export default Vue.extend({
   async fetch()
   {
     try {
-      await this.$store.dispatch("channel/joinChannel", (this as any).id)
-      await this.$store.dispatch("channel/fetchOne", (this as any).id)
-      await this.$store.dispatch("channel/getMessages", (this as any).id)
+      await this.$store.dispatch("channel/joinChannel", this.channelId)
+      await this.$store.dispatch("channel/fetchOne", this.channelId)
+      await this.$store.dispatch("channel/getMessages", this.channelId)
+      this.$store.dispatch("channel/getMembers", this.channelId) // TODO loading animation ?
     }
     catch(error)
     {
       this.$toast.error("Cannot fetch channel")
     } 
   },
+  methods : {
+    sendMessage(msgContent: string) {
+      const dto: CreateMessageDto = {
+        channelId: this.channelId,
+        content: msgContent,
+      }
+      try
+      {
+        this.$store.dispatch("channel/sendMessage", dto)
+      }
+      catch
+      {
+        //TODO error handling
+      } },
+    fetchMembers()
+    {
+      this.$store.dispatch("channel/getMembers", this.channelId) // TODO loading animation ?
+    },
+  }
+//     },
 //   methods: {
 //     initForm()
 //     {
@@ -123,70 +140,20 @@ export default Vue.extend({
 //         })
 //       }
 //     },
-//     fetchMembers()
-//     {
-//       this.$store.dispatch("channel/getMembers", this.id) // TODO loading animation ?
-//     },
-//     makeAdmin(userId : string)
-//     {
-//       this.$axios.post(`/channel/${this.id}/members/${userId}/makeAdmin`)
-//       .then((rep : any) => {
-//         if (rep.data.status && rep.data.status != 201)
-//           this.$toast.error(rep.data.message)
-//         else
-//           this.$toast.success("Member is now admin")
-//         this.fetchMembers()
-//       })
-//       .catch((error : any) => {
-//           console.log(error)
-//           this.$toast.error("Cannot update member")
-//       })
-//     },
-//     banMember(data : { memberId: string, time : number}) // time in minute, the default value is the max value for forever ban
-//     {
-//       this.$axios.post(`/channel/${this.id}/ban`, { userId : data.memberId, duration : data.time})
-//       .then((rep : any) => {
-//         if (rep.data.status && rep.data.status != 201)
-//           this.$toast.error(rep.data.message)
-//         else
-//           this.$toast.success("User banned")
-//         this.fetchMembers()
-//       })
-//       .catch((error : any) => {
-//           console.log(error)
-//           this.$toast.error("Cannot ban member")
-//       })
-//     },
-//     unbanMember(memberId: string) // time in minute, the default value is the max value for forever ban
-//     {
-//       this.$axios.post(`/channel/${this.id}/unban`, { userId : memberId })
-//       .then((rep : any) => {
-//         if (rep.data.status && rep.data.status != 201)
-//           this.$toast.error(rep.data.message)
-//         else
-//           this.$toast.success("User unbanned")
-//         this.fetchMembers()
-//       })
-//       .catch((error : any) => {
-//           console.log(error)
-//           this.$toast.error("Cannot unban member")
-//       })
-//     },
-//     sendMessage(msgContent: string) {
-//       const dto: CreateMessageDto = {
-//         channelId: this.id,
-//         content: msgContent,
-//       }
-//       try
-//       {
-//         this.$store.dispatch("channel/sendMessage", dto)
-//       }
-//       catch
-//       {
-//         //TODO error handling
-//       }
-
-//     },
-//   },
 })
 </script>
+<style>
+
+#memberList {
+  top: 0;
+  left: 100%;
+  transition: all .2s;
+  @apply w-full h-full absolute bg-white;
+}
+
+#memberList.show
+{
+  left: 0%;
+}
+  
+</style>
