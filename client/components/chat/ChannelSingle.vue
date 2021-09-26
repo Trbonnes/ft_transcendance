@@ -41,9 +41,9 @@ export default Vue.extend({
         let members = this.getMembers
         if (members)
         {
-          console.log(members)
-          let mem = (this.getMembers as any[]).find((mem : any) => mem.userId === this.$auth.user.id)
-          return mem && mem.isAdmin || mem.user.role === 'admin' || mem.user.role === 'superAdmin'
+          let mem : any = (this.getMembers as any[]).find((m : any) => m.userId === this.$auth.user.id)
+          if (mem)
+            return mem && (mem.isAdmin || mem.user.role === 'admin' || mem.user.role === 'superAdmin')
         }
         return false
     }

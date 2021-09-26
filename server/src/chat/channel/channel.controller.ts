@@ -111,7 +111,8 @@ export class ChannelController {
         return new HttpException("Channel name cannot be empty", HttpStatus.BAD_REQUEST)
       channel.isPublic = !payload.isPrivate
       channel.name = payload.channelName
-      channel.password = payload.newPassword // TODO set password to sha
+      if (payload.newPassword != "")
+        channel.password = payload.newPassword // TODO set password to sha
       let data = await this.channelService.saveChannel(channel)
       delete data.password
       return data
