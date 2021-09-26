@@ -10,6 +10,9 @@
         <span v-if="isCurrentUserAdmin" @click='$emit("next", {comp : "ChatUpdateChannel", props : { channel : getChannel}})' class="btn btn-primary text-white">
           <font-awesome-icon class="text-xl mx-1.5" icon="pen"> </font-awesome-icon> Edit
         </span>
+        <span v-if="isCurrentUserOwner" @click='deleteChannel' class="btn btn-secondary text-white">
+          <font-awesome-icon class="text-xl mx-1.5" icon="times"> </font-awesome-icon> Delete
+        </span>
     </div>
 </template>
 
@@ -36,16 +39,19 @@ export default Vue.extend({
     {
       return this.$store.getters["channel/members"](this.channelId)
     },
+    currentMember()
+    {
+      return (this.getMembers as any[]).find((m : any) => m.userId === this.$auth.user.id)
+    },
     isCurrentUserAdmin()
     {
-        let members = this.getMembers
-        if (members)
-        {
-          let mem : any = (this.getMembers as any[]).find((m : any) => m.userId === this.$auth.user.id)
-          if (mem)
-            return mem && (mem.isAdmin || mem.user.role === 'admin' || mem.user.role === 'superAdmin')
-        }
+        if (this.currentMember)
+            return (this.currentMember.isAdmin || this.currentMember.user.role === 'admin' || this.currentMember.user.role === 'superAdmin')
         return false
+    },
+    isCurrentUserOwner()
+    {
+        return (this.getChannel && this.$auth.user.id === this.getChannel.owner.id)
     }
   },
   async fetch()
@@ -74,7 +80,25 @@ export default Vue.extend({
       catch
       {
         //TODO error handling
-      } },
+      }
+    },
+    deleteChannel()
+    {
+      this.$axios.$delete(`/channel/${this.channelId}/delete`)
+      .then((rep : any) => {
+        if (rep.status == 201)
+        {
+          this.$toast.success("Channel deleted")
+          this.$store.dispatch("channel/fetchAll")
+          this.$emit("back")
+        }
+        else
+          this.$toast.error(rep.message)
+       })
+      .catch(() => {
+        this.$toast.error("Cannot delete channel")
+      })
+    },
     fetchMembers()
     {
       this.$store.dispatch("channel/getMembers", this.channelId) // TODO loading animation ?
