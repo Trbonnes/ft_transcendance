@@ -48,6 +48,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { CreateChannelDto } from '~/utils/types'
 
 export default Vue.extend({
   data() {

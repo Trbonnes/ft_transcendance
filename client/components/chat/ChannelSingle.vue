@@ -41,17 +41,17 @@ export default Vue.extend({
     },
     currentMember()
     {
-      return (this.getMembers as any[]).find((m : any) => m.userId === this.$auth.user.id)
+      return ((this as any).getMembers as any[]).find((m : any) => this.$auth.user && m.userId === this.$auth.user.id)
     },
     isCurrentUserAdmin()
     {
-        if (this.currentMember)
-            return (this.currentMember.isAdmin || this.currentMember.user.role === 'admin' || this.currentMember.user.role === 'superAdmin')
+        if ((this as any).currentMember)
+            return ((this as any).currentMember.isAdmin || (this as any).currentMember.user.role === 'admin' || (this as any).currentMember.user.role === 'superAdmin')
         return false
     },
     isCurrentUserOwner()
     {
-        return (this.getChannel && this.$auth.user.id === this.getChannel.owner.id)
+        return ((this as any).getChannel && this.$auth.user && this.$auth.user.id === (this as any).getChannel.owner.id)
     }
   },
   async fetch()

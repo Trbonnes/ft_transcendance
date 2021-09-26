@@ -51,7 +51,8 @@ export default Vue.extend({
             console.log(channelId)
             if (this.channelRoute.length > 1
                 && this.channelRoute[1].comp === "ChatChannelSingle"
-                && this.channelRoute[1].props.channelId === channelId)  // we only reset if we are in the channel
+                && this.channelRoute[1].props
+                && (this.channelRoute[1].props as any).channelId === channelId)  // we only reset if we are in the channel
             {
                 console.log("reseting the route")
                 console.log(this.currentComponent)
@@ -78,14 +79,14 @@ export default Vue.extend({
     computed : {
         currentRoute()
         {
-            switch (this.currentTab)
+            switch ((this as any).currentTab)
             {
                 case 0: {
-                    return this.channelRoute
+                    return (this as any).channelRoute
                     break
                 }
                 case 1: {
-                    return this.directRoute
+                    return (this as any).directRoute
                     break
                 }
                 default :{
@@ -95,16 +96,16 @@ export default Vue.extend({
         },
         topRoute()
         {
-           return this.currentRoute[this.currentRoute.length - 1]
+           return (this as any).currentRoute[(this as any).currentRoute.length - 1]
         },
         currentComponent()
         {
-            return this.topRoute.comp
+            return (this as any).topRoute.comp
         },
         currentProps()
         {
-           if (this.topRoute.props) 
-               return this.topRoute.props
+           if ((this as any).topRoute.props) 
+               return (this as any).topRoute.props
             return []
         }
     },

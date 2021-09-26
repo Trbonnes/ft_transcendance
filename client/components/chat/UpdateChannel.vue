@@ -58,12 +58,12 @@ export default Vue.extend({
             if (this.channelName === "")
             {
                 this.$toast.error("Name cannot be empty")
-                this.valid = false
+                valid = false
             }
-            if (this.channel.isPublic && this.isPrivate && this.channelPassord === "")
+            if (this.channel.isPublic && this.isPrivate && this.channelPassword === "")
             {
                 this.$toast.error("Password cannot be empty")
-                this.valid = false
+                valid = false
             }
             if (valid)
                 this.updateChannel()
