@@ -4,9 +4,11 @@
           <font-awesome-icon title="Chat" class="text-4xl" icon="comments"></font-awesome-icon>
         </div>
         <div id="main" :class='{ "hidden-right" : chatHidden}'>
-            <div class="w-full flex flex-row justify-center">
-              <font-awesome-icon title="Chat" class="cursor-pointer text-4xl m-2" icon="times" @click="toggleChat"></font-awesome-icon>
-              <span>Messages</span>
+            <div class="relative h-14  w-full flex flex-row items-center justify-center">
+                <div @click="toggleChat" class="absolute top-0 left-0 w-14 h-14 cursor-pointer bg-gray-100 hover:bg-gray-300 transition-all duration-500 flex flex-row items-center justify-center justify-self-start">
+                  <font-awesome-icon title="Chat" class="text-4xl" icon="times" ></font-awesome-icon>
+                </div>
+                <span class="text-2xl font-bold">Chat</span>
             </div>
             <div class="flex flex-row items-center justify-center font-bold text-xl justify-evenly">
                 <div @click='currentTab = 0' class="cursor-pointer">
@@ -16,7 +18,7 @@
                   <span>Direct chat</span>
                 </div>
             </div>
-            <ChatGoBack @click.native="back"/>
+            <ChatGoBack :class="[ currentRoute.length === 1 ? 'opacity-0' : 'opacity-100']" @click.native="back"/>
             <component @back="back" @replace="replace" @next="next" :is='this.currentComponent' v-bind="currentProps"></component>
         </div>
     </div>
@@ -157,7 +159,7 @@ export default Vue.extend({
 #main
 {
     position: fixed;
-    width: 40vw;
+    width: 25vw;
     height: 100vh;
     top: 0;
     right: 0vw;
@@ -169,7 +171,7 @@ export default Vue.extend({
 
 #main.hidden-right
 {
-    right: -40vw;
+    right: -25vw;
 }
 
 #chatMain 

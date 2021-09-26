@@ -42,12 +42,6 @@
             <li>
               <NuxtLink to="/leaderboard">Players</NuxtLink>
             </li>
-            <li>
-              <NuxtLink to="/channel">Channels</NuxtLink>
-            </li>
-            <li>
-              <NuxtLink to="/direct-channel">Direct Messages</NuxtLink>
-            </li>
           </ul>
         </div>
       </div>
@@ -61,12 +55,6 @@
           </NuxtLink>
           <NuxtLink to="/leaderboard" class="btn btn-ghost btn-sm rounded-btn">
             Players
-          </NuxtLink>
-          <NuxtLink to="/channel" class="btn btn-ghost btn-sm rounded-btn">
-            Channels
-          </NuxtLink>
-          <NuxtLink to="/direct-channel" class="btn btn-ghost btn-sm rounded-btn">
-            Direct Messages
           </NuxtLink>
         </div>
       </div>
