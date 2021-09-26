@@ -5,7 +5,7 @@
             v-bind:key="m.id"
             :channel="channel"
             :membership="m"
-            :isCurrentAdmin="isCurrentUserAdmin"
+            :isCurrentAdmin="isCurrentAdmin"
             :currentDate="currentDate"
             @banMember="banMember"
             @makeAdmin="makeAdmin"
@@ -17,7 +17,7 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-    props: ["channel"],
+    props: ["channel", "isCurrentAdmin"],
     data()
     {
         return {
@@ -43,11 +43,6 @@ export default Vue.extend({
         {
             return this.$store.getters["channel/members"](this.channel.id)
         },
-        isCurrentUserAdmin()
-        {
-            let mem = (this.getMemberships as any[]).find((mem : any) => mem.userId === this.$auth.user.id)
-            return mem.isAdmin || mem.user.role === 'admin' || mem.user.role === 'superAdmin'
-        }
     },
     methods: {
         fetchMembers()
@@ -71,8 +66,6 @@ export default Vue.extend({
         },
         banMember(data : { memberId: string, time : number}) // time in minute, the default value is the max value for forever ban
         {
-          console.log(this.isCurrentUserAdmin)
-          console.log(data)
           this.$axios.post(`/channel/${this.channel.id}/ban`, { userId : data.memberId, duration : data.time})
           .then((rep : any) => {
             if (rep.data.status && rep.data.status != 201)

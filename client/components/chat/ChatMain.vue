@@ -24,6 +24,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { component } from 'vue/types/umd'
+import { getSocket } from '~/store/plugins/websocket'
 
 interface Route
 {
@@ -40,32 +41,67 @@ export default Vue.extend({
             timer : null as any
         }
     },
+    created()
+    {
+        let sock = getSocket()
+        let exitChannel = (channelId : string) => {
+            console.log("props : " , this.currentProps)
+            console.log(channelId)
+            if (this.channelRoute.length > 1
+                && this.channelRoute[1].comp === "ChatChannelSingle"
+                && this.channelRoute[1].props.channelId === channelId)  // we only reset if we are in the channel
+            {
+                console.log("reseting the route")
+                console.log(this.currentComponent)
+                this.resetRoute()
+                console.log(this.currentComponent)
+            }
+        }
+        let interval = setInterval(() => { // setting interval, the socket might not be connected, TODO maybe use the on connected event ?
+            if (sock.connected)
+            {
+                console.log('The socket is connected')
+                sock.on("channel/banned", exitChannel)
+                sock.on("channel/destroyed", exitChannel)
+                clearInterval(interval)
+            }
+        }, 500)
+    },
+    destroyed()
+    {
+        let sock = getSocket()
+        sock.off("channel/banned")
+        sock.off("channel/destroyed")
+    },
     computed : {
         currentRoute()
         {
-            console.log(this.channelRoute)
-            return this.channelRoute[this.channelRoute.length - 1]
+            return this.channelRoute
+        },
+        topRoute()
+        {
+           return this.currentRoute[this.currentRoute.length - 1]
         },
         currentComponent()
         {
-            return this.currentRoute.comp
+            return this.topRoute.comp
         },
         currentProps()
         {
-           if (this.currentRoute.props) 
-               return this.currentRoute.props
+           if (this.topRoute.props) 
+               return this.topRoute.props
             return []
         }
     },
     methods : {
         back()
         {
-            if (this.channelRoute.length > 1)
-                this.channelRoute.pop()
+            if (this.currentRoute.length > 1)
+                this.currentRoute.pop()
         },
         next(data : {comp : string, props?: [{[key: string] : any}]})
         {
-            this.channelRoute.push({
+            this.currentRoute.push({
                 comp : data.comp,
                 props : data.props
             })
@@ -74,6 +110,12 @@ export default Vue.extend({
         {
            this.back()
            this.next(data) 
+        },
+        resetRoute() // only reset the channel route
+        {
+            console.log(this.channelRoute)
+            this.channelRoute.splice(1, this.channelRoute.length)
+            console.log(this.channelRoute)
         },
         toggleChat()
         {
