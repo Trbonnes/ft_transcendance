@@ -9,14 +9,15 @@
               <span>Messages</span>
             </div>
             <div class="flex flex-row items-center justify-center font-bold text-xl justify-evenly">
-                <div @click='component = "Channels"' class="cursor-pointer">
+                <div @click='component = "ChatChannels"' class="cursor-pointer">
                   <span>Channels</span>
                 </div>
-                <div @click='component = "DirectList"' class="cursor-pointer">
+                <div @click='component = "ChatDirectList"' class="cursor-pointer">
                   <span>Direct chat</span>
                 </div>
             </div>
-            <component :is='this.component'></component>
+            <ChatGoBack @click.native="back"/>
+            <component @back="back" @replace="replace" @next="next" :is='this.currentComponent' v-bind="currentProps"></component>
         </div>
     </div>
 </template>
@@ -24,23 +25,63 @@
 import Vue from 'vue'
 import { component } from 'vue/types/umd'
 
+interface Route
+{
+    comp : string
+    props? : {[key : string] : any}[]
+}
+
 export default Vue.extend({
     data()
     {
         return {
+            channelRoute : [ { comp : 'ChatChannels' } ] as Route[],
             chatHidden : false,
-            component : 'Channels' as "Channels" | "DirectList",
             timer : null as any
         }
     },
     mounted(){
         this.timer = setInterval( this.refresh, 30000)
+        console.log(this.channelRoute)
     },
     destroyed()
     {
         clearInterval(this.timer)
     },
+    computed : {
+        currentRoute()
+        {
+            console.log(this.channelRoute)
+            return this.channelRoute[this.channelRoute.length - 1]
+        },
+        currentComponent()
+        {
+            return this.currentRoute.comp
+        },
+        currentProps()
+        {
+           if (this.currentRoute.props) 
+               return this.currentRoute.props
+            return []
+        }
+    },
     methods : {
+        back()
+        {
+            this.channelRoute.pop()
+        },
+        next(data : {comp : string, props?: [{[key: string] : any}]})
+        {
+            this.channelRoute.push({
+                comp : data.comp,
+                props : data.props
+            })
+        },
+        replace(data : {comp : string, props?: [{[key: string] : any}]})
+        {
+           this.back()
+           this.next(data) 
+        },
         toggleChat()
         {
             this.chatHidden = !this.chatHidden

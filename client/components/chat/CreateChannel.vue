@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="bg-white">
-      <ChatGoBack @click.native='$emit("back")'/>
       <div>
         <div class="flex flex-col font-bold">
           <form class="flex items-center justify-center flex-col" @submit="checkForm">
@@ -41,7 +40,6 @@
             </label>
             <input type="submit" value="Create channel" class="btn btn-primary" />
           </form>
-            <a href="#" class="btn btn-primary">Close</a>
           </div>
         </div>
       </div>
@@ -67,31 +65,31 @@ export default Vue.extend({
         this.$toast.error('Channel name cannot be empty')
       else if (this.isPrivate && this.channelPassword === '')
         this.$toast.error('Channel password cannot be empty')
-      // else
-      // this.createChannel()
+      else
+        this.createChannel()
     },
-    // createChannel() {
-    //   const data: CreateChannelDto = { // TODO remove DTO, kinda overkill, types that are used only one time don't need to be defined elsewhere
-    //     isPublic: !this.isPrivate,
-    //     channelPassword: this.channelPassword,
-    //     channelName: this.channelName,
-    //   }
-    //   this.$store
-    //     .dispatch('channel/create', data)
-    //     .then((data : any) => {
-    //       if (data.status)
-    //       {
-    //           this.$toast.error(data.message)
-    //       }
-    //       else
-    //       {
-    //         this.$toast.success("Channel created")
-    //         this.$router.push(`/channel/${data.id}`)
-    //       }
-    //     })
-    //     .catch((error: any) => {
-    //     })
-    // },
+    createChannel() {
+      const data: CreateChannelDto = { // TODO remove DTO, kinda overkill, types that are used only one time don't need to be defined elsewhere
+        isPublic: !this.isPrivate,
+        channelPassword: this.channelPassword,
+        channelName: this.channelName,
+      }
+      this.$store
+        .dispatch('channel/create', data)
+        .then((data : any) => {
+          if (data.status)
+          {
+              this.$toast.error(data.message)
+          }
+          else
+          {
+            this.$toast.success("Channel created")
+            this.$emit("back")
+          }
+        })
+        .catch((error: any) => {
+        })
+    },
   }
 })
 </script>

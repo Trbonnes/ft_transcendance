@@ -1,6 +1,5 @@
 <template>
     <div class="bg-white">
-      <ChatGoBack @click.native='$emit("back")'/>
       <form @submit="sendForm">
           <label for="channelPrivatePassword" class="cursor-pointer label">
             Password required
@@ -21,6 +20,7 @@
 import Vue from 'vue'
 
 export default Vue.extend({
+    props : ["channelId"],
     data()
     {
       return {
@@ -32,8 +32,23 @@ export default Vue.extend({
       sendForm(event : any)
       {
         event.preventDefault()
-        this.$emit('joinPrivate', this.password) 
-      }
+        if (this.password !== '')
+          this.joinChannel()
+      },
+      joinChannel()
+      {
+        this.$axios.$post(`/channel/${this.channelId}/join`, { password: this.password })
+          .then((rep : any) => {
+              console.log(rep)
+              if (rep.status === 201)
+                  this.$emit("next", { comp : "ChatChannelSingle", props : { channelId : this.channelId } })
+              else
+                  this.$toast.error(rep.message)
+          })
+          .catch((error) => {
+              // TODO error handling
+          })
+        },
     }
 })
 </script>
