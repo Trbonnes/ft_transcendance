@@ -65,7 +65,20 @@ export default Vue.extend({
     submitForm(event : any)
     {
         event.preventDefault();
-    }
+    },
+    async selectOne(id : string){
+      try
+      {
+        let data = await this.$store.dispatch('directChannel/joinChannel', id)
+        await this.$store.dispatch('directChannel/fetchAll')
+        let channel = this.$store.getters['directChannel/one'](data.id)
+        this.$emit("replace", { comp : 'ChatDirectSingle',  props : { userId : channel.user.id, channelId : channel.id }})
+      }
+      catch (error : any)
+      {
+        this.$toast.error("Cannot join channel")
+      }
+    },
   }
 })
 </script>

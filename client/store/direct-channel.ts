@@ -56,7 +56,6 @@ export default class DirectChannelModule extends VuexModule {
     try {
       const socket = getSocket()
       socket.emit("sendDirect", payload)
-      console.log("here we are sending anoehter message ", payload)
     } catch (error: any) {
       // TODO error handling
     }
@@ -125,6 +124,13 @@ export default class DirectChannelModule extends VuexModule {
 
   get all() {
     return this.channels
+  }
+  
+  get one()
+  {
+    return (channelId : string) => {
+      return this.channels.find(c => c.id === channelId)
+    }
   }
 
   get messages() {

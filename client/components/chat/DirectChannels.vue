@@ -1,22 +1,38 @@
 <template>
-    <div>
+    <div class="w-full">
         <span class="btn btn-primary m-1" @click="$emit('next', { comp : 'ChatAddDirect'})">
             <font-awesome-icon title="Search" class="cursor-pointer text-4xl m-2" icon="search" ></font-awesome-icon>
         </span>
+        <ChatDirectList
+            class="w-full"
+            :channels="getChannels"
+            @joinChannel="joinChannel"
+            />
     </div>
 </template>
-<script>
+<script lang="ts">
 import Vue from 'vue'
 export default Vue.extend({
-    fetch()
-    {
-        this.$store.dispatch("channel/fetchAll")
+    fetch() {
+        this.$store.dispatch('directChannel/fetchAll')     
     },
     computed : {
         getChannels()
         {
-            return this.$store.getters["channel/all"]
+            let data = this.$store.getters["directChannel/all"]
+            console.log(data)
+            return data
         },
     },
+    methods : {
+        joinChannel(channel : any)
+        {
+          this.$emit("next", { comp : "ChatDirectSingle", props : { userId : channel.user.id, channelId : channel.id }})
+        },
+        deleteChannel(channelId : string)
+        {
+
+        }
+    }
 })
 </script>
