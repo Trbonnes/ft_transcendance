@@ -9,10 +9,10 @@
               <span>Messages</span>
             </div>
             <div class="flex flex-row items-center justify-center font-bold text-xl justify-evenly">
-                <div @click='component = "ChatChannels"' class="cursor-pointer">
+                <div @click='currentTab = 0' class="cursor-pointer">
                   <span>Channels</span>
                 </div>
-                <div @click='component = "ChatDirectList"' class="cursor-pointer">
+                <div @click='currentTab = 1' class="cursor-pointer">
                   <span>Direct chat</span>
                 </div>
             </div>
@@ -37,6 +37,8 @@ export default Vue.extend({
     {
         return {
             channelRoute : [ { comp : 'ChatChannels' } ] as Route[],
+            directRoute : [ { comp : 'ChatDirectChannels' } ] as Route[],
+            currentTab : 1,
             chatHidden : false,
             timer : null as any
         }
@@ -76,7 +78,20 @@ export default Vue.extend({
     computed : {
         currentRoute()
         {
-            return this.channelRoute
+            switch (this.currentTab)
+            {
+                case 0: {
+                    return this.channelRoute
+                    break
+                }
+                case 1: {
+                    return this.directRoute
+                    break
+                }
+                default :{
+                    break
+                }
+            }
         },
         topRoute()
         {

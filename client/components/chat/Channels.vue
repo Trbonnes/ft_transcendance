@@ -3,11 +3,6 @@
     <div class="w-full flex flex-col items-center justify-around">
         
         <ChatChannelList :channels="getChannels" v-on:select="joinChannel" />
-        <!-- <ChatCreateChannel @back='showCreate = false' class="sideComponent w-full h-full" :class='{"show" : showCreate}'/> -->
-        <!-- <ChatJoinPrivate @back='showJoin = false' @joinPrivate="joinChannel" class="sideComponent w-full h-full" :class='{"show" : showJoin}'/> -->
-        <!-- <ChatChannelSingle @back='showConvo = false' class="sideComponent" :class='{"show" : showConvo}' :channelId="channelId" /> -->
-        <!-- <ChatConversation :messages="getMessages" @sendMessage="sendMessage" /> -->
-        <!-- TODO make it not render the component on the side maybe ? -->
         <span class="cursor-pointer flex flex-row items-center justify-center h-7 text-xl font-bold" @click='$emit("next", { comp : "ChatCreateChannel" })'>
             Create channel
           <font-awesome-icon title="Create channel" icon="plus-square"></font-awesome-icon>
@@ -23,7 +18,6 @@ export default Vue.extend({
     fetch()
     {
         this.$store.dispatch("channel/fetchAll")
-        console.log("Here we are")
     },
     computed : {
         getChannels()
