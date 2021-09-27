@@ -5,7 +5,7 @@
                 {{user.displayName}} wants to play with you
             </div>
             <div class="flex flex-row">
-                <span class="btn btn-accent m-1">Accept</span>
+                <span class="btn btn-accent m-1" @click="">Accept</span>
                 <span class="btn m-1">Refuse</span>
             </div>
             <span id="progress"></span>

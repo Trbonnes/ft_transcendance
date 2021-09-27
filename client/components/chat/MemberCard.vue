@@ -12,7 +12,7 @@
                 <span v-if="membership.isAdmin && channel.owner.id !== membership.userId" @click="$emit('makeOwner', membership.user.id)" class="btn btn-accent mx-1">Transfer</span>
                 <span v-if="!membership.isAdmin" @click="$emit('makeAdmin', membership.user.id )" class="btn btn-accent mx-1">Admin</span>
                 <span v-else-if="membership.isAdmin && membership.userId !== channel.owner.id" @click="$emit('unmakeAdmin', membership.user.id )" class="btn btn-secondary mx-1">Remove Admin</span>
-                <span v-if="membership.user.id !== channel.owner.id" @click="$emit('banMember', {memberId : membership.user.id, time : time})" class="btn mx-1">Ban</span>
+                <span v-if="membership.user.id !== channel.owner.id" @click="$emit('banMember', membership.user.id)" class="btn mx-1">Ban</span>
             </div>
             <div class="font-bold text-red-700" v-else-if="isActiveTimeout">
               Banned for {{timeoutValue}}
@@ -35,7 +35,7 @@ export default Vue.extend({
     computed: {
         isActiveTimeout()
         {
-            return (this.membership as any).timeout && new Date((this.membership as any).timeout.end) >= this.currentDate
+            return (this.membership as any).timeout && (new Date((this.membership as any).timeout.end) >= this.currentDate || ((this.membership as any).timeout.start === (this.membership as any).timeout.end))
         },
         timeoutValue()
         {
@@ -43,9 +43,12 @@ export default Vue.extend({
                 return "forever"
             let diffDate = (new Date((this.membership as any).timeout.end) as any) - (this.currentDate as any)
             let diffSeconds = Math.round(diffDate / 1000)
-            if (diffSeconds > 60)
+            if (diffSeconds > 3600)
+                return Math.ceil(diffSeconds/3600) + "h"
+            else if (diffSeconds > 60)
                 return Math.ceil(diffSeconds/60) + "min"
-            return diffSeconds + "s"
+            else
+                return diffSeconds + "s"
         }
     },
     methods: {

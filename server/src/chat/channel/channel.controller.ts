@@ -211,6 +211,8 @@ export class ChannelController {
     try {
       if (dto.duration < 0)
         return new HttpException("Request malformed", HttpStatus.BAD_REQUEST);
+      console.log(dto.userId)
+      console.log(dto)
       let membership = await this.membershipService.getOne(channelId, dto.userId)
       if (!membership)
         return new HttpException("User is not in channel", HttpStatus.BAD_REQUEST);
