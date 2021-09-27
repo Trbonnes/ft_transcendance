@@ -41,7 +41,7 @@ export default Vue.extend({
           .then((rep : any) => {
               console.log(rep)
               if (rep.status === 201)
-                  this.$emit("next", { comp : "ChatChannelSingle", props : { channelId : this.channelId } })
+                  this.$emit("replace", { comp : "ChatChannelSingle", props : { channelId : this.channelId } })
               else
                   this.$toast.error(rep.message)
           })

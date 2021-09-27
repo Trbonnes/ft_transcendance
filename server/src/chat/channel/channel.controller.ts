@@ -274,4 +274,19 @@ export class ChannelController {
     }
     return { status: 201, message: 'Joined channel' };
   }
+
+  @Delete(':channelId/leave')
+  @UseGuards(JwtAuthGuard, IsChannelMemberGuard)
+  async leaveChannel(@Req() req, @Param('channelId') channelId: string) {
+    try {
+      const mem = await this.membershipService.getOne(channelId, req.user.id)
+      const channel = await this.channelService.getById(channelId)
+      if (channel.ownerId === req.user.id)
+        return new HttpException("You must transfer ownership before leaving", HttpStatus.FORBIDDEN);
+      this.membershipService.delete(channelId, req.user.id)
+    } catch (error) {
+      return new HttpException("Can't leave channel", HttpStatus.BAD_REQUEST);
+    }
+    return { status: 201, message: 'Channel leaved' };
+  }
 }

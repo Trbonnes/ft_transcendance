@@ -52,6 +52,11 @@ export class ChannelMembershipService {
     return this.membershipRepo.save(mem)
   }
 
+  async delete(channelId: string, userId: string) {
+    let mem = await this.getOne(channelId, userId)
+    return this.membershipRepo.delete(mem.id)
+  }
+
   async create(channelId: string, userId: string, isAdmin = false) {
     let mem = new ChannelMembership()
     mem.userId = userId

@@ -13,6 +13,9 @@
         <span v-if="isCurrentUserOwner" @click='deleteChannel' class="btn btn-secondary text-white">
           <font-awesome-icon class="text-xl mx-1.5" icon="times"> </font-awesome-icon> Delete
         </span>
+        <span @click='leaveChannel' class="btn text-white">
+          <font-awesome-icon class="text-xl mx-1.5" icon="sign-out-alt"> </font-awesome-icon> Leave
+        </span>
     </div>
 </template>
 
@@ -97,6 +100,23 @@ export default Vue.extend({
        })
       .catch(() => {
         this.$toast.error("Cannot delete channel")
+      })
+    },
+    leaveChannel()
+    {
+      this.$axios.$delete(`/channel/${this.channelId}/leave`)
+      .then((rep : any) => {
+        if (rep.status == 201)
+        {
+          this.$toast.success("Channel leaved")
+          this.$store.dispatch("channel/fetchAll")
+          this.$emit("back")
+        }
+        else
+          this.$toast.error(rep.message)
+       })
+      .catch(() => {
+        this.$toast.error("Cannot leave channel")
       })
     },
     fetchMembers()
