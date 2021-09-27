@@ -41,13 +41,13 @@ export default class SpectateScene extends Phaser.Scene {
         this.socket = data.socket
         this.room = data.room
         this.layoutType = data.layoutType
+        console.log(this.layoutType)
     }
 
     preload() {}
 
     create() {
         setActiveScene(scenesList.SpectateScene)
-        // this.input.setDefaultCursor('none') // Not forget to this.input.setDefaultCursor('default') when stopping the scene
         
         this.add
         .image(config.width / 2, config.height / 2, this.layoutType + "_background.png")
@@ -103,7 +103,6 @@ export default class SpectateScene extends Phaser.Scene {
             this.rightBar!.destroy()
             scoreBoard.destroy()
             this.socket!.disconnect()
-            this.input.setDefaultCursor('default')
             this.scene.run(scenesList.MenuScene)
             this.scene.stop(this)
         })
@@ -118,7 +117,6 @@ export default class SpectateScene extends Phaser.Scene {
             this.rightBar!.destroy()
             scoreBoard.destroy()
             this.socket!.disconnect()
-            this.input.setDefaultCursor('default')
             this.scene.run(scenesList.MenuScene)
             this.scene.stop(this)
         })

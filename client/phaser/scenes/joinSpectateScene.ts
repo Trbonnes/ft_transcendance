@@ -2,12 +2,13 @@ import Phaser from 'phaser'
 import { io, Socket } from 'socket.io-client'
 import os from 'os'
 import { config } from '../phaserconfig'
-import { scenesList, activeScene, setActiveScene } from '../sceneManager'
+import { scenesList, activeScene, setActiveScene, sceneLoader } from '../sceneManager'
 import createSocket from '../objects/CreateSocket'
 
 import Button from '../objects/ButtonObject'
 import Input from '../objects/InputField'
 import ExitObject from '../objects/ExitObject'
+import { assetLoader } from '../assetsManager'
 
 export default class JoinSpectateScene extends Phaser.Scene {
     private socket?: Socket
@@ -23,29 +24,15 @@ export default class JoinSpectateScene extends Phaser.Scene {
         this.id = data.id
     }
 
-    preload() {}
+    preload() {
+    }
 
     create() {
         setActiveScene(scenesList.JoinSpectateScene)
 
-        this.add.text(config.width / 2, config.height / 2, "Game id: " + this.id)
+        this.add.text(config.width / 2, config.height / 2, "Just a second...")
 
-        // const joinInput = new Input(this, config.width / 2, config.height / 2, {}) //for test purpose only
-        //     .setPlaceholder('Enter Game ID')
-        //     .setDisplaySize(560, 60)
-        //     .setDisabled(false)
-
-        // this.game.domContainer.style.pointerEvents = 'all'
-
-        // console.log(joinInput.getNode())
-
-        new Button(this, config.width / 2, 850, "Join",
-        () => {
-            // console.log(joinInput.getValue())
-            // if (joinInput.getValue()) {
-            //     this.id = joinInput.getValue()
-                this.establishConnection("game")
-        })
+        this.establishConnection("game")
 
         let exitButton = new ExitObject(this, 120, 120, "Exit", this.socket)
         exitButton.setDisplaySize(100, 100)
@@ -58,7 +45,6 @@ export default class JoinSpectateScene extends Phaser.Scene {
 
         this.socket?.on('Spectator Joined', (response: {room: string}) => {
             console.log('sectator joining')
-            this.game.domContainer.style.pointerEvents = 'auto'
             this.scene.run(scenesList.SpectateScene,  { socket: this.socket, room: response.room, layoutType: this.layoutType})
             this.scene.stop(this)
         })
