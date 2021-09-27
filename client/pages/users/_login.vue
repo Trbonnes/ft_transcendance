@@ -299,7 +299,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 			await this.fetchUser();
 			if (this.user.game_id)
 			// Link is incorrect 
-				this.$router.push(`/game/${this.user.game_id}`)
+				this.$router.push(`/game?spectateId=${this.user.game_id}`)
 			else
 				this.$toast.error("This players' game is over.")
 		}
