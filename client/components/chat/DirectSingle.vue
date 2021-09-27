@@ -1,6 +1,12 @@
 <template>
     <div class="w-full">
         <ChatConversation :messages="getMessages" @sendMessage="sendMessage" />
+        <div class="w-full">
+          <span @click="defyUser" class="btn m-1">
+              Defy
+          </span>
+
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -19,6 +25,11 @@ export default Vue.extend({
         },
     },
     methods : {
+        defyUser()
+        {
+          this.$router.push(`/game?friendId=${this.userId}`)
+          this.$emit("hide")
+        },
         async sendMessage(content : string)
         {
           try

@@ -19,7 +19,7 @@
                 </div>
             </div>
             <ChatGoBack :class="[ currentRoute.length === 1 ? 'opacity-0' : 'opacity-100']" @click.native="back"/>
-            <component @back="back" @replace="replace" @next="next" :is='this.currentComponent' v-bind="currentProps"></component>
+            <component @hide="toggleChat" @back="back" @replace="replace" @next="next" :is='this.currentComponent' v-bind="currentProps"></component>
         </div>
     </div>
 </template>

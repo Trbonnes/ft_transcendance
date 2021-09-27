@@ -9,8 +9,7 @@ import Vue from 'vue'
 export default class DirectChannelModule extends VuexModule {
 
   public channels: DirectChannel[] = []
-  public notifications : { [ channelId : string ] : number } = {}
-
+  public gameNotifications : { userId : string, link : string }[] = []
 
   @Action
   async fetchAll() {
@@ -76,7 +75,12 @@ export default class DirectChannelModule extends VuexModule {
     try {
       console.log("Pushing new message")
       this.context.commit('pushMessage', msg)
-      this.context.commit('pushNotification', msg.channelId)
+      if (/^\/game\/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b$/.test(msg.content))
+      {
+        // TODO check for user id there ?
+        console.log("Match !")
+        this.context.commit('pushGameNotification', { userId : msg.senderId, link : msg.content })
+      }
     } catch (err: any) {
       console.log(err)
       // TODO error handlign properly
@@ -109,12 +113,15 @@ export default class DirectChannelModule extends VuexModule {
   }
 
   @Mutation
-  pushNotification(channelId : string)
+  pushGameNotification(data : { userId : string, link : string })
   {
-    if (this.notifications[channelId])
-      Vue.set(this.notifications, channelId, this.notifications.channelId + 1)
-    else
-      Vue.set(this.notifications, channelId, 0)
+    this.gameNotifications.push(data)
+  }
+
+  @Mutation
+  shiftGameNotification()
+  {
+    this.gameNotifications.shift()
   }
 
   @Mutation
@@ -149,5 +156,10 @@ export default class DirectChannelModule extends VuexModule {
       if (c)
         return c.user
     }
+  }
+  
+  get getGameNotifications()
+  {
+    return this.gameNotifications
   }
 }
