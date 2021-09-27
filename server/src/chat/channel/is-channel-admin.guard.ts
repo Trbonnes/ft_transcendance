@@ -9,14 +9,14 @@ import { User } from 'src/entities/user.entity';
 export class IsChannelAdminGuard implements CanActivate {
   constructor(private readonly memService: ChannelMembershipService,
             private readonly usersService: UsersService) { }
-  canActivate(
+  async canActivate(
     context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  ): Promise<any> {
     console.log("Checking if user is an admin of channel")
     const req: any = context.switchToHttp().getRequest<Request>()
     if (!req.user)
       return false
-    const user = this.usersService.findOneById(req.user.id)
+    const user = await this.usersService.findOneById(req.user.id)
     console.log(user)
     let channelId = ""
     if (req.params)
@@ -27,9 +27,9 @@ export class IsChannelAdminGuard implements CanActivate {
       if (!data)
         return false
       let isBanned = await this.memService.isBanned(channelId, req.user.id)
-      if (data.isAdmin == false)
-        return false
-      return true
+      if (user.role === "superAdmin" || user.role === "admin" || data.isAdmin == true)
+        return true
+      return false
     })
       .catch(() => {
         return false
