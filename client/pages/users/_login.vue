@@ -234,9 +234,13 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 
 		showIfNotAdmin(): boolean {
 		
-		// console.log("SNA\n")
-		// console.log(this.user.role)
-		if (this.user.role === "admin" || this.user.role === "superAdmin")
+		const current_user = this.$auth.user;
+		
+		if (!current_user)
+			return false
+
+		if 	( current_user.id != this.user.id &&
+			( this.user.role === "admin" || this.user.role === "superAdmin") )
 			return false;
 		// console("still here")
 		return true
