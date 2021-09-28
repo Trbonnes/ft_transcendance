@@ -22,6 +22,7 @@ import { Logger } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Request, response } from 'express';
 import { request } from 'http';
+import { RolesGuard } from 'src/auth/roles.guard';
 // import { UserAdminGuard } from './UserAdmin.guard';
 
 @Controller('users')
@@ -40,8 +41,9 @@ export class UsersController {
     return this.usersService.searchByName(name);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
+  // @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   async findAllOrByLogin(@Req() req: Request) {
     if (req.query.login) {
       const user = await this.usersService.findOneByFortyTwoLogin(req.query.login.toString())
@@ -71,6 +73,7 @@ export class UsersController {
   @Get('id/:id')
   @UseGuards(JwtAuthGuard)
   fineOneById(@Param('id') id: string) {
+    console.log("IN FINDEONEBYID")
     return this.usersService.findOneById(id);
   }
 

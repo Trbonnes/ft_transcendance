@@ -12,6 +12,7 @@ import { JwtStrategy } from './jwt.strategy';
     HttpModule,
     UsersModule,
     PassportModule,
+    UsersModule,
     JwtModule.register({
       secret: jwtConstants.secret,
       signOptions: {
