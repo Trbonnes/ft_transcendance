@@ -80,7 +80,6 @@ export class UsersController {
   }
 
   @Patch('update/:id')
-  // @UseGuards(JwtAuthGuard)
   @UseGuards(AdminIdGuard)
   adminUpdate(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto)
