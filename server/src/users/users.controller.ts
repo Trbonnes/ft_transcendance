@@ -42,8 +42,8 @@ export class UsersController {
   }
 
   @Get()
-  // @UseGuards(JwtAuthGuard)
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  // @UseGuards(RolesGuard)
   async findAllOrByLogin(@Req() req: Request) {
     if (req.query.login) {
       const user = await this.usersService.findOneByFortyTwoLogin(req.query.login.toString())
@@ -79,7 +79,6 @@ export class UsersController {
 
   @Patch('update/:id')
   @UseGuards(JwtAuthGuard)
-  // @UseGuards(UserAdminGuard)
   adminUpdate(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto)
   }

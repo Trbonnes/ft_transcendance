@@ -43,29 +43,29 @@ export default Vue.extend({
     computed : {
         currentRoute()
         {
-            console.log(this.channelRoute)
-            return this.channelRoute[this.channelRoute.length - 1]
+            console.log((this as any).channelRoute)
+            return (this as any).channelRoute[(this as any).channelRoute.length - 1]
         },
         currentComponent()
         {
-            return this.currentRoute.comp
+            return (this as any).currentRoute.comp
         },
         currentProps()
         {
            if (this.currentRoute.props) 
-               return this.currentRoute.props
+               return (this as any).currentRoute.props
             return []
         }
     },
     methods : {
         back()
         {
-            if (this.channelRoute.length > 1)
-                this.channelRoute.pop()
+            if ((this as any).channelRoute.length > 1)
+                (this as any).channelRoute.pop()
         },
         next(data : {comp : string, props?: [{[key: string] : any}]})
         {
-            this.channelRoute.push({
+            (this as any).channelRoute.push({
                 comp : data.comp,
                 props : data.props
             })
