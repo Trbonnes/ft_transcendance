@@ -69,17 +69,17 @@ export default Vue.extend({
         this.createChannel()
     },
     createChannel() {
-      const data: CreateChannelDto = { // TODO remove DTO, kinda overkill, types that are used only one time don't need to be defined elsewhere
+      const data = { // TODO remove DTO, kinda overkill, types that are used only one time don't need to be defined elsewhere
+        channelName: this.channelName,
         isPublic: !this.isPrivate,
         channelPassword: this.channelPassword,
-        channelName: this.channelName,
       }
       this.$store
         .dispatch('channel/create', data)
         .then((data : any) => {
           if (data.status)
           {
-              this.$toast.error(data.message)
+              this.$toast.error("could not create channel")
           }
           else
           {
