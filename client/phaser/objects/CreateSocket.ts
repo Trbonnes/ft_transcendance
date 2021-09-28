@@ -4,7 +4,6 @@ import { config } from '../phaserconfig'
 
 export default function createSocket(namespace: string, spectate: string, friend: string) {
 
-    console.log(os.hostname())
     let socket = io("http://" + os.hostname() + ":3000/" + namespace, {
         forceNew: true,
         extraHeaders: {

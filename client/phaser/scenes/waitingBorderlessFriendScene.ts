@@ -27,11 +27,6 @@ export default class WaitingBorderlessFriendScene extends Phaser.Scene {
         setActiveScene(scenesList.WaitingFriendScene)
 
         let gameLink: string
-        let copyField: CopyField
-
-        // this.game.domContainer.style.pointerEvents = 'all'
-
-        console.log(this.layoutType)
 
         this.add.text(config.width / 2, 120, "Waiting for friend...")
 			.setFontSize(50)
@@ -41,7 +36,6 @@ export default class WaitingBorderlessFriendScene extends Phaser.Scene {
 
         new Video(this, config.width / 2, config.height / 2, 'loading.webm')
 
-        console.log(os.hostname())
         this.socket = createSocket("borderless", "", "true")
 
         this.socket.on('gameId', (response: string) => {
@@ -50,7 +44,6 @@ export default class WaitingBorderlessFriendScene extends Phaser.Scene {
         })
 
         this.socket.on('OpponentFound', (response: {player: number, room: string}) => {
-            this.game.domContainer.style.pointerEvents = 'auto'
             this.scene.run(scenesList.GameScene,  { socket: this.socket, player: response.player, room: response.room, layoutType: this.layoutType})
             this.scene.stop(this)
         })
