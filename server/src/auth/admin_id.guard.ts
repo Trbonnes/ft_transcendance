@@ -30,6 +30,7 @@ export class AdminIdGuard extends AuthGuard('jwt') {
 
         if (user && other_user &&
         (user.role === "superAdmin" ||
+         user.id === other_id ||
         (user.role === "admin" &&
         ( other_user.role != "admin" && other_user.role != "superAdmin" )) ) ) {
             return true
