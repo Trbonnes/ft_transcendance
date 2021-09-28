@@ -28,12 +28,6 @@ export class AdminIdGuard extends AuthGuard('jwt') {
         const other_id = request.params.id
 		const other_user: User = await this.usersService.findOneById(other_id)
 
-        console.log("user_id: " + id)
-        console.log("other_id: " + other_id)
-        console.log("USER")
-        console.log(user)
-        console.log("OTHER")
-        console.log(other_user)
         if (user && other_user &&
         (user.role === "superAdmin" ||
         (user.role === "admin" &&
