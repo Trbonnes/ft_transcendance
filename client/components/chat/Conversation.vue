@@ -119,7 +119,7 @@ export default Vue.extend({
 <style>
 
 #inner {
-  height: 70vh;
+  height: 55vh;
   width: 100%;
   overflow-y: auto;
 }

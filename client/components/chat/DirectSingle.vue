@@ -26,7 +26,11 @@ export default Vue.extend({
         getMembers()
         {
           if (this.$auth.user)
-            return [ this.channel.user , this.$auth.user ]
+          {
+            if (this.channel)
+              return [ this.channel.user , this.$auth.user ]
+            return [ this.$auth.user ]
+          }
           return []
         }
     },
