@@ -22,7 +22,8 @@ import { Logger } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Request, response } from 'express';
 import { request } from 'http';
-import { RolesGuard } from 'src/auth/roles.guard';
+import { AdminGuard } from 'src/auth/admin.guard';
+import { SuperAdminGuard } from 'src/auth/superAdmin.guard';
 // import { UserAdminGuard } from './UserAdmin.guard';
 
 @Controller('users')
@@ -43,7 +44,7 @@ export class UsersController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  // @UseGuards(RolesGuard)
+  // @UseGuards(AdminGuard)
   async findAllOrByLogin(@Req() req: Request) {
     if (req.query.login) {
       const user = await this.usersService.findOneByFortyTwoLogin(req.query.login.toString())
@@ -79,6 +80,7 @@ export class UsersController {
 
   @Patch('update/:id')
   @UseGuards(JwtAuthGuard)
+  @UseGuards(SuperAdminGuard)
   adminUpdate(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto)
   }
