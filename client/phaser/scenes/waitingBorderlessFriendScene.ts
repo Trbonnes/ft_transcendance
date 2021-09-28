@@ -45,7 +45,7 @@ export default class WaitingBorderlessFriendScene extends Phaser.Scene {
         this.socket = createSocket("borderless", "", "true")
 
         this.socket.on('gameId', (response: string) => {
-            gameLink = "http://localhost/game/" + response
+            gameLink = "/game/" + response
             // copyField = new CopyField(
             //     this,
             //     config.width / 2,

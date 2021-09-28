@@ -341,9 +341,11 @@ export class GameGateway {
       let hitZone = gameState.ball.y - gameState.player0.y
       if (hitZone < 0) { // Ball hit bar above center
         delta.dy = hitZone / (gameState.player0.height / 2)
+        delta.dy += -Math.random() - 1
       }
       else if (hitZone > 0) { // Ball hit bar below center
         delta.dy = hitZone / (gameState.player0.height / 2)
+        delta.dy += Math.random() + 1
       }
       else 
         delta.dy = 0
@@ -366,9 +368,11 @@ export class GameGateway {
       let hitZone = gameState.ball.y - gameState.player1.y
       if (hitZone < 0) { // Ball hit bar above center
         delta.dy = hitZone / (gameState.player1.height / 2)
+        delta.dy += -Math.random() - 1
       }
       else if (hitZone > 0) { // Ball hit bar below center
         delta.dy = hitZone / (gameState.player1.height / 2)
+        delta.dy += Math.random() + 1
       }
       else 
         delta.dy = 0

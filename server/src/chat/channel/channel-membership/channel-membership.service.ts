@@ -22,7 +22,10 @@ export class ChannelMembershipService {
   async isBanned(cId: string, uId: string) {
     const data = await this.membershipRepo.findOne({ where: { userId: uId, channelId: cId }, relations: ["timeout"] })
     if (data && data.timeout) {
-      if (data.timeout.start != data.timeout.end && data.timeout.end < new Date()) {
+      if (data.timeout.start.getTime() === data.timeout.end.getTime()) {
+        return true;
+      }
+      if (data.timeout.end < new Date()) {
         this.timeoutRepo.delete(data.timeout.id)
         return false
       }
@@ -49,6 +52,11 @@ export class ChannelMembershipService {
     return this.membershipRepo.save(mem)
   }
 
+  async delete(channelId: string, userId: string) {
+    let mem = await this.getOne(channelId, userId)
+    return this.membershipRepo.delete(mem.id)
+  }
+
   async create(channelId: string, userId: string, isAdmin = false) {
     let mem = new ChannelMembership()
     mem.userId = userId
@@ -60,7 +68,10 @@ export class ChannelMembershipService {
   async banOne(membershipId: string, duration: number) {
     let timeout = new ChannelTimeout()
     timeout.start = new Date()
-    timeout.end = new Date(timeout.start.getTime() + duration * 60000)
+    if (duration === 0)
+      timeout.end = timeout.start
+    else
+      timeout.end = new Date(timeout.start.getTime() + duration * 60000)
     timeout.membershipId = membershipId
     return this.timeoutRepo.save(timeout)
   }

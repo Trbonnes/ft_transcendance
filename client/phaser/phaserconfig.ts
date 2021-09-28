@@ -143,11 +143,11 @@ export function setup(_options: {
 					.setDisplaySize(config.width, config.height)
 
 			if(config.invite)
-				this.scene.run(scenesList.JoinFriendScene, { type: "classical", id: config.invite })
+				this.scene.run(scenesList.JoinFriendScene, { layout: "classical", id: config.invite })
 			else if(config.friendId)
 				this.scene.run(scenesList.ChooseGameTypeWithFriendScene)
 			else if (config.spectate)
-				this.scene.run(scenesList.JoinSpectateScene, { type: "classical", id: config.spectate })
+				this.scene.run(scenesList.JoinSpectateScene, { layout: "classical", id: config.spectate })
 			else
 				this.scene.run(scenesList.MenuScene)
     	}

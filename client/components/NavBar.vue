@@ -28,7 +28,7 @@
               shadow
               menu
               dropdown-content
-              bg-base-100
+              bg-neutral
               rounded-box
               w-52
             "
@@ -41,12 +41,6 @@
             </li>
             <li>
               <NuxtLink to="/leaderboard">Players</NuxtLink>
-            </li>
-            <li>
-              <NuxtLink to="/channel">Channels</NuxtLink>
-            </li>
-            <li>
-              <NuxtLink to="/direct-channel">Direct Messages</NuxtLink>
             </li>
           </ul>
         </div>
@@ -61,12 +55,6 @@
           </NuxtLink>
           <NuxtLink to="/leaderboard" class="btn btn-ghost btn-sm rounded-btn">
             Players
-          </NuxtLink>
-          <NuxtLink to="/channel" class="btn btn-ghost btn-sm rounded-btn">
-            Channels
-          </NuxtLink>
-          <NuxtLink to="/direct-channel" class="btn btn-ghost btn-sm rounded-btn">
-            Direct Messages
           </NuxtLink>
         </div>
       </div>
@@ -84,7 +72,7 @@
               shadow
               menu
               dropdown-content
-              bg-base-100
+              bg-neutral
               rounded-box
               w-52
             "

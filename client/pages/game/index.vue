@@ -17,12 +17,13 @@ export default Vue.extend({
 			this.$auth.fetchUser()
 			const user: any  = this.$auth.user as any
 			let token = this.getToken()
+			const spectate: string | null = this.$route.query.spectateId as string | null
 			if (!this.error) this.game = setup({
 				userId: user.id,
 				userToken: token,
 				gameId: user.game_id,
 				invite: null,
-				spectate: null,
+				spectate: spectate ? spectate : null,
 				store: this.$store,
 				friendId : this.$route.query.friendId as string || "",
 			})
@@ -40,8 +41,14 @@ export default Vue.extend({
 <style lang="scss">
 
 #gameCtnr {
-	width: 100%;
-	height: 100%;
+	width: 80%;
+	height: 80%;
+    display: block;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 	/* background: black; */
 }
 

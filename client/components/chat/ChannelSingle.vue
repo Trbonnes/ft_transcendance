@@ -1,8 +1,20 @@
 <template>
     <div class="bg-white relative">
+        <div class="flex flex-row items-center justify-center w-full h-8">
+          <span class="font-bold text-2xl">{{getChannel.name}}</span>
+        </div>
         <ChatConversation :messages="getMessages" @sendMessage="sendMessage" />
-        <span @click='$emit("next", {comp : "ChatMemberList", props : { channel : getChannel}})' class="btn btn-primary text-white">
+        <span @click='$emit("next", {comp : "ChatMemberList", props : { channel : getChannel, isCurrentAdmin: isCurrentUserAdmin}})' class="btn btn-primary text-white">
           <font-awesome-icon class="text-xl mx-1.5" icon="users"> </font-awesome-icon> Members
+        </span>
+        <span v-if="isCurrentUserAdmin" @click='$emit("next", {comp : "ChatUpdateChannel", props : { channel : getChannel}})' class="btn btn-primary text-white">
+          <font-awesome-icon class="text-xl mx-1.5" icon="pen"> </font-awesome-icon> Edit
+        </span>
+        <span v-if="isCurrentUserOwner" @click='deleteChannel' class="btn btn-secondary text-white">
+          <font-awesome-icon class="text-xl mx-1.5" icon="times"> </font-awesome-icon> Delete
+        </span>
+        <span @click='leaveChannel' class="btn text-white">
+          <font-awesome-icon class="text-xl mx-1.5" icon="sign-out-alt"> </font-awesome-icon> Leave
         </span>
     </div>
 </template>
@@ -10,52 +22,39 @@
 <script lang="ts">
 import Vue from 'vue'
 import { CreateMessageDto, Message } from '~/utils/types'
-import { getSocket } from '~/store/plugins/websocket'
 
 export default Vue.extend({
   // fetch channel given the id and pass the data to the Conversation component
   props : ['channelId'],
-  created()
-  {
-    let sock = getSocket()
-    let exitChannel = (channelId : string) => {
-      if (this.channelId == channelId)
-          this.$emit('back')
-    }
-    if (sock.connected)
-    {
-      sock.on("channel/banned", exitChannel)
-      sock.on("channel/destroyed", exitChannel)
-    }
-    // (this as any).timer = setInterval(() => {this.dateNow = new Date}, 1000)
-  },
-  destroyed()
-  {
-    let sock = getSocket()
-    sock.off("channel/banned")
-    sock.off("channel/destroyed")
-    // clearInterval((this as any).timer)
-  },
   computed: {
     getChannel()
     {
       const data = this.$store.getters["channel/getOne"](this.channelId)
-      console.log("Get Channel`", data)
       if (data)
         return data
       return ""
     },
     getMessages()
     {
-      let data = this.$store.getters["channel/messages"](this.channelId)
-      console.log("Get Messages`", data)
-      return data
+      return this.$store.getters["channel/messages"](this.channelId)
     },
     getMembers()
     {
-      let data = this.$store.getters["channel/members"](this.channelId)
-      console.log("Get Members`", data)
-      return data
+      return this.$store.getters["channel/members"](this.channelId)
+    },
+    currentMember()
+    {
+      return ((this as any).getMembers as any[]).find((m : any) => this.$auth.user && m.userId === this.$auth.user.id)
+    },
+    isCurrentUserAdmin()
+    {
+        if ((this as any).currentMember)
+            return ((this as any).currentMember.isAdmin || (this as any).currentMember.user.role === 'admin' || (this as any).currentMember.user.role === 'superAdmin')
+        return false
+    },
+    isCurrentUserOwner()
+    {
+        return ((this as any).getChannel && this.$auth.user && this.$auth.user.id === (this as any).getChannel.owner.id)
     }
   },
   async fetch()
@@ -84,62 +83,47 @@ export default Vue.extend({
       catch
       {
         //TODO error handling
-      } },
+      }
+    },
+    deleteChannel()
+    {
+      this.$axios.$delete(`/channel/${this.channelId}/delete`)
+      .then((rep : any) => {
+        if (rep.status == 201)
+        {
+          this.$toast.success("Channel deleted")
+          this.$store.dispatch("channel/fetchAll")
+          this.$emit("back")
+        }
+        else
+          this.$toast.error(rep.message)
+       })
+      .catch(() => {
+        this.$toast.error("Cannot delete channel")
+      })
+    },
+    leaveChannel()
+    {
+      this.$axios.$delete(`/channel/${this.channelId}/leave`)
+      .then((rep : any) => {
+        if (rep.status == 201)
+        {
+          this.$toast.success("Channel leaved")
+          this.$store.dispatch("channel/fetchAll")
+          this.$emit("back")
+        }
+        else
+          this.$toast.error(rep.message)
+       })
+      .catch(() => {
+        this.$toast.error("Cannot leave channel")
+      })
+    },
     fetchMembers()
     {
       this.$store.dispatch("channel/getMembers", this.channelId) // TODO loading animation ?
     },
   }
-//     },
-//   methods: {
-//     initForm()
-//     {
-//       this.channelName = this.getChannel.name
-//       this.isPrivate = !this.getChannel.isPublic
-//     },
-//     deleteChannel(event : any)
-//     {
-//       event.preventDefault()
-//       this.$axios.$delete(`/channel/${this.getChannel.id}/delete`)
-//       .then((rep : any) => {
-//         if (rep.status == 201)
-//         {
-//           this.$toast.success("Channel deleted")
-//           this.$store.dispatch("channel/fetchAll")
-//           this.$router.push("/channel")
-//         }
-//         else
-//           this.$toast.error(rep.message)
-//        })
-//       .catch(() => {
-//         this.$toast.error("Cannot delete channel")
-//        })
-//     },
-//     updateChannel(event : any)
-//     {
-//       event.preventDefault()
-//       if (this.channelName == "")
-//         this.$toast.error("Name cannot be empty")
-//       else
-//       {
-//         this.$store.dispatch("channel/update", { channelId : this.getChannel.id, channelName : this.channelName, isPrivate : this.isPrivate, password : this.channelPassword })  
-//         .then((rep : any) => {
-//           if (rep.data.status && rep.status != 201)
-//           {
-//             this.$toast.error(rep.message)
-//           }
-//           else
-//           {
-//             this.$toast.success("Channel updated")
-//             this.$router.back()
-//             this.$store.commit("channel/updateChannel", rep.data)
-//           }
-//          })
-//         .catch(() => {
-//           this.$toast.error("Cannot update channel")
-//         })
-//       }
-//     },
 })
 </script>
 <style>
