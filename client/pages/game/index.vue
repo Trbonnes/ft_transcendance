@@ -18,11 +18,13 @@ export default Vue.extend({
 			const user: any  = this.$auth.user as any
 			let token = this.getToken()
 			const spectate: string | null = this.$route.query.spectateId as string | null
+			const invite: string | null = this.$route.query.inviteId as string | null
+			console.log('invite: ' + invite)
 			if (!this.error) this.game = setup({
 				userId: user.id,
 				userToken: token,
 				gameId: user.game_id,
-				invite: null,
+				invite: invite ? invite : null,
 				spectate: spectate ? spectate : null,
 				store: this.$store,
 				friendId : this.$route.query.friendId as string || "",

@@ -30,19 +30,8 @@ export default class JoinFriendScene extends Phaser.Scene {
 
         this.add.text(config.width / 2, config.height / 2, "Game id: " + this.id)
 
-        // const joinInput = new Input(this, config.width / 2, config.height / 2, {})
-        //     .setPlaceholder('Enter Game ID')
-        //     .setDisplaySize(560, 60)
-        //     .setDisabled(false)
-
-        // this.game.domContainer.style.pointerEvents = 'all'
-
-        // console.log(joinInput.getNode())
-
         new Button(this, config.width / 2, 850, "Join",
         () => {
-            // console.log(joinInput.getValue())
-            // if (joinInput.getValue())
             this.establishConnection("game")
         })
 
@@ -56,7 +45,6 @@ export default class JoinFriendScene extends Phaser.Scene {
         this.socket = createSocket(gateway, "", this.id!)
 
         this.socket.on('OpponentFound', (response: {player: number, room: string}) => {
-            this.game.domContainer.style.pointerEvents = 'auto'
             this.scene.run(scenesList.GameScene,  { socket: this.socket, player: response.player, room: response.room, layoutType: this.layoutType})
             this.scene.stop(this)
         })
