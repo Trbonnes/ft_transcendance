@@ -45,17 +45,7 @@ export default class WaitingFriendScene extends Phaser.Scene {
         this.socket = createSocket("game", "", "true")
 
         this.socket.on('gameId', (response: string) => {
-            gameLink = "/game/" + response
-            // copyField = new CopyField(
-            //     this,
-            //     config.width / 2,
-            //     config.height / 2 + 250,
-            //     gameLink,
-            //     {
-            //         'text-align': 'center',
-            //         'font-size': '20px',
-            //     }
-            // ).setDisplaySize(700, 40)
+            gameLink = "/game?inviteId=" + response
             config.store.dispatch("directChannel/sendInvitation", {userId : config.friendId, content: gameLink})
         })
 

@@ -83,6 +83,7 @@ export default class DirectChannelModule extends VuexModule {
   {
     try {
       let sock = getSocket()
+      console.log("sending an invitation ")
       sock.emit("invitation", payload)
     } catch (error) {
     }
@@ -92,6 +93,7 @@ export default class DirectChannelModule extends VuexModule {
   async invitation(payload: { userId : string, link : string})
   {
     try {
+      console.log("Receiving an invitation")
       this.context.commit('pushGameNotification', { userId : payload.userId, link : payload.link })
     } catch (error) {
     }

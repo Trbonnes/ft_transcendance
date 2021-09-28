@@ -92,14 +92,13 @@ export class ChatGateway {
     @MessageBody() payload: { userId: string, content: string },
     @ConnectedSocket() client: Socket,
   ) {
-    console.log("Invitation event lUUUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUCHNED")
     if (!payload.userId || !payload.content)
       return
     try {
       let clientId = this.activeClients.get(client.id).id
-      console.log("id de la source ", clientId)
-      console.log("id de la cible", payload.userId)
-      if (/^\/game\/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b$/.test(payload.content)) {
+      console.log("About to test the regex on ", payload.content)
+      if (/^\/game\?inviteId=\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b$/.test(payload.content)) {
+        console.log("Mathc ! ")
         if (payload.userId !== clientId)
           this.server.to(payload.userId).emit("directChannel/invitation", { userId: clientId, link: payload.content })
       }
