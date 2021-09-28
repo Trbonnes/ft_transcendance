@@ -24,6 +24,7 @@ import { Request, response } from 'express';
 import { request } from 'http';
 import { AdminGuard } from 'src/auth/admin.guard';
 import { SuperAdminGuard } from 'src/auth/superAdmin.guard';
+import { AdminIdGuard } from 'src/auth/admin_id.guard';
 // import { UserAdminGuard } from './UserAdmin.guard';
 
 @Controller('users')
@@ -79,8 +80,8 @@ export class UsersController {
   }
 
   @Patch('update/:id')
-  @UseGuards(JwtAuthGuard)
-  @UseGuards(SuperAdminGuard)
+  // @UseGuards(JwtAuthGuard)
+  @UseGuards(AdminIdGuard)
   adminUpdate(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto)
   }

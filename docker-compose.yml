@@ -24,20 +24,20 @@ services:
      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5000:5432"
-  pgadmin:
-    image: dpage/pgadmin4
-    #environment:
-     # PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
-     # PGADMIN_DEFAULT_PASSWORD: admin
-     # PGADMIN_CONFIG_SERVER_MODE: 'False'
-    env_file:
-      - ./dev.env
-    volumes:
-      - pgadmin:/root/.pgadmin
-    ports:
-      - "5050:80"
-    links:
-      - "postgres:pgsql-server"
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   #environment:
+  #    # PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+  #    # PGADMIN_DEFAULT_PASSWORD: admin
+  #    # PGADMIN_CONFIG_SERVER_MODE: 'False'
+  #   env_file:
+  #     - ./dev.env
+  #   volumes:
+  #     - pgadmin:/root/.pgadmin
+  #   ports:
+  #     - "5050:80"
+  #   links:
+  #     - "postgres:pgsql-server"
   server:
     build:
       context: ./server
@@ -61,4 +61,4 @@ services:
 
 volumes:
   database:
-  pgadmin:
+  # pgadmin:
