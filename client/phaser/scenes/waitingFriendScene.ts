@@ -28,8 +28,6 @@ export default class WaitingFriendScene extends Phaser.Scene {
 
         let gameLink: string
 
-        console.log(this.layoutType)
-
         this.add.text(config.width / 2, 120, "Waiting for friend...")
 			.setFontSize(50)
 			.setStroke('black', 3)
@@ -38,7 +36,6 @@ export default class WaitingFriendScene extends Phaser.Scene {
 
         new Video(this, config.width / 2, config.height / 2, 'loading.webm')
 
-        console.log(os.hostname())
         this.socket = createSocket("game", "", "true")
 
         this.socket.on('gameId', (response: string) => {

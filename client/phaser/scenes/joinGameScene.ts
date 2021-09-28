@@ -24,8 +24,6 @@ export default class JoinGameScene extends Phaser.Scene {
   create() {
     setActiveScene(scenesList.JoinGameScene)
 
-    console.log(this.layoutType)
-
     this.add.text(config.width / 2, 120, "Waiting for opponent...")
       .setFontSize(50)
       .setStroke('black', 3)
@@ -33,8 +31,7 @@ export default class JoinGameScene extends Phaser.Scene {
       .setOrigin(0.5, 0.5)
 
     new Video(this, config.width / 2, config.height / 2, 'loading.webm')
-
-    console.log(os.hostname())
+    
     this.socket = createSocket("game", "", "")
 
     this.socket.on('OpponentFound', (response: { player: number, room: string }) => {

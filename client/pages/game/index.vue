@@ -19,7 +19,6 @@ export default Vue.extend({
 			let token = this.getToken()
 			const spectate: string | null = this.$route.query.spectateId as string | null
 			const invite: string | null = this.$route.query.inviteId as string | null
-			console.log('invite: ' + invite)
 			if (!this.error) this.game = setup({
 				userId: user.id,
 				userToken: token,

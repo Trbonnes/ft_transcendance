@@ -41,7 +41,6 @@ export default class JoinFriendScene extends Phaser.Scene {
 
     establishConnection(gateway: string) {
 
-        console.log(os.hostname())
         this.socket = createSocket(gateway, "", this.id!)
 
         this.socket.on('OpponentFound', (response: {player: number, room: string}) => {
