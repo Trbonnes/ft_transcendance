@@ -3,23 +3,30 @@
         <div id="openChat"  @click="toggleChat">
           <font-awesome-icon title="Chat" class="text-4xl" icon="comments"></font-awesome-icon>
         </div>
-        <div id="main" :class='{ "hidden-right" : chatHidden}'>
-            <div class="relative h-14  w-full flex flex-row items-center justify-center">
+        <div id="main" class="flex flex-col items-center" :class='{ "hidden-right" : chatHidden}'>
+            <div class="w-full flex flex-row items-center justify-center h-14 ">
                 <div @click="toggleChat" class="absolute top-0 left-0 w-14 h-14 cursor-pointer bg-gray-100 hover:bg-gray-300 transition-all duration-500 flex flex-row items-center justify-center justify-self-start">
                   <font-awesome-icon title="Chat" class="text-4xl" icon="times" ></font-awesome-icon>
-                </div>
+                </div> 
                 <span class="text-2xl font-bold">Chat</span>
             </div>
-            <div class="flex flex-row items-center justify-center font-bold text-xl justify-evenly">
-                <div @click='currentTab = 0' class="cursor-pointer">
+            <div class="h-26 w-full">
+                <div>
+                    <img class="h-24 w-24 shadow-md rounded-full" :src="$auth.user.avatar" alt="Your avatar">
+
+                </div>
+
+            </div>
+            <div class=" w-full flex flex-row items-center justify-items-stretch font-bold text-xl">
+                <div @click='currentTab = 0' class="tabMenu" :class="{'tabActive' : currentTab == 0}">
                   <span>Channels</span>
                 </div>
-                <div @click='currentTab = 1' class="cursor-pointer">
+                <div @click='currentTab = 1' class="tabMenu" :class="{'tabActive' : currentTab == 1}">
                   <span>Direct chat</span>
                 </div>
             </div>
             <ChatGoBack :class="[ currentRoute.length === 1 ? 'opacity-0' : 'opacity-100']" @click.native="back"/>
-            <component @hide="toggleChat" @back="back" @replace="replace" @next="next" :is='this.currentComponent' v-bind="currentProps"></component>
+            <component class="w-11/12" @hide="toggleChat" @back="back" @replace="replace" @next="next" :is='this.currentComponent' v-bind="currentProps"></component>
         </div>
     </div>
 </template>
@@ -161,6 +168,7 @@ export default Vue.extend({
     position: fixed;
     width: 25vw;
     height: 100vh;
+    overflow-y: auto;
     top: 0;
     right: 0vw;
     background-color: white;
@@ -178,5 +186,31 @@ export default Vue.extend({
 {
     position: fixed;
     height: 100vh;
+}
+
+.tabMenu
+{
+    @apply border-white border-t-2 border-r-2 border-l-2 cursor-pointer flex-1 flex flex-row justify-center;
+}
+
+.tabActive {
+     @apply border-gray-200 rounded-lg rounded-b-none;
+}
+
+@media (max-width: 650px) {
+  #main {
+    width: 100vw;
+  }
+  #main.hidden-right {
+    right: -100vw;
+  }
+}
+@media (min-width: 650px) and (max-width: 1300px) {
+  #main {
+    width: 50vw;
+  }
+  #main.hidden-right {
+    right: -50vw;
+  }
 }
 </style>

@@ -1,7 +1,8 @@
 <template>
     <div class="w-full">
         <span class="btn btn-primary m-1" @click="$emit('next', { comp : 'ChatAddDirect'})">
-            <font-awesome-icon title="Search" class="cursor-pointer text-4xl m-2" icon="search" ></font-awesome-icon>
+            <font-awesome-icon title="Search" class="cursor-pointer text-2xl m-2" icon="search" ></font-awesome-icon>
+            Find user
         </span>
         <ChatDirectList
             class="w-full"

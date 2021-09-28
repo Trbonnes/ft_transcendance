@@ -38,7 +38,7 @@ export default Vue.extend({
             if (!notif)
                 return
             this.$store.commit('directChannel/shiftGameNotification')
-            if(notif.userId !== this.$auth.user.id) // TODO not very clean to do here
+            if(this.$auth.user && notif.userId !== this.$auth.user.id) // TODO not very clean to do here
             {
                 this.notifs.push(notif)
                 this.executeTimeouts()

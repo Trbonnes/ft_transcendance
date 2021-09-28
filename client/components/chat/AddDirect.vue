@@ -2,14 +2,14 @@
 <template>
     <div>
         <form @submit="submitForm">
-          <div class="flex flex-col">
+          <div class="flex flex-col items-center">
               <label class="label">
-                <span class="label-text">Username</span>
+                <span class="label-text">Type in an username</span>
               </label> 
-              <div class="relative w-full border-8" @blur="() => this.search = []">
+              <div class="relative w-11/12" @blur="() => this.search = []">
                 <input type="text" @focus="fetchList" @keyup="fetchList" v-model="usernameSearch" placeholder="username" class="input h-16 input-bordered w-full mb-2">
                 <ul v-if="search && search.length > 0" tabindex="0"
-                  class="absolute w-full left-0 top-16 p-2 shadow-2xl menu dropdown-open bg-base-100 rounded-box w-52">
+                  class="menu w-full">
                   <li v-for="user in search">
                     <a @click="selectOne(user.id)">
                       <img class="w-14" :src="user.avatar" alt="avatar">

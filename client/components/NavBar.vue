@@ -28,7 +28,7 @@
               shadow
               menu
               dropdown-content
-              bg-base-100
+              bg-neutral
               rounded-box
               w-52
             "
@@ -72,7 +72,7 @@
               shadow
               menu
               dropdown-content
-              bg-base-100
+              bg-neutral
               rounded-box
               w-52
             "
