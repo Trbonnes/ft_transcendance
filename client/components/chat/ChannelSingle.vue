@@ -3,19 +3,21 @@
         <div class="flex flex-row items-center justify-center w-full h-8">
           <span class="font-bold text-2xl">{{getChannel.name}}</span>
         </div>
-        <ChatConversation :messages="getMessages" @sendMessage="sendMessage" />
-        <span @click='$emit("next", {comp : "ChatMemberList", props : { channel : getChannel, isCurrentAdmin: isCurrentUserAdmin}})' class="btn btn-primary text-white">
-          <font-awesome-icon class="text-xl mx-1.5" icon="users"> </font-awesome-icon> Members
-        </span>
-        <span v-if="isCurrentUserAdmin" @click='$emit("next", {comp : "ChatUpdateChannel", props : { channel : getChannel}})' class="btn btn-primary text-white">
-          <font-awesome-icon class="text-xl mx-1.5" icon="pen"> </font-awesome-icon> Edit
-        </span>
-        <span v-if="isCurrentUserOwner" @click='deleteChannel' class="btn btn-secondary text-white">
-          <font-awesome-icon class="text-xl mx-1.5" icon="times"> </font-awesome-icon> Delete
-        </span>
-        <span @click='leaveChannel' class="btn text-white">
-          <font-awesome-icon class="text-xl mx-1.5" icon="sign-out-alt"> </font-awesome-icon> Leave
-        </span>
+        <ChatConversation @unknownMember="fetchConvoMembers" :messages="getMessages" :members="getConvoMembers" @sendMessage="sendMessage" />
+        <div class="actions">
+          <span @click='$emit("next", {comp : "ChatMemberList", props : { channel : getChannel, isCurrentAdmin: isCurrentUserAdmin}})' class="btn btn-primary text-white">
+            <font-awesome-icon  icon="users"> </font-awesome-icon> Members
+          </span>
+          <span v-if="isCurrentUserAdmin" @click='$emit("next", {comp : "ChatUpdateChannel", props : { channel : getChannel}})' class="btn btn-primary text-white">
+            <font-awesome-icon  icon="pen"> </font-awesome-icon> Edit
+          </span>
+          <span v-if="isCurrentUserOwner" @click='deleteChannel' class="btn btn-secondary text-white">
+            <font-awesome-icon  icon="times"> </font-awesome-icon> Delete
+          </span>
+          <span @click='leaveChannel' class="btn text-white">
+            <font-awesome-icon  icon="sign-out-alt"> </font-awesome-icon> Leave
+          </span>
+        </div>
     </div>
 </template>
 
@@ -42,6 +44,10 @@ export default Vue.extend({
     {
       return this.$store.getters["channel/members"](this.channelId)
     },
+    getConvoMembers()
+    {
+      return this.$store.getters["channel/convoMembers"](this.channelId)
+    },
     currentMember()
     {
       return ((this as any).getMembers as any[]).find((m : any) => this.$auth.user && m.userId === this.$auth.user.id)
@@ -63,7 +69,8 @@ export default Vue.extend({
       await this.$store.dispatch("channel/joinChannel", this.channelId)
       await this.$store.dispatch("channel/fetchOne", this.channelId)
       await this.$store.dispatch("channel/getMessages", this.channelId)
-      this.$store.dispatch("channel/getMembers", this.channelId) // TODO loading animation ?
+      await this.$store.dispatch("channel/getMembers", this.channelId)
+      await this.$store.dispatch("channel/getConvoMembers", this.channelId)
     }
     catch(error)
     {
@@ -121,12 +128,30 @@ export default Vue.extend({
     },
     fetchMembers()
     {
-      this.$store.dispatch("channel/getMembers", this.channelId) // TODO loading animation ?
+      this.$store.dispatch("channel/getMembers", this.channelId)
+    },
+    fetchConvoMembers()
+    {
+      this.$store.dispatch("channel/getConvoMembers", this.channelId)
     },
   }
 })
 </script>
 <style>
+
+.actions
+{
+  @apply flex flex-row justify-center flex-wrap items-center text-2xl;
+}
+.actions > span
+{
+  @apply mx-1;
+}
+
+.actions > span > *
+{
+  @apply mx-1.5;
+}
 
 #memberList {
   top: 0;

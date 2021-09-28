@@ -76,10 +76,10 @@ export class User {
   @Column('text', { array: true, default: '{}' })
   public friends: string[];
 
-  @OneToMany(() => ChannelMembership, chan => chan.user)
+  @OneToMany(() => ChannelMembership, chan => chan.user, { onDelete: 'CASCADE' })
   memberships: ChannelMembership[]
 
-  @OneToMany(() => ChannelMembership, chan => chan.user)
+  @OneToMany(() => ChannelMembership, chan => chan.user, { onDelete: 'CASCADE' })
   direct: DirectChannel[]
 
   @OneToMany(() => User, user => user.blocker)

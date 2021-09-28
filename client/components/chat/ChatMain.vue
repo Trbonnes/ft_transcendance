@@ -10,14 +10,15 @@
                 </div> 
                 <span class="text-2xl font-bold">Chat</span>
             </div>
-            <div class="h-26 w-full">
-                <div>
-                    <img class="h-24 w-24 shadow-md rounded-full" :src="$auth.user.avatar" alt="Your avatar">
-
+            <div class="h-26 w-full flex flex-col items-center justify-center">
+                <div class="flex flex-col w-3/4 items-start rounded-3xl shadow-md p-4">
+                    <div class="flex flex-row justify-start w-full items-center ">
+                        <img class="h-24 w-24 shadow-md rounded-full" :src="$auth.user.avatar" alt="Your avatar">
+                        <span class="text-xl font-bold m-2">{{$auth.user.displayName}}</span>
+                    </div>
                 </div>
-
             </div>
-            <div class=" w-full flex flex-row items-center justify-items-stretch font-bold text-xl">
+            <div class="mt-14 w-full flex flex-row items-center justify-items-stretch font-bold text-xl">
                 <div @click='currentTab = 0' class="tabMenu" :class="{'tabActive' : currentTab == 0}">
                   <span>Channels</span>
                 </div>
@@ -25,7 +26,9 @@
                   <span>Direct chat</span>
                 </div>
             </div>
-            <ChatGoBack :class="[ currentRoute.length === 1 ? 'opacity-0' : 'opacity-100']" @click.native="back"/>
+            <div class="cursor-pointer" :class="[ currentRoute.length === 1 ? 'opacity-0' : 'opacity-100']" @click="back">
+                <font-awesome-icon title="Chat" class="text-4xl" icon="arrow-left"></font-awesome-icon>
+            </div>
             <component class="w-11/12" @hide="toggleChat" @back="back" @replace="replace" @next="next" :is='this.currentComponent' v-bind="currentProps"></component>
         </div>
     </div>
@@ -47,7 +50,7 @@ export default Vue.extend({
         return {
             channelRoute : [ { comp : 'ChatChannels' } ] as Route[],
             directRoute : [ { comp : 'ChatDirectChannels' } ] as Route[],
-            currentTab : 1,
+            currentTab : 0,
             chatHidden : false,
             timer : null as any
         }

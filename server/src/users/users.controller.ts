@@ -33,7 +33,7 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-   @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('/search/:name')
   searchByName(@Param('name') name: string) {
     return this.usersService.searchByName(name);
@@ -85,7 +85,7 @@ export class UsersController {
     return this.usersService.remove(id);
   }
 
-  
+
   @Post(':id/block')
   @UseGuards(JwtAuthGuard)
   async blockUser(@Req() req, @Param('id') id: string) {
@@ -94,6 +94,17 @@ export class UsersController {
       return { status: 201, message: "User blocked" }
     } catch (error) {
       return new HttpException("Cannot block User", HttpStatus.BAD_REQUEST)
+    }
+  }
+
+  @Post(':id/unblock')
+  @UseGuards(JwtAuthGuard)
+  async unblockUser(@Req() req, @Param('id') id: string) {
+    try {
+      this.usersService.unblockUser(req.user.id, id) // blocker, blocked
+      return { status: 201, message: "User unblocked" }
+    } catch (error) {
+      return new HttpException("Cannot unblock User", HttpStatus.BAD_REQUEST)
     }
   }
 

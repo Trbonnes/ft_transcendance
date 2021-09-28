@@ -75,6 +75,15 @@ export class ChannelService {
     return []
   }
 
+  async getConvoMembers(channelId: string) {
+    let ids = await this.channelMessageService.getUsersInConvo(channelId)
+    console.log("Here are the ids")
+    let users: User[] = []
+    if (ids.length > 0)
+      users = await this.userService.getUsersByIds(ids)
+    return users
+  }
+
   async getAllChannels(): Promise<Channel[]> {
     let data: any[];
     try {

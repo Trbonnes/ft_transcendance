@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Logger } from '@nestjs/common';
 import * as bcrypt from 'bcrypt-nodejs';
@@ -27,7 +27,7 @@ export class UsersService {
     //createUserDto.password = hash;
     const newUser = this.usersRepository.create(createUserDto);
 
-    if ( await this.usersRepository.count() == 0 )
+    if (await this.usersRepository.count() == 0)
       newUser.role = "superAdmin"
     newUser.defaultAvatar = newUser.avatar
     return await this.usersRepository.save(newUser);
@@ -41,6 +41,10 @@ export class UsersService {
   async findOne(id: string): Promise<User> {
     const user = await this.usersRepository.findOneOrFail(id);
     return user;
+  }
+
+  async getUsersByIds(ids: string[]): Promise<User[]> {
+    return this.usersRepository.find({ id: In(ids) })
   }
 
   async incrementWins(id: string | string[]) {
@@ -223,8 +227,16 @@ export class UsersService {
 
   async blockUser(blockerId: string, blockedId: string) {
     let blocker = await this.usersRepository.findOne({ where: { id: blockerId }, relations: ["blockedUsers"] })
-    let blocked = await this.usersRepository.findOne({ id: blockedId })
+    const blocked = await this.usersRepository.findOne({ id: blockedId })
     blocker.blockedUsers.push(blocked)
+    return this.usersRepository.save(blocker)
+  }
+
+  async unblockUser(blockerId: string, blockedId: string) {
+    let blocker = await this.usersRepository.findOne({ where: { id: blockerId }, relations: ["blockedUsers"] })
+    const blocked = await this.usersRepository.findOne({ id: blockedId })
+    const index = blocker.blockedUsers.indexOf(blocked)
+    blocker.blockedUsers.slice(index, 1)
     return this.usersRepository.save(blocker)
   }
 
