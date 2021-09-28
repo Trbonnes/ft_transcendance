@@ -7,14 +7,14 @@
 						v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id && user.game_id"
 						@click="spectateUser">
 					Spectate </button>
-				<button class="inline-flex text-white bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-xs italic mb-3"
+				<button class="inline-flex text-grey bg-grey border-0 py-0.5 px-5 focus:outline-none hover:bg-blue-700 rounded text-xs italic mb-3"
 						v-if="this.$auth.loggedIn && (this.$auth.user.id === user.id || this.$auth.user.role === 'admin' || this.$auth.user.role === 'superAdmin')"
 						@click="toggleAvatarUploader">
 					Change avatar </button>
 				<avatar-uploader v-if="inputAvatarUpload" @imageUploaded="updateAvatar" :user="user" class="flex mb-3"/>
     			<div class="text-center lg:w-3/3 w-full">
      					<h1 class="title-font sm:text-5xl text-3xl mb-0 font-medium text-info">{{ user.displayName }}</h1>
-					<button class="inline-flex text-white bg-grey border-0 py-0.5 px-2 focus:outline-none hover:bg-blue-700 rounded mb-3 text-xs italic"
+					<button class="inline-flex text-grey bg-grey border-0 py-0.5 px-2 focus:outline-none hover:bg-blue-700 rounded mb-3 text-xs italic"
 							v-if="this.$auth.loggedIn && (this.$auth.user.id === user.id || this.$auth.user.role === 'admin' || this.$auth.user.role === 'superAdmin')"
 							@click="toggleDisplayNameField">
 						Change display name (length: 2-16 chars)</button>
