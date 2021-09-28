@@ -73,17 +73,27 @@ export default class DirectChannelModule extends VuexModule {
   @Action
   async message(msg: Message) {
     try {
-      console.log("Pushing new message")
       this.context.commit('pushMessage', msg)
-      if (/^\/game\/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b$/.test(msg.content))
-      {
-        // TODO check for user id there ?
-        console.log("Match !")
-        this.context.commit('pushGameNotification', { userId : msg.senderId, link : msg.content })
-      }
     } catch (err: any) {
-      console.log(err)
-      // TODO error handlign properly
+    }
+  }
+
+  @Action
+  async sendInvitation(payload: { userId : string, link : string})
+  {
+    try {
+      let sock = getSocket()
+      sock.emit("invitation", payload)
+    } catch (error) {
+    }
+  }
+  
+  @Action
+  async invitation(payload: { userId : string, link : string})
+  {
+    try {
+      this.context.commit('pushGameNotification', { userId : payload.userId, link : payload.link })
+    } catch (error) {
     }
   }
 

@@ -34,6 +34,9 @@ export function createWebSocketPlugin(store: any) {
   socket.on('directChannel/directMessage', (data) => {
     store.dispatch('directChannel/message', data)
   })
+  socket.on('directChannel/invitation', (data) => {
+    store.dispatch('directChannel/invitation', data)
+  })
   store.subscribe((mutation: any) => { })
 }
 

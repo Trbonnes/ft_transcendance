@@ -27,9 +27,9 @@ export class ChannelService {
     newChannel.name = channelDto.channelName;
     newChannel.owner = <any>{ id: userid };
     // TODO should we only update password if the channel is private ?
-    newChannel.password = channelDto.channelPassword;
 
     const data = await this.channelRepositery.save(newChannel);
+
     delete data.password;
     return data;
   }
