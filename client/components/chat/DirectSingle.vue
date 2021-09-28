@@ -14,13 +14,15 @@ import Vue from 'vue'
 export default Vue.extend({
     props : ["channel"],
     async fetch() {
-        await this.$store.dispatch('directChannel/history', this.channel.id)
+        if(this.channel)
+          await this.$store.dispatch('directChannel/history', this.channel.id)
     },
     computed : {
         getMessages()
         {
-          let data = this.$store.getters["directChannel/messages"](this.channel.id)
-          console.log('Here are the message ', data)
+          let data : any[] = []
+          if (this.channel)
+            data = this.$store.getters["directChannel/messages"](this.channel.id)
           return data
         },
         getMembers()

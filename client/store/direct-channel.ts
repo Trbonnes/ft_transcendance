@@ -93,7 +93,6 @@ export default class DirectChannelModule extends VuexModule {
   async invitation(payload: { userId : string, link : string})
   {
     try {
-      console.log("Receiving an invitation")
       this.context.commit('pushGameNotification', { userId : payload.userId, link : payload.link })
     } catch (error) {
     }
