@@ -5,7 +5,7 @@
                 {{user.displayName}} wants to play with you
             </div>
             <div class="flex flex-row">
-                <span class="btn btn-accent m-1" @click="">Accept</span>
+                <span class="btn btn-accent m-1" @click="acceptGame">Accept</span>
                 <span class="btn m-1">Refuse</span>
             </div>
             <span id="progress"></span>
@@ -69,6 +69,12 @@ export default Vue.extend({
         async fetchUser(userId : string)
         {
 			this.user = await this.$axios.$get(`/users/${userId}`)
+        },
+        async acceptGame() {
+            if (this.notifs[0].link) {
+                console.log(this.notifs[0].link)
+                 this.$router.push(`/game?inviteId=${this.notifs[0].link}`)
+            }
         }
     },
 })
