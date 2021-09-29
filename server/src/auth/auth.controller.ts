@@ -46,6 +46,11 @@ export class AuthController {
         }, HttpStatus.UNAUTHORIZED)
     }
     else {
+      if (user && user.banned === true) {
+        throw new HttpException({
+          error: 'login error: user was banned'
+        }, HttpStatus.UNAUTHORIZED)
+      }
       console.log(code);
       const fortyTwoUser = await this.authService.getFortyTwoUser(code);
       if (!fortyTwoUser) {
@@ -54,11 +59,6 @@ export class AuthController {
         }, HttpStatus.BAD_REQUEST)
       }
       user = await this.usersService.findOneByFortyTwoLogin(fortyTwoUser.login);
-      if (user.banned === true) {
-        throw new HttpException({
-          error: 'login error: user was banned'
-        }, HttpStatus.UNAUTHORIZED)
-      }
       if (user === null) {
         let userDto = new CreateUserDto()
           .setEmail(fortyTwoUser.email)
@@ -69,6 +69,11 @@ export class AuthController {
 
         user = await this.usersService.create(userDto);
       }
+    }
+    if (user && user.banned === true) {
+      throw new HttpException({
+        error: 'login error: user was banned'
+      }, HttpStatus.UNAUTHORIZED)
     }
     if (user.twoFactor) {
       if (!twoFactorCode) {

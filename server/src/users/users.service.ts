@@ -27,6 +27,7 @@ export class UsersService {
 
     if ( await this.usersRepository.count() == 0 )
       newUser.role = "superAdmin"
+    newUser.banned = false
     newUser.defaultAvatar = newUser.avatar
     return await this.usersRepository.save(newUser);
   }

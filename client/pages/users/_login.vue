@@ -318,11 +318,14 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		}
 
 		toggleBan(): boolean {
-			let ban_status: boolean = this.user.banned
+			console.log("IN TOGGLEBAN")
+			let ban_status: boolean = !(this.user.banned)
 			this.$axios.patch(`users/update/${this.user.id}`, {
-				banned: !ban_status
+				banned: ban_status
 			}).then((result) => {
-				this.user.banned = !ban_status
+				console.log("IN THEN")
+				this.user.banned = ban_status
+				console.log(this.user)
 				this.$toast.success("User was banned")
 			}).catch((error) => {
 				this.$toast.error("Could not ban user")
