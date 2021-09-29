@@ -38,6 +38,9 @@ export class User {
   role: string = 'user';
 
   @Column()
+  banned: boolean = false
+
+  @Column()
   avatar: string = ''; // link to the image
 
   @Column()
