@@ -23,8 +23,6 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     Logger.log(createUserDto);
-    //const hash = bcrypt.hashSync(createUserDto.password);
-    //createUserDto.password = hash;
     const newUser = this.usersRepository.create(createUserDto);
 
     if ( await this.usersRepository.count() == 0 )

@@ -44,8 +44,7 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
-  // @UseGuards(AdminGuard)
+  // @UseGuards(JwtAuthGuard)
   async findAllOrByLogin(@Req() req: Request) {
     if (req.query.login) {
       const user = await this.usersService.findOneByFortyTwoLogin(req.query.login.toString())

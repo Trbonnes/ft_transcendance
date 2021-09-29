@@ -36,6 +36,14 @@
 					Remove Admin </button>
 					<p class="sm:text-lg mt-10 text-info">Level: {{ user.level }}</p>
 				</div>
+ 				<div v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id && (( user.role === 'user' && this.$auth.user.role === 'admin') || this.$auth.user.role === 'superAdmin')">
+					<div v-if="user.banned === false">
+						<button class="btn" @click="toggleBan">Ban</button>
+					</div>
+					<div v-else>
+						<button class="btn" @click="toggleBan">Unban</button>
+					</div>
+				</div>
 				<div v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id">
 					<friend-button @update="updateFriend" :friendStatus="friendStatus"/>
 					<div v-if="isBlocked === false">
@@ -307,6 +315,19 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 			}).catch((error) => {
 				this.$toast.error("Could not change user's role")
 			})
+		}
+
+		toggleBan(): boolean {
+			let ban_status: boolean = this.user.banned
+			this.$axios.patch(`users/update/${this.user.id}`, {
+				banned: !ban_status
+			}).then((result) => {
+				this.user.banned = !ban_status
+				this.$toast.success("User was banned")
+			}).catch((error) => {
+				this.$toast.error("Could not ban user")
+			})
+			return true
 		}
 
 		async spectateUser() {
