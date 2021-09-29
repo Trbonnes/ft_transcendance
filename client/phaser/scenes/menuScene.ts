@@ -31,7 +31,7 @@ export default class MenuScene extends Phaser.Scene {
         }))
 
         this.add.text(config.width / 2 - 300, config.height / 2 + 300,
-        "↑\nA normal pong game\nwith a random adversary\nand a nice bouncing ball\nFirst at 6 points win")
+        "↑\nA normal pong game\ncontrolled with your mouse\nwith a random adversary\nand a nice bouncing ball\nFirst at 6 points win")
         .setFontSize(38)
         .setTint(0x0000ff)
         .setOrigin(0.5, 0.5)
