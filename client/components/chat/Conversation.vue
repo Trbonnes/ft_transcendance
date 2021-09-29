@@ -5,7 +5,9 @@
         <span class="text-gray-400">Say hello to your new friend !</span>
       </div>
       <div v-for="m in renderedMessages" v-bind:key='m.id' class="flex flex-col justify-start">
-        <span class="font-bold text-gray-400" :class="{'self-end' : m.isMine }" v-if="m.first"> {{m.name}}</span>
+        <NuxtLink :to="`/users/${m.name}`" class="font-bold text-gray-400" :class="{'self-end' : m.isMine }" v-if="m.first">
+          {{m.name}}
+        </NuxtLink> 
         <div class="flex" :class="[ m.isMine ? 'flex-row-reverse' : 'flex-row']">
           <span class="p-3 m-0.5 rounded-xl inline-block max-w-full break-all" :class="[m.isMine ? 'text-white bg-blue-500' : 'text-black bg-gray-300 self-start']">
             {{ m.content }}
@@ -111,7 +113,7 @@ export default Vue.extend({
       var container = this.$el.querySelector("#inner");
       if (container)
         container.scrollTop = container.scrollHeight;
-    }
+    },
   },
 })
 </script>
