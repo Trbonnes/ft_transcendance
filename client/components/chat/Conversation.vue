@@ -5,7 +5,7 @@
         <span class="text-gray-400">Say hello to your new friend !</span>
       </div>
       <div v-for="m in renderedMessages" v-bind:key='m.id' class="flex flex-col justify-start">
-        <NuxtLink :to="`/users/${m.name}`" class="font-bold text-gray-400" :class="{'self-end' : m.isMine }" v-if="m.first">
+        <NuxtLink :to="`/users/${m.login}`" class="font-bold text-gray-400" :class="{'self-end' : m.isMine }" v-if="m.first">
           {{m.name}}
         </NuxtLink> 
         <div class="flex" :class="[ m.isMine ? 'flex-row-reverse' : 'flex-row']">
@@ -71,7 +71,7 @@ export default Vue.extend({
     {
       let diff = this.messages.length - this.renderedMessages.length
       for (let i = this.messages.length - diff; i < this.messages.length; i++) {
-        const m = this.messages[i];
+        const m = this.messages[i]
         m.isMine = this.isMessageMine(m)
         if (this.lastUserId !== m.senderId)
         {
@@ -86,6 +86,7 @@ export default Vue.extend({
               return
             }
             m.name = member.displayName
+            m.login = member.login
           }
           this.lastUserId = m.senderId
           m.first = true
