@@ -27,6 +27,7 @@ interface Channel {
   lastUpdated: Date
   owner: any
   members: any[]
+  convoMembers: any[]
   messages: Message[]
 }
 

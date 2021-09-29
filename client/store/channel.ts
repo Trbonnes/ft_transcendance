@@ -69,6 +69,16 @@ export default class ChannelModule extends VuexModule {
   }
 
   @Action
+  async getConvoMembers(channelId: string) {
+    try {
+      const data = await $axios.$get<any[]>(`/channel/${channelId}/convoMembers`)
+      this.context.commit("setConvoMembers", { channelId, data })
+    } catch (error: any) {
+      // TODO error handling
+    }
+  }
+
+  @Action
   joinChannel(channelId: string) {
     const sock = getSocket()
     sock.emit('joinChannel', channelId)
@@ -80,7 +90,6 @@ export default class ChannelModule extends VuexModule {
 
     sock.emit('channelMessage', dto)
   }
-
 
   @Action
   message(msg: Message) {
@@ -103,10 +112,18 @@ export default class ChannelModule extends VuexModule {
   }
 
   @Mutation
-  setMembers(payload: { channelId: string; data: Message[] }) {
+  setMembers(payload: { channelId: string; data: any[] }) {
     let c = this.channels[payload.channelId]
     if (c) {
       Vue.set(this.channels[payload.channelId], "members", payload.data)
+    }
+  }
+
+  @Mutation
+  setConvoMembers(payload: { channelId: string; data: any[] }) {
+    let c = this.channels[payload.channelId]
+    if (c) {
+      Vue.set(this.channels[payload.channelId], "convoMembers", payload.data)
     }
   }
 
@@ -167,6 +184,16 @@ export default class ChannelModule extends VuexModule {
       let c = this.channels[id]
       if (c && c.members) {
         return c.members
+      }
+      return []
+    }
+  }
+
+  get convoMembers() {
+    return (id: string) => {
+      let c = this.channels[id]
+      if (c && c.convoMembers) {
+        return c.convoMembers
       }
       return []
     }

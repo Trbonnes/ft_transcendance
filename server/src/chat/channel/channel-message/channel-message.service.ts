@@ -26,4 +26,14 @@ export class ChannelMessageService {
       .orderBy('channel-message.createdDate')
     return builder.getMany()
   }
+
+  async getUsersInConvo(channelId: string) {
+    let builder = this.channelMessageRepositery.createQueryBuilder('channel-message')
+      .select('channel-message.senderId', 'senderId')
+      .distinct(true)
+    let rawData = await builder.getRawMany()
+    let data: string[] = []
+    rawData.forEach((el: { senderId: string }) => data.push(el.senderId))
+    return data
+  }
 }

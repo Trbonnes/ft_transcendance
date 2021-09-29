@@ -87,19 +87,38 @@ export class ChatGateway {
     }
   }
 
+  @SubscribeMessage('invitation')
+  async invitation(
+    @MessageBody() payload: { userId: string, content: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    if (!payload.userId || !payload.content)
+      return
+    try {
+      let clientId = this.activeClients.get(client.id).id
+      console.log("About to test the regex on ", payload.content)
+      if (/^\/game\?inviteId=\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b$/.test(payload.content)) {
+        console.log("Mathc ! ")
+        if (payload.userId !== clientId)
+          this.server.to(payload.userId).emit("directChannel/invitation", { userId: clientId, link: payload.content })
+      }
+    } catch (e) {
+      //TODO error handling
+      return;
+    }
+  }
+
   @SubscribeMessage('sendDirect')
   async sendDirect(
     @MessageBody() payload: { userId: string, content: string },
     @ConnectedSocket() client: Socket,
   ) {
-    // TODO check for blocked
-    if (payload.userId === "")
+    if (!payload.userId || !payload.content)
       return
     try {
       let clientId = this.activeClients.get(client.id).id
       let data = await this.directService.getOneByUsers(clientId, payload.userId)
       if (data) {
-        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
         let message = await this.directService.saveMessage(data.id, clientId, payload.content)
         if (payload.userId !== clientId)
           this.server.to(payload.userId).emit("directChannel/directMessage", message)
@@ -146,7 +165,6 @@ export class ChatGateway {
         const sockets = await this.server.in(channelId).fetchSockets();
         if (sockets.length == 0) this.activeChannels.delete(channelId);
       } catch (error) {
-        // TODO catch the error properly
         throw error;
       }
     }

@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-        <ChatConversation :messages="getMessages" @sendMessage="sendMessage" />
+        <ChatConversation :members="getMembers" :messages="getMessages" @sendMessage="sendMessage" />
         <div class="w-full">
           <span @click="defyUser" class="btn m-1">
               Defy
@@ -12,29 +12,41 @@
 <script lang="ts">
 import Vue from 'vue'
 export default Vue.extend({
-    props : ["userId", "channelId"],
+    props : ["channel"],
     async fetch() {
-        await this.$store.dispatch('directChannel/history', this.channelId)
+        if(this.channel)
+          await this.$store.dispatch('directChannel/history', this.channel.id)
     },
     computed : {
         getMessages()
         {
-          let data = this.$store.getters["directChannel/messages"](this.channelId)
-          console.log('Here are the message ', data)
+          let data : any[] = []
+          if (this.channel)
+            data = this.$store.getters["directChannel/messages"](this.channel.id)
           return data
         },
+        getMembers()
+        {
+          if (this.$auth.user)
+          {
+            if (this.channel)
+              return [ this.channel.user , this.$auth.user ]
+            return [ this.$auth.user ]
+          }
+          return []
+        }
     },
     methods : {
         defyUser()
         {
-          this.$router.push(`/game?friendId=${this.userId}`)
+          this.$router.push(`/game?friendId=${this.channel.user.id}`)
           this.$emit("hide")
         },
         async sendMessage(content : string)
         {
           try
           {
-            let data = await this.$store.dispatch('directChannel/sendMessage',  { userId : this.userId, content : content })
+            let data = await this.$store.dispatch('directChannel/sendMessage',  { userId : this.channel.user.id, content : content })
           }
           catch(error : any)
           {

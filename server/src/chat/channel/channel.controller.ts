@@ -87,6 +87,21 @@ export class ChannelController {
     }
   }
 
+  @Get(':channelId/convoMembers')
+  @UseGuards(JwtAuthGuard, IsChannelMemberGuard)
+  async getConvoMembers(@Param('channelId') channelId: string) {
+    console.log("Here we are in the getConvoMembers")
+    try {
+      let data = await this.channelService.getConvoMembers(channelId)
+      return data
+    } catch (error) {
+      return new HttpException(
+        'Cannot retrieve members',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
   @Post(':channelId/members/:userId/makeAdmin')
   @UseGuards(JwtAuthGuard, IsChannelAdminGuard)
   async updateMember(@Param('channelId') channelId: string,

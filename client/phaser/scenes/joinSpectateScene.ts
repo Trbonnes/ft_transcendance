@@ -40,11 +40,9 @@ export default class JoinSpectateScene extends Phaser.Scene {
 
     establishConnection(gateway: string) {
 
-        console.log(os.hostname())
         this.socket = createSocket(gateway, this.id!, "")
 
         this.socket?.on('Spectator Joined', (response: {room: string}) => {
-            console.log('sectator joining')
             this.scene.run(scenesList.SpectateScene,  { socket: this.socket, room: response.room, layoutType: this.layoutType})
             this.scene.stop(this)
         })

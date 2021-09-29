@@ -27,9 +27,9 @@ export class ChannelService {
     newChannel.name = channelDto.channelName;
     newChannel.owner = <any>{ id: userid };
     // TODO should we only update password if the channel is private ?
-    newChannel.password = channelDto.channelPassword;
 
     const data = await this.channelRepositery.save(newChannel);
+
     delete data.password;
     return data;
   }
@@ -73,6 +73,15 @@ export class ChannelService {
     if (data)
       return data
     return []
+  }
+
+  async getConvoMembers(channelId: string) {
+    let ids = await this.channelMessageService.getUsersInConvo(channelId)
+    console.log("Here are the ids")
+    let users: User[] = []
+    if (ids.length > 0)
+      users = await this.userService.getUsersByIds(ids)
+    return users
   }
 
   async getAllChannels(): Promise<Channel[]> {

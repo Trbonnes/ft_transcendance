@@ -27,11 +27,6 @@ export default class WaitingFriendScene extends Phaser.Scene {
         setActiveScene(scenesList.WaitingFriendScene)
 
         let gameLink: string
-        let copyField: CopyField
-
-        //this.game.domContainer.style.pointerEvents = 'all'
-
-        console.log(this.layoutType)
 
         this.add.text(config.width / 2, 120, "Waiting for friend...")
 			.setFontSize(50)
@@ -41,26 +36,14 @@ export default class WaitingFriendScene extends Phaser.Scene {
 
         new Video(this, config.width / 2, config.height / 2, 'loading.webm')
 
-        console.log(os.hostname())
         this.socket = createSocket("game", "", "true")
 
         this.socket.on('gameId', (response: string) => {
-            gameLink = "/game/" + response
-            // copyField = new CopyField(
-            //     this,
-            //     config.width / 2,
-            //     config.height / 2 + 250,
-            //     gameLink,
-            //     {
-            //         'text-align': 'center',
-            //         'font-size': '20px',
-            //     }
-            // ).setDisplaySize(700, 40)
-            config.store.dispatch("directChannel/sendMessage", {userId : config.friendId, content: gameLink})
+            gameLink = "/game?inviteId=" + response
+            config.store.dispatch("directChannel/sendInvitation", {userId : config.friendId, content: gameLink})
         })
 
         this.socket.on('OpponentFound', (response: {player: number, room: string}) => {
-            this.game.domContainer.style.pointerEvents = 'auto'
             this.scene.run(scenesList.GameScene,  { socket: this.socket, player: response.player, room: response.room, layoutType: this.layoutType})
             this.scene.stop(this)
         })

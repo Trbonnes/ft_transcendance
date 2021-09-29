@@ -24,8 +24,6 @@ export default class JoinBorderlessScene extends Phaser.Scene {
     create() {
         setActiveScene(scenesList.JoinGameScene)
 
-        console.log(this.layoutType)
-
         this.add.text(config.width / 2, 120, "Waiting for opponent...")
 			.setFontSize(50)
 			.setStroke('black', 3)
@@ -34,7 +32,6 @@ export default class JoinBorderlessScene extends Phaser.Scene {
 
         new Video(this, config.width / 2, config.height / 2, 'loading.webm')
 
-        console.log(os.hostname())
         this.socket = createSocket("borderless", "", "")
 
         this.socket.on('OpponentFound', (response: {player: number, room: string}) => {

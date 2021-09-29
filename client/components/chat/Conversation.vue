@@ -1,11 +1,18 @@
 <template>
-  <div class="flex flex-col h-full" >
+  <div class="flex flex-col my-4" >
     <div id="inner" class="flex flex-col">
-      <div v-if="messages.length === 0" class="flex flex-row iterms-center justify-center"><span class="text-gray-400">Say hello to your new friend !</span></div>
-      <div v-for="c in messages" v-bind:key='c.id'
-            class="p-3 m-0.5 rounded-xl inline-block max-w-full break-all"
-            v-bind:class="[$auth && $auth.user && $auth.user.id === c.senderId ? 'text-white bg-blue-500 self-end' : ' text-black bg-gray-300 self-start']">
-        {{ c.content }}
+      <div v-if="renderedMessages.length === 0" class="flex flex-row iterms-center justify-center">
+        <span class="text-gray-400">Say hello to your new friend !</span>
+      </div>
+      <div v-for="m in renderedMessages" v-bind:key='m.id' class="flex flex-col justify-start">
+        <NuxtLink :to="`/users/${m.login}`" class="font-bold text-gray-400" :class="{'self-end' : m.isMine }" v-if="m.first">
+          {{m.name}}
+        </NuxtLink> 
+        <div class="flex" :class="[ m.isMine ? 'flex-row-reverse' : 'flex-row']">
+          <span class="p-3 m-0.5 rounded-xl inline-block max-w-full break-all" :class="[m.isMine ? 'text-white bg-blue-500' : 'text-black bg-gray-300 self-start']">
+            {{ m.content }}
+          </span>
+        </div>
       </div>
     </div>
     <div class="flex flex-row">
@@ -26,10 +33,13 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  props: ['messages'],
+  props: ['messages', 'members'],
   data() {
     return {
       message: '',
+      lastUserId : '',
+      isMine : false,
+      renderedMessages : [] as any[]
     }
   },
   updated() {
@@ -40,15 +50,57 @@ export default Vue.extend({
     if(this.$refs.textinput)
       (this.$refs.textinput as any).focus()
   },
-  computed: {},
+  watch :
+  {
+    members()
+    {
+      if (this.members.length === 0)
+        return
+      this.renderedMessages = []
+      this.updateMessageList()
+    },
+    messages()
+    {
+      if (this.members.length === 0)
+        return
+      this.updateMessageList()
+    } 
+  },
   methods: {
-    // urlify(text) {
-    //   var urlRegex = /(https?:\/\/[^\s]+)/g;
-    //   return text.replace(urlRegex, '<a href="$1">$1</a>')
-    // },
+    updateMessageList()
+    {
+      let diff = this.messages.length - this.renderedMessages.length
+      for (let i = this.messages.length - diff; i < this.messages.length; i++) {
+        const m = this.messages[i]
+        m.isMine = this.isMessageMine(m)
+        if (this.lastUserId !== m.senderId)
+        {
+          if (this.members)
+          {
+            const member = this.members.find((mem : any) => {
+                return mem.id === m.senderId
+            })
+            if (!member)
+            {
+              this.$emit("unknownMember")
+              return
+            }
+            m.name = member.displayName
+            m.login = member.login
+          }
+          this.lastUserId = m.senderId
+          m.first = true
+        }
+        this.renderedMessages.push(m)
+      }
+    },
     listenKey(e: any) {
       // key code for enter key
       if (e.keyCode === 13) this.sendMessage()
+    },
+    isMessageMine(m : any)
+    {
+      return this.$auth && this.$auth.user && this.$auth.user.id === m.senderId 
     },
     sendMessage() {
       if (this.message.trim() !== '') {
@@ -62,7 +114,7 @@ export default Vue.extend({
       var container = this.$el.querySelector("#inner");
       if (container)
         container.scrollTop = container.scrollHeight;
-    }
+    },
   },
 })
 </script>
@@ -70,8 +122,8 @@ export default Vue.extend({
 <style>
 
 #inner {
-  height: 70vh;
+  height: 55vh;
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 </style>

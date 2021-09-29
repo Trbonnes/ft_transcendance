@@ -72,7 +72,7 @@ export default Vue.extend({
         let data = await this.$store.dispatch('directChannel/joinChannel', id)
         await this.$store.dispatch('directChannel/fetchAll')
         let channel = this.$store.getters['directChannel/one'](data.id)
-        this.$emit("replace", { comp : 'ChatDirectSingle',  props : { userId : channel.user.id, channelId : channel.id }})
+        this.$emit("replace", { comp : 'ChatDirectSingle',  props : { channel : channel }})
       }
       catch (error : any)
       {

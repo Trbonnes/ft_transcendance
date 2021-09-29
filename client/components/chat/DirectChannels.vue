@@ -28,7 +28,7 @@ export default Vue.extend({
     methods : {
         joinChannel(channel : any)
         {
-          this.$emit("next", { comp : "ChatDirectSingle", props : { userId : channel.user.id, channelId : channel.id }})
+            this.$emit("next", { comp : "ChatDirectSingle", props : { channel : channel }})
         },
         deleteChannel(channelId : string)
         {
