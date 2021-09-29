@@ -126,6 +126,7 @@ export default Vue.extend({
   methods: {
     userLogin() {
       this.$auth.loginWith('fortytwo')
+      .catch(error => this.$toast.error("login error: user was banned"))
     },
 
     testUserLogin() {
@@ -137,7 +138,7 @@ export default Vue.extend({
         params: {
           user: this.testUserName,
         },
-      })
+      }).catch(error => this.$toast.error("login error: user was banned"))
     },
 
     displayState() {
