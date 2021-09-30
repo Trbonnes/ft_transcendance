@@ -36,6 +36,14 @@
 					Remove Admin </button>
 					<p class="sm:text-lg mt-10 text-info">Level: {{ user.level }}</p>
 				</div>
+				<div>
+					<div v-if="user.isActive">
+						<p>Status: online</p>
+					</div>
+					<div v-else>
+						<p>Status: offline</p>
+					</div>
+				</div>
  				<div v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id && (( user.role === 'user' && this.$auth.user.role === 'admin') || this.$auth.user.role === 'superAdmin')">
 					<div v-if="user.banned === false">
 						<button class="btn" @click="toggleBan">Ban</button>
