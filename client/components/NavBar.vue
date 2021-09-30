@@ -109,17 +109,19 @@ export default class Navigation extends Vue {
   public loggedInUser!: any
 
   async logOut() {
-    console.log("SALUT LA MIF\n\n\n\n\n\n\n")
-    // console.log(this.$auth.user)
-    // this.$auth.user.isActive = false
-    // await this.$axios.patch(`users/update/${this.$auth.user.id}`, this.$auth.user)
-    // .then((result) => {
-    //   console.log("OK")
-		// 	}).catch((err) => {
-    //     console.log("ERR")
-    //     console.log(err.message)
-    //     console.log("END   ")
-    // })
+    if (this.isLoggedIn) {
+      console.log("SALUT LA MIF\n\n\n\n\n\n\n")
+      console.log(this.$auth.user)
+      this.$auth.user.isActive = false
+      await this.$axios.patch(`users/update/${this.$auth.user.id}`, this.$auth.user)
+      .then((result) => {
+        console.log("OK")
+        }).catch((err) => {
+          console.log("ERR")
+          console.log(err.message)
+          console.log("END   ")
+      })
+    }
     this.$auth.logout()
     this.$router.push('/login')
   }
