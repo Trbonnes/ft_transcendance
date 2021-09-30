@@ -14,11 +14,17 @@ export default class ChannelModule extends VuexModule {
 
   @Action
   async fetchAll() {
+
+    if(!getSocket().io.opts.extraHeaders)
+      return
+
     try {
       const data: Channel[] = await $axios.$get<Channel[]>('/channel/all')
+      console.log(data)
       this.context.commit('setChannels', data)
     } catch (error: any) {
       // TODO proper error handling
+      //console.log(error.response.status)
     }
   }
 
