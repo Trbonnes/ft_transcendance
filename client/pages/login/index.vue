@@ -124,8 +124,8 @@ export default Vue.extend({
   },
 
   methods: {
-    userLogin() {
-      this.$auth.loginWith('fortytwo')
+    async userLogin() {
+      await this.$auth.loginWith('fortytwo')
       .catch(error => this.$toast.error("login error: user was banned"))
     },
 

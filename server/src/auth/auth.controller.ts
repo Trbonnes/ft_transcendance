@@ -107,6 +107,8 @@ export class AuthController {
       expiresIn: `${60 * 60 * 24 * 7}s`,
     });
     this.logger.log('User gets new access and refresh tokens');
+    user.isActive = true
+    this.usersService.update(user.id, user);
     return response.status(200).json({
       access_token,
       refresh_token,
@@ -166,6 +168,9 @@ export class AuthController {
       login: user.login,
       id: user.id,
     };
+    const userDTO = await this.usersService.findOneById(user.id)
+    userDTO.isActive = true
+    await this.usersService.update(user.id, userDTO)
     const access_token = await this.authService.generateToken(payload);
     const refresh_token = await this.authService.generateToken(payload, {
       expiresIn: `${60 * 60 * 24 * 7}s`,

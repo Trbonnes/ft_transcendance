@@ -50,7 +50,7 @@ export class User {
   avatarFileName: string = ''; // custom avatar file name
 
   @Column()
-  isActive: boolean = false;
+  isActive: boolean;
 
   @Column()
   inGame: boolean = false;

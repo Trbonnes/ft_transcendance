@@ -44,6 +44,14 @@
 						<button class="btn" @click="toggleBan">Unban</button>
 					</div>
 				</div>
+				<div>
+					<div v-if="user.isActive">
+						<p>Status: online</p>
+					</div>
+					<div v-else>
+						<p>Status: offline</p>
+					</div>
+				</div>
 				<div v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id">
 					<friend-button @update="updateFriend" :friendStatus="friendStatus"/>
 					<div v-if="isBlocked === false">

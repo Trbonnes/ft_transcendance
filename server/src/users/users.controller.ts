@@ -80,7 +80,7 @@ export class UsersController {
 
   @Patch('update/:id')
   @UseGuards(AdminIdGuard)
-  adminUpdate(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  adminUpdate(@Param('id') id: string, @Body() updateUserDto) {
     return this.usersService.update(id, updateUserDto)
   }
 
