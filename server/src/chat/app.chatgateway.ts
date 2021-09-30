@@ -5,6 +5,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
   WsResponse,
+  OnGatewayDisconnect
 } from '@nestjs/websockets';
 import { EntityNotFoundError } from 'typeorm';
 import { UseGuards, Req, Injectable } from '@nestjs/common';
@@ -172,6 +173,14 @@ export class ChatGateway {
 
   async banUser(channelId: string, userId: string) {
     this.server.to(userId).emit("channel/banned", channelId)
+  }
+
+  async handleDisconnect(client: Socket) {
+    let token = client.handshake.headers.authorization.split(' ')[1];
+    let data = await this.auth.validateToken(token);
+    let user = await this.userService.findOneById(data.id)
+    user.isActive = false;
+    await this.userService.update(user.id, user)
   }
 
   async destroyedChannel(channelId: string) {
