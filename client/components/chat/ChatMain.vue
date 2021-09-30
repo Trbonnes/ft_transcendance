@@ -51,7 +51,7 @@ export default Vue.extend({
             channelRoute : [ { comp : 'ChatChannels' } ] as Route[],
             directRoute : [ { comp : 'ChatDirectChannels' } ] as Route[],
             currentTab : 0,
-            chatHidden : false,
+            chatHidden : true,
             timer : null as any
         }
     },

@@ -17,7 +17,9 @@ import { Channel, CreateChannelDto } from '~/utils/types'
 export default Vue.extend({
     fetch()
     {
-        this.$store.dispatch("channel/fetchAll")
+        setTimeout(() => {
+            this.$store.dispatch("channel/fetchAll") //triggers 401 when login wth 42 auth
+        }, 1500)
     },
     computed : {
         getChannels()
