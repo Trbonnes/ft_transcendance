@@ -106,7 +106,6 @@ export class AuthController {
     const refresh_token = await this.authService.generateToken(payload, {
       expiresIn: `${60 * 60 * 24 * 7}s`,
     });
-    this.logger.log('User gets new access and refresh tokens');
     user.isActive = true
     this.usersService.update(user.id, user);
     return response.status(200).json({
@@ -121,7 +120,6 @@ export class AuthController {
     const refresh_token = refreshDto.refresh_token;
     const new_access_token = await this.authService.refreshToken(refresh_token);
     if (new_access_token) {
-      this.logger.log('User refreshed his token');
       return response.status(200).json({
         access_token: new_access_token,
         expires_in: jwtConstants.expiresIn,
