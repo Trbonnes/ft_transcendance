@@ -13,6 +13,9 @@
 					<p class="m-3">{{ user.displayName }}</p>
 					<p class="m-3">Wins: {{ user.victory }}</p>
 					<p class="m-3">Defeats: {{ user.defeat }}</p>
+					<p v-if="user.game_id" class="m-3">Status: in-game</p>
+					<p v-else-if="user.isActive" class="m-3">Status: online</p>
+					<p v-else class="m-3">Status: offline</p> 
 				</div>
 			  </div>
 		  </div>
