@@ -6,7 +6,7 @@
       </div>
       <div v-for="m in cleanMessages" v-bind:key='m.id' class="flex flex-col justify-start">
         <NuxtLink :to="`/users/${m.login}`" class="font-bold text-gray-400" :class="{'self-end' : m.isMine }">
-          {{m.name}}
+          {{m.login}}
         </NuxtLink> 
         <div class="flex" :class="[ m.isMine ? 'flex-row-reverse' : 'flex-row']">
           <span class="p-3 m-0.5 rounded-xl inline-block max-w-full break-all" :class="[m.isMine ? 'text-white bg-blue-500' : 'text-black bg-gray-300 self-start', m.blocked ? 'font-bold' : '']">
