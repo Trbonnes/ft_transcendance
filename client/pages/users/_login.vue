@@ -181,19 +181,17 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 			else
 				return true
 		}
-
+		
 		async toggleBlock() {
 			if (this.isBlocked === false) {
-				this.$axios.post(`/users/block`, {
-					toBlockId: this.user.id
+				this.$axios.post(`/users/${this.user.id}/block`, {
 				}).then((result) => {
 					this.$toast.success("User blocked")
 					this.$auth.fetchUser()
 				})
 			}
 			else {
-				this.$axios.post(`/users/unblock`, {
-					blockedId: this.user.id
+				this.$axios.post(`/users/${this.user.id}/unblock`, {
 				}).then((result) => {
 					this.$toast.success("User unblocked")
 					this.$auth.fetchUser()

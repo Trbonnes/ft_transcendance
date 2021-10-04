@@ -58,6 +58,7 @@
           </NuxtLink>
         </div>
       </div>
+      <span>{{loggedInUser.displayName}}</span>
       <div class="flex-none">
         <div class="dropdown dropdown-end">
           <div class="avatar" tabindex="0">
