@@ -95,6 +95,8 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   async blockUser(@Req() req, @Param('id') id: string) {
     try {
+      if (id === req.user.id)
+        return new HttpException("Cannot block yourself", HttpStatus.BAD_REQUEST)
       this.usersService.blockUser(req.user.id, id) // blocker, blocked
       return { status: 201, message: "User blocked" }
     } catch (error) {
@@ -106,6 +108,8 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   async unblockUser(@Req() req, @Param('id') id: string) {
     try {
+      if (id === req.user.id)
+        return new HttpException("Cannot unblock yourself", HttpStatus.BAD_REQUEST)
       this.usersService.unblockUser(req.user.id, id) // blocker, blocked
       return { status: 201, message: "User unblocked" }
     } catch (error) {

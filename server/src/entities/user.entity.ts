@@ -85,12 +85,10 @@ export class User {
   @OneToMany(() => ChannelMembership, chan => chan.user, { onDelete: 'CASCADE' })
   direct: DirectChannel[]
 
-  @OneToMany(() => User, user => user.blocker)
+  @ManyToMany(() => User)
   @JoinTable()
   blockedUsers: User[]
 
-  @ManyToOne(() => User, user => user.blockedUsers)
-  blocker: User
 
   @Column({ default: '' })
   game_id: string;

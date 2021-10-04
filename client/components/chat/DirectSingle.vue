@@ -1,7 +1,8 @@
 <template>
     <div class="w-full">
-        <ChatConversation :members="getMembers" :messages="getMessages" @sendMessage="sendMessage" />
-        <div class="w-full">
+        <span class="block text-center w-full font-bold" v-if="isBlocked">You have blocked the user</span>
+        <ChatConversation v-if="!isBlocked" :members="getMembers" :messages="getMessages" @sendMessage="sendMessage" />
+        <div v-if="!isBlocked" class="w-full">
           <span @click="defyUser" class="btn m-1">
               Defy
           </span>
@@ -34,6 +35,10 @@ export default Vue.extend({
             return [ this.$auth.user ]
           }
           return []
+        },
+        isBlocked()
+        {
+          return (this.$auth as any).user.blockedUsers.find((el) => this.channel.user.id === el.id) !== undefined
         }
     },
     methods : {

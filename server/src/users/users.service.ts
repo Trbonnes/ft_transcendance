@@ -234,8 +234,9 @@ export class UsersService {
   async unblockUser(blockerId: string, blockedId: string) {
     let blocker = await this.usersRepository.findOne({ where: { id: blockerId }, relations: ["blockedUsers"] })
     const blocked = await this.usersRepository.findOne({ id: blockedId })
-    const index = blocker.blockedUsers.indexOf(blocked)
-    blocker.blockedUsers.slice(index, 1)
+    const index = blocker.blockedUsers.findIndex((user) => user.id === blocked.id)
+    blocker.blockedUsers.splice(index, 1)
+    console.log(blocker.blockedUsers)
     return this.usersRepository.save(blocker)
   }
 

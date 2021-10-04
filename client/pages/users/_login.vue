@@ -176,10 +176,10 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		}
 		
 		get isBlocked(): boolean {
-			if ((this.$auth.user as any).blockedUsers.indexOf(this.user.id) === -1)
-				return false
-			else
+			if ((this.$auth.user as any).blockedUsers.find((user : any) => { return user.id === this.user.id}) !== undefined)
 				return true
+			else
+				return false
 		}
 		
 		async toggleBlock() {
@@ -195,6 +195,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 				}).then((result) => {
 					this.$toast.success("User unblocked")
 					this.$auth.fetchUser()
+					console.log(this.$auth.user.blockedUsers)
 				})
 			}
 		}

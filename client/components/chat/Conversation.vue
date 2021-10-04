@@ -1,15 +1,15 @@
 <template>
   <div class="flex flex-col my-4" >
     <div id="inner" class="flex flex-col">
-      <div v-if="renderedMessages.length === 0" class="flex flex-row iterms-center justify-center">
+      <div class="flex flex-row iterms-center justify-center">
         <span class="text-gray-400">Say hello to your new friend !</span>
       </div>
-      <div v-for="m in renderedMessages" v-bind:key='m.id' class="flex flex-col justify-start">
-        <NuxtLink :to="`/users/${m.login}`" class="font-bold text-gray-400" :class="{'self-end' : m.isMine }" v-if="m.first">
+      <div v-for="m in cleanMessages" v-bind:key='m.id' class="flex flex-col justify-start">
+        <NuxtLink :to="`/users/${m.login}`" class="font-bold text-gray-400" :class="{'self-end' : m.isMine }">
           {{m.name}}
         </NuxtLink> 
         <div class="flex" :class="[ m.isMine ? 'flex-row-reverse' : 'flex-row']">
-          <span class="p-3 m-0.5 rounded-xl inline-block max-w-full break-all" :class="[m.isMine ? 'text-white bg-blue-500' : 'text-black bg-gray-300 self-start']">
+          <span class="p-3 m-0.5 rounded-xl inline-block max-w-full break-all" :class="[m.isMine ? 'text-white bg-blue-500' : 'text-black bg-gray-300 self-start', m.blocked ? 'font-bold' : '']">
             {{ m.content }}
           </span>
         </div>
@@ -39,7 +39,6 @@ export default Vue.extend({
       message: '',
       lastUserId : '',
       isMine : false,
-      renderedMessages : [] as any[]
     }
   },
   updated() {
@@ -50,50 +49,33 @@ export default Vue.extend({
     if(this.$refs.textinput)
       (this.$refs.textinput as any).focus()
   },
-  watch :
-  {
-    members()
+  computed : {
+    cleanMessages()
     {
-      if (this.members.length === 0)
-        return
-      this.renderedMessages = []
-      this.updateMessageList()
-    },
-    messages()
-    {
-      if (this.members.length === 0)
-        return
-      this.updateMessageList()
-    } 
+      let blocked = (this.$auth as any).user.blockedUsers as any[]
+      console.log(blocked)
+      for (let i = 0; i < this.messages.length; i++) {
+        const m = this.messages[i];
+        m.isMine = (m.id === (this.$auth as any).user.id)
+        let user = this.members.find((mem : any) => mem.id === m.senderId) 
+        if (user)
+        {
+          m.login = user.displayName
+          if (blocked.find((u : any) => u.id === m.senderId))
+          {
+            m.content = "This message has been blocked"
+            m.blocked = true
+          }
+          if (user.id === (this.$auth as any).user.id)
+            m.isMine = true
+        }
+      }
+      console.log(this.messages)
+      return this.messages
+    }
+
   },
   methods: {
-    updateMessageList()
-    {
-      let diff = this.messages.length - this.renderedMessages.length
-      for (let i = this.messages.length - diff; i < this.messages.length; i++) {
-        const m = this.messages[i]
-        m.isMine = this.isMessageMine(m)
-        if (this.lastUserId !== m.senderId)
-        {
-          if (this.members)
-          {
-            const member = this.members.find((mem : any) => {
-                return mem.id === m.senderId
-            })
-            if (!member)
-            {
-              this.$emit("unknownMember")
-              return
-            }
-            m.name = member.displayName
-            m.login = member.login
-          }
-          this.lastUserId = m.senderId
-          m.first = true
-        }
-        this.renderedMessages.push(m)
-      }
-    },
     listenKey(e: any) {
       // key code for enter key
       if (e.keyCode === 13) this.sendMessage()
