@@ -38,7 +38,7 @@ export default Vue.extend({
             if (!notif)
                 return
             this.$store.commit('directChannel/shiftGameNotification')
-            if(this.$auth.user && notif.userId !== this.$auth.user.id) // TODO not very clean to do here
+            if(this.$auth.user && notif.userId !== this.$auth.user.id && (this.$auth as any).user.blockedUsers.find((u : any) => u.id === notif.userId) === undefined) // TODO not very clean to do here
             {
                 this.notifs.push(notif)
                 this.executeTimeouts()
@@ -72,7 +72,6 @@ export default Vue.extend({
         },
         acceptGame() {
             if (this.notifs[0].link) {
-                console.log(this.notifs[0].link)
                 this.$router.push(`${this.notifs[0].link}`)
                 this.notifs.shift()
             }
