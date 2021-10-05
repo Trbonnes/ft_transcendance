@@ -54,7 +54,7 @@
 				</div>
 				<div v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id">
 					<friend-button @update="updateFriend" :friendStatus="friendStatus"/>
-					<div v-if="isBlocked === false">
+					<div v-if="user.blocked === false">
 						<button class="btn" @click="toggleBlock">Block</button>
 					</div>
 					<div v-else>
@@ -111,11 +111,13 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		displayNameInput:string = "";
 		inputAvatarUpload:boolean = false;
 		games: any[] = [];
+		blocked: boolean;
 
 		mounted() {
 			if (this.$auth.loggedIn) 
 				this.$auth.fetchUser()
 			this.updateUserStats()
+			this.user.blocked = this.toggleBlock;
 		}
 
 		toggleDisplayNameField() {
@@ -183,10 +185,11 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		}
 		
 		async toggleBlock() {
-			if (this.isBlocked === false) {
-				this.$axios.post(`/users/${this.user.id}/block`, {
+			if (this.user.blocked === false) {
+				await this.$axios.post(`/users/${this.user.id}/block`, {
 				}).then((result) => {
 					this.$toast.success("User blocked")
+					this.user.blocked = true;
 					this.$auth.fetchUser()
 				})
 			}
@@ -195,6 +198,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 				}).then((result) => {
 					this.$toast.success("User unblocked")
 					this.$auth.fetchUser()
+					this.user.blocked = false;
 					console.log(this.$auth.user.blockedUsers)
 				})
 			}
