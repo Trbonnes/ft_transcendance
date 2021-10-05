@@ -33,6 +33,16 @@ export function createWebSocketPlugin(store: any) {
   socket.on('directChannel/invitation', (data) => {
     store.dispatch('directChannel/invitation', data)
   })
+  socket.on('channel/memberUpdate', (channelId : string) => {
+    console.log("Member update detected")
+    store.dispatch('channel/getMembers', channelId)
+  })
+  socket.on('channel/channelUpdate', (channelId : string) => {
+    store.dispatch('channel/fetchOne', channelId)
+  })
+  socket.on('channel/updateList', (data) => {
+    store.dispatch('channel/fetchAll', data)
+  })
   store.subscribe((mutation: any) => { })
 }
 

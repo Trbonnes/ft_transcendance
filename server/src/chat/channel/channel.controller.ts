@@ -111,7 +111,9 @@ export class ChannelController {
     @Param('userId') userId: string,
     @Req() req: any) {
     try {
-      return this.membershipService.update(channelId, userId, true)
+      const data = await this.membershipService.update(channelId, userId, true)
+      this.chatGateway.memberUpdate(channelId)
+      return data
     } catch (error) {
       return new HttpException("Cannot update user", HttpStatus.BAD_REQUEST)
     }
@@ -126,6 +128,7 @@ export class ChannelController {
       const channel = await this.channelService.getById(channelId)
       if (channel.owner.id === userId)
         return new HttpException("Cannot remove owner as admin", HttpStatus.FORBIDDEN)
+      this.chatGateway.memberUpdate(channelId)
       return this.membershipService.update(channelId, userId, false)
     } catch (error) {
       return new HttpException("Cannot update user", HttpStatus.BAD_REQUEST)
@@ -150,7 +153,9 @@ export class ChannelController {
         return new HttpException("User is not an admin", HttpStatus.BAD_REQUEST)
       delete channel.owner
       channel.ownerId = userId
-      this.channelService.saveChannel(channel)
+      await this.channelService.saveChannel(channel)
+      this.chatGateway.memberUpdate(channelId)
+      this.chatGateway.channelUpdate(channelId)
     } catch (error) {
       return new HttpException("Cannot update user", HttpStatus.BAD_REQUEST)
     }
@@ -173,6 +178,7 @@ export class ChannelController {
         channel.password = payload.newPassword // TODO set password to sha
       let data = await this.channelService.saveChannel(channel)
       delete data.password
+      this.chatGateway.channelUpdate(channelId)
       return data
     } catch (error) {
       return new BadRequestException()
@@ -188,6 +194,7 @@ export class ChannelController {
         return new HttpException("Only the owner can delete the channel", HttpStatus.UNAUTHORIZED)
       let data = await this.channelService.deleteChannel(channelId)
       this.chatGateway.destroyedChannel(channelId)
+      this.chatGateway.updateList()
       return { status: 201 } //TODO maybe change code ? 
     } catch (error) {
       return new HttpException("Cannot delete channel", HttpStatus.BAD_REQUEST)
@@ -220,6 +227,7 @@ export class ChannelController {
         );
       throw error;
     }
+    this.chatGateway.updateList()
     return data;
   }
 
@@ -273,7 +281,7 @@ export class ChannelController {
         return { status: 201, message: 'Joined channel' }
       }
       const channel = await this.channelService.getById(channelId); // the true includes the password
-      const user : User = await this.usersService.findOneById(req.user.id)
+      const user: User = await this.usersService.findOneById(req.user.id)
       if (channel.isPublic === false && user.role != "admin" && user.role != "superAdmin") {
         if (!dto.password)
           return new HttpException('Password needed', HttpStatus.UNAUTHORIZED);
@@ -287,6 +295,7 @@ export class ChannelController {
     } catch (error) {
       return new HttpException("Can't join channel", HttpStatus.BAD_REQUEST);
     }
+    this.chatGateway.memberUpdate(channelId)
     return { status: 201, message: 'Joined channel' };
   }
 
@@ -302,6 +311,7 @@ export class ChannelController {
     } catch (error) {
       return new HttpException("Can't leave channel", HttpStatus.BAD_REQUEST);
     }
+    this.chatGateway.memberUpdate(channelId)
     return { status: 201, message: 'Channel leaved' };
   }
 }

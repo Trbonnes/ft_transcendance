@@ -54,8 +54,9 @@ export default Vue.extend({
     {
       let blocked = (this.$auth as any).user.blockedUsers as any[]
       for (let i = 0; i < (this.messages as any).length; i++) {
+        console.log(this.members)
         const m = (this as any).messages[i];
-        m.isMine = (m.id === (this.$auth as any).user.id)
+        m.isMine = (m.senderId === (this.$auth as any).user.id)
         let user = (this.members as any).find((mem : any) => mem.id === m.senderId) 
         if (user)
         {

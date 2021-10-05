@@ -5,7 +5,7 @@
         </div>
         <ChatConversation @unknownMember="fetchConvoMembers" :messages="getMessages" :members="getConvoMembers" @sendMessage="sendMessage" />
         <div class="actions">
-          <span @click='$emit("next", {comp : "ChatMemberList", props : { channel : getChannel, isCurrentAdmin: isCurrentUserAdmin}})' class="btn btn-primary text-white">
+          <span @click='$emit("next", {comp : "ChatMemberList", props : { channelId : getChannel.id, isCurrentAdmin: isCurrentUserAdmin}})' class="btn btn-primary text-white">
             <font-awesome-icon  icon="users"> </font-awesome-icon> Members
           </span>
           <span v-if="isCurrentUserAdmin" @click='$emit("next", {comp : "ChatUpdateChannel", props : { channel : getChannel}})' class="btn btn-primary text-white">

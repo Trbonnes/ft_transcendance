@@ -181,4 +181,16 @@ export class ChatGateway {
   async destroyedChannel(channelId: string) {
     this.server.to(channelId).emit("channel/destroyed", channelId)
   }
+
+  async updateList() {
+    this.server.emit("channel/updateList")
+  }
+
+  async channelUpdate(channelId: string) {
+    this.server.to(channelId).emit("channel/update", channelId)
+  }
+
+  async memberUpdate(channelId: string) {
+    this.server.to(channelId).emit("channel/memberUpdate", channelId)
+  }
 }

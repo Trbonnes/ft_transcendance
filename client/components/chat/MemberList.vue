@@ -38,7 +38,7 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-    props: ["channel", "isCurrentAdmin"],
+    props: ["channelId", "isCurrentAdmin"],
     data()
     {
         return {
@@ -61,9 +61,13 @@ export default Vue.extend({
        clearInterval(this.timer) 
     },
     computed : {
+        channel()
+        {
+          return this.$store.getters["channel/getOne"](this.channelId)
+        },
         getMemberships()
         {
-            return this.$store.getters["channel/members"](this.channel.id)
+            return this.$store.getters["channel/members"](this.channelId)
         },
     },
     methods: {
