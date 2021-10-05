@@ -94,7 +94,6 @@ export class ChannelController {
   @Get(':channelId/convoMembers')
   @UseGuards(JwtAuthGuard, IsChannelMemberGuard)
   async getConvoMembers(@Param('channelId') channelId: string) {
-    console.log("Here we are in the getConvoMembers")
     try {
       let data = await this.channelService.getConvoMembers(channelId)
       return data
@@ -230,8 +229,6 @@ export class ChannelController {
     try {
       if (dto.duration < 0)
         return new HttpException("Request malformed", HttpStatus.BAD_REQUEST);
-      console.log(dto.userId)
-      console.log(dto)
       let membership = await this.membershipService.getOne(channelId, dto.userId)
       if (!membership)
         return new HttpException("User is not in channel", HttpStatus.BAD_REQUEST);
@@ -245,7 +242,6 @@ export class ChannelController {
       return ret
     }
     catch (error: any) {
-      console.log(error)
       return new HttpException("Cannot ban user", HttpStatus.BAD_REQUEST);
     }
   }
@@ -278,16 +274,12 @@ export class ChannelController {
       }
       const channel = await this.channelService.getById(channelId); // the true includes the password
       const user : User = await this.usersService.findOneById(req.user.id)
-      console.log(channel)
       if (channel.isPublic === false && user.role != "admin" && user.role != "superAdmin") {
         if (!dto.password)
           return new HttpException('Password needed', HttpStatus.UNAUTHORIZED);
         // TODO set password to sha256
         // dto.password = await bcrypt.hash(dto.password, 10);
-        console.log("dto pwd: " + dto.password)
-        console.log("channel pwd: " + channel.password)
         const isPasswordMatching = await bcrypt.compare(dto.password, channel.password);
-        console.log("\n\n\NISPWDMATCH " + isPasswordMatching)
         if (!isPasswordMatching)
           return new HttpException('Invalid password', HttpStatus.BAD_REQUEST);
       }

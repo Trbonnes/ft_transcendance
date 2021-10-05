@@ -21,7 +21,6 @@ export default Vue.extend({
         getChannels()
         {
             let data = this.$store.getters["directChannel/all"]
-            console.log(data)
             return data
         },
     },

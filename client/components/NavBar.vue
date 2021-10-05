@@ -114,11 +114,8 @@ export default class Navigation extends Vue {
       (this.$auth as any).user.isActive = false
       await this.$axios.patch(`users/update/${(this.$auth as any).user.id}`, (this.$auth as any).user)
       .then((result) => {
-        console.log("OK")
         }).catch((err) => {
-          console.log("ERR")
-          console.log(err.message)
-          console.log("END   ")
+          // console.log(err.message)
       })
     }
     this.$auth.logout()

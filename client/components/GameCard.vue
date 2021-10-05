@@ -46,7 +46,6 @@ import {Component, Prop} from "nuxt-property-decorator"
 		loser:any = null;
 
 		show() {
-			console.log(this.winner.data.avatar);
 		}
 
 		async fetch() {

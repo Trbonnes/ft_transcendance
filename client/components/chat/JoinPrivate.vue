@@ -39,7 +39,6 @@ export default Vue.extend({
       {
         this.$axios.$post(`/channel/${this.channelId}/join`, { password: this.password })
           .then((rep : any) => {
-              console.log(rep)
               if (rep.status === 201)
                   this.$emit("replace", { comp : "ChatChannelSingle", props : { channelId : this.channelId } })
               else

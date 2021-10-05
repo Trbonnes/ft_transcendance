@@ -76,7 +76,6 @@ export class ChannelMembershipService {
   }
 
   async unbanOne(membershipId: string) {
-    console.log("We should unban here")
     return this.timeoutRepo.delete({ membershipId: membershipId })
   }
 }

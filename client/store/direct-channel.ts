@@ -35,7 +35,6 @@ export default class DirectChannelModule extends VuexModule {
 
   @Action
   async joinChannel(userId: string) {
-    console.log("Calling joinChannel")
     return $axios.$post<DirectChannel>(`/direct-channel/${userId}`)
   }
 
@@ -83,7 +82,6 @@ export default class DirectChannelModule extends VuexModule {
   {
     try {
       let sock = getSocket()
-      console.log("sending an invitation ")
       sock.emit("invitation", payload)
     } catch (error) {
     }
@@ -119,7 +117,7 @@ export default class DirectChannelModule extends VuexModule {
       if (c)
         c.messages.push(message)
     } catch (error) {
-      console.log(error)// TODO error handling ? 
+      // console.log(error) TODO error handling ? 
     }
   }
 

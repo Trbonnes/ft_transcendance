@@ -9,7 +9,6 @@ export class IsChannelMemberGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    console.log("Checking if user is a member of channel")
     const req: any = context.switchToHttp().getRequest<Request>()
     if (!req.user)
       return false
@@ -22,7 +21,6 @@ export class IsChannelMemberGuard implements CanActivate {
       if (!data)
         return false
       let isBanned = await this.memService.isBanned(channelId, req.user.id)
-      console.log(isBanned)
       if (isBanned)
         return false
       return true

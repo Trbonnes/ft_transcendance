@@ -53,7 +53,6 @@ export default Vue.extend({
     cleanMessages()
     {
       let blocked = (this.$auth as any).user.blockedUsers as any[]
-      console.log(this.$auth.user.blockedUsers)
       for (let i = 0; i < this.messages.length; i++) {
         const m = this.messages[i];
         m.isMine = (m.id === (this.$auth as any).user.id)

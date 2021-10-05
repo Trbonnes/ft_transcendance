@@ -12,12 +12,10 @@ export class IsChannelAdminGuard implements CanActivate {
   async canActivate(
     context: ExecutionContext,
   ): Promise<any> {
-    console.log("Checking if user is an admin of channel")
     const req: any = context.switchToHttp().getRequest<Request>()
     if (!req.user)
       return false
     const user = await this.usersService.findOneById(req.user.id)
-    console.log(user)
     let channelId = ""
     if (req.params)
       channelId = req.params.channelId
@@ -34,7 +32,5 @@ export class IsChannelAdminGuard implements CanActivate {
       .catch(() => {
         return false
       })
-    // console.log("Guard code")
-    // console.log(req.url)
   }
 }

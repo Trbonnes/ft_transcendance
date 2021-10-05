@@ -236,7 +236,6 @@ export class UsersService {
     const blocked = await this.usersRepository.findOne({ id: blockedId })
     const index = blocker.blockedUsers.findIndex((user) => user.id === blocked.id)
     blocker.blockedUsers.splice(index, 1)
-    console.log(blocker.blockedUsers)
     return this.usersRepository.save(blocker)
   }
 

@@ -30,7 +30,6 @@ export class GameGateway {
   protected server: Namespace
   
   async handleConnection(client: Socket, ...args: any[]) {
-    console.log('WS Connect', { id: client.id })
     
     let data = client.handshake
     let joined = false
@@ -45,7 +44,6 @@ export class GameGateway {
         return
       }
     } catch (error: any) {
-      console.log(error)
       client.disconnect()
     }
 
@@ -116,11 +114,9 @@ export class GameGateway {
         this.createGame(client, false, userId)
     }
 
-    console.log('room number: ', this.rooms.size)
   }
 
   handleDisconnect(client: Socket, ...args: any[]) {
-    console.log(client.id, 'disconnected')
     this.leaveGame(client)
   }
 
@@ -130,7 +126,6 @@ export class GameGateway {
     room.client0 = client
     room.client0_id = userId
     this.rooms.set(room.id, room)
-    console.log("create room ", room.id)
     client.emit('gameId', room.id)
     client.join(room.id)
     this.clients.set(client.id, room.id)
@@ -141,7 +136,6 @@ export class GameGateway {
     this.rooms.get(id).client1 = client
     client.join(id)
     this.rooms.get(id).client1_id = userId
-    console.log("join room ", id)
     this.gameService.create(id, [this.rooms.get(id).client0_id, this.rooms.get(id).client1_id])
     this.rooms.get(id).client0
       .emit('OpponentFound', {player: 0, room: id})
@@ -196,12 +190,6 @@ export class GameGateway {
             this.rooms.get(gameRoomId).player1.ready = true
         }
       }
-
-      console.log('Join',
-        client.id,
-        this.rooms.get(gameRoomId).player0.ready,
-        this.rooms.get(gameRoomId).player1.ready
-      )
 
       if (this.rooms.get(gameRoomId).player0.ready
         && this.rooms.get(gameRoomId).player1.ready)

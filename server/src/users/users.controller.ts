@@ -74,7 +74,6 @@ export class UsersController {
   @Get('id/:id')
   @UseGuards(JwtAuthGuard)
   fineOneById(@Param('id') id: string) {
-    console.log("IN FINDEONEBYID")
     return this.usersService.findOneById(id);
   }
 

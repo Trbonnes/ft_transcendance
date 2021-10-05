@@ -56,7 +56,6 @@ export class ChatGateway {
       let token = client.handshake.headers.authorization.split(' ')[1];
       let data = await this.auth.validateToken(token);
       if (!data) {
-        console.log('Disconnected client');
         client.disconnect();
         return;
       }
@@ -66,7 +65,6 @@ export class ChatGateway {
     } catch (error: any) {
       client.disconnect();
     }
-    console.log('WS Connect', { id: client.id });
   }
 
   @SubscribeMessage('joinChannel')
@@ -97,9 +95,7 @@ export class ChatGateway {
       return
     try {
       let clientId = this.activeClients.get(client.id).id
-      console.log("About to test the regex on ", payload.content)
       if (/^\/game\?inviteId=\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b$/.test(payload.content)) {
-        console.log("Mathc ! ")
         if (payload.userId !== clientId)
           this.server.to(payload.userId).emit("directChannel/invitation", { userId: clientId, link: payload.content })
       }
@@ -145,11 +141,10 @@ export class ChatGateway {
           dto.channelId,
           dto.content,
         );
-        console.log("Here is the id ", dto.channelId)
         this.server.in(dto.channelId).emit('channel/message', data);
       } catch (error) {
         // TODO handle error
-        console.log(error);
+        // console.log(error);
       }
     }
   }
@@ -159,7 +154,7 @@ export class ChatGateway {
     @MessageBody() channelId: string,
     @ConnectedSocket() client: Socket,
   ) {
-    console.log('A client has been leaving the channel !');
+    // console.log('A client has been leaving the channel !');
     if (client.rooms.has(channelId)) {
       client.leave(channelId);
       try {

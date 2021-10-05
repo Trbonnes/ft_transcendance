@@ -38,7 +38,6 @@ export default Vue.extend({
   },
   mounted()
   {
-      console.log("the script is mounted")
   },
   methods : {
     async fetchList(event : any)

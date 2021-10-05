@@ -18,7 +18,6 @@ import { Component, Prop } from 'nuxt-property-decorator'
 			if ($event.target && $event.target.files.length > 0) {
 				let data = new FormData()
 				const file = $event.target.files[0]
-				console.log(file)
 				let ext = file.name
 				const oldAvatar = this.user.avatar
 

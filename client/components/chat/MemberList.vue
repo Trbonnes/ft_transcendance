@@ -54,7 +54,7 @@ export default Vue.extend({
     },
     created()
     {
-        this.timer = setInterval(() => { this.currentDate = new Date(); console.log("Interval")} , 1000)
+        this.timer = setInterval(() => { this.currentDate = new Date(); } , 1000)
     },
     destroyed()
     {
@@ -90,7 +90,6 @@ export default Vue.extend({
             this.fetchMembers()
           })
           .catch((error : any) => {
-              console.log(error)
               this.$toast.error("Cannot update member")
           })
         },
@@ -105,7 +104,6 @@ export default Vue.extend({
             this.fetchMembers()
           })
           .catch((error : any) => {
-              console.log(error)
               this.$toast.error("Cannot update member")
           })
         },
@@ -113,7 +111,6 @@ export default Vue.extend({
         {
           this.$axios.post(`/channel/${this.channel.id}/members/${userId}/makeAdmin`)
           .then((rep : any) => {
-            console.log(rep)
             if (rep.data.status && rep.data.status != 201)
               this.$toast.error(rep.data.message)
             else
@@ -121,7 +118,6 @@ export default Vue.extend({
             this.fetchMembers()
           })
           .catch((error : any) => {
-              console.log(error)
               this.$toast.error("Cannot update member")
           })
         },
@@ -139,7 +135,6 @@ export default Vue.extend({
             this.fetchMembers()
           })
           .catch((error : any) => {
-              console.log(error)
               this.$toast.error("Cannot ban member")
           })
         },
@@ -154,7 +149,6 @@ export default Vue.extend({
             this.fetchMembers()
           })
           .catch((error : any) => {
-              console.log(error)
               this.$toast.error("Cannot unban member")
           })
         },

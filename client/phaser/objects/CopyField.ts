@@ -106,6 +106,5 @@ export default class CopyField extends GameObjects.Container {
 		this.getInputNode().select()
 		document.execCommand('copy')
 		this.getInputNode().disabled = true
-		console.log('copy')
 	}
 }

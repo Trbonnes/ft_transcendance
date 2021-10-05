@@ -20,7 +20,6 @@ export class AdminIdGuard extends AuthGuard('jwt') {
     async canActivate(context: ExecutionContext): Promise<boolean> {
       const passportActivate = await super.canActivate(context) as boolean
       
-    console.log("IN ADMINIDGUARD")
 	if (passportActivate) {
 		const request = context.switchToHttp().getRequest();
 		const id = request.user.id;

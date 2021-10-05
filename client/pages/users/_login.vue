@@ -116,7 +116,6 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 			if (this.$auth.loggedIn) 
 				this.$auth.fetchUser()
 			await this.updateUserStats()
-			console.log("IN MOUNTED")
 		}
 
 		toggleDisplayNameField() {
@@ -170,14 +169,12 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		get playedGames(): any[] {
 			let tmp = this.games.filter(game => game.winner_id === (this.user as any).id
 											|| game.loser_id === (this.user as any).id)
-			console.log(tmp);
 			return tmp.sort((a, b) => {
 				return a.date - b.date ? -1 : 1
 			})
 		}
 		
 		get isBlocked(): boolean {
-			console.log((this.$auth.user as any).blockedUsers)
 			return (this.$auth.user as any).blockedUsers.find((user : any) => { return user.id === this.user.id}) !== undefined
 		}
 		
@@ -244,11 +241,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		}
 
 		async showuser() {
-			console.log(this.$auth.user)
-			console.log("block_status" + this.isBlocked)
 			let user = await this.$axios.$get(`/game/user/${this.user.id}`)
-			console.log(user);
-			
 		}
 
 		showIfNotAdmin(): boolean {
@@ -325,14 +318,11 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		}
 
 		toggleBan(): boolean {
-			console.log("IN TOGGLEBAN")
 			let ban_status: boolean = !(this.user.banned)
 			this.$axios.patch(`users/update/${this.user.id}`, {
 				banned: ban_status
 			}).then((result) => {
-				console.log("IN THEN")
 				this.user.banned = ban_status
-				console.log(this.user)
 				this.$toast.success("User was banned")
 			}).catch((error) => {
 				this.$toast.error("Could not ban user")

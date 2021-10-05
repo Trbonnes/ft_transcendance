@@ -4,7 +4,7 @@ services:
   frontend:
     image: node
     env_file:
-      - ./dev.env
+      - ./.env
     command: yarn docker
     volumes:
       - ./client:/usr/src/app
@@ -18,7 +18,7 @@ services:
   postgres: # https://medium.com/analytics-vidhya/getting-started-with-postgresql-using-docker-compose-34d6b808c47c
     image: postgres
     env_file:
-      - ./dev.env
+      - ./.env
     volumes:
       - ./database:/var/lib/postgresql/data
      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -31,7 +31,7 @@ services:
   #    # PGADMIN_DEFAULT_PASSWORD: admin
   #    # PGADMIN_CONFIG_SERVER_MODE: 'False'
   #   env_file:
-  #     - ./dev.env
+  #     - ./.env
   #   volumes:
   #     - pgadmin:/root/.pgadmin
   #   ports:
@@ -51,7 +51,7 @@ services:
       MAILJET_API_KEY: "31dd9aab3a99b88d32533f17634df60f"
       MAILJET_SECRET_KEY: "3ff0b6b1cf6e3608ce6fd32f772ac611"
     env_file:
-      - ./dev.env
+      - ./.env
     ports:
       - 3000:3000
       - 9229:9229

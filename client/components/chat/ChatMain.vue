@@ -59,23 +59,17 @@ export default Vue.extend({
     {
         let sock = getSocket()
         let exitChannel = (channelId : string) => {
-            console.log("props : " , this.currentProps)
-            console.log(channelId)
             if (this.channelRoute.length > 1
                 && this.channelRoute[1].comp === "ChatChannelSingle"
                 && this.channelRoute[1].props
                 && (this.channelRoute[1].props as any).channelId === channelId)  // we only reset if we are in the channel
             {
-                console.log("reseting the route")
-                console.log(this.currentComponent)
                 this.resetRoute()
-                console.log(this.currentComponent)
             }
         }
         let interval = setInterval(() => { // setting interval, the socket might not be connected, TODO maybe use the on connected event ?
             if (sock.connected)
             {
-                console.log('The socket is connected')
                 sock.on("channel/banned", exitChannel)
                 sock.on("channel/destroyed", exitChannel)
                 clearInterval(interval)
@@ -141,9 +135,7 @@ export default Vue.extend({
         },
         resetRoute() // only reset the channel route
         {
-            console.log(this.channelRoute)
             this.channelRoute.splice(1, this.channelRoute.length)
-            console.log(this.channelRoute)
         },
         toggleChat()
         {

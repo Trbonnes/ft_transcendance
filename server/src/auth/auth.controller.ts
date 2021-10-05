@@ -51,7 +51,6 @@ export class AuthController {
           error: 'login error: user was banned'
         }, HttpStatus.UNAUTHORIZED)
       }
-      console.log(code);
       const fortyTwoUser = await this.authService.getFortyTwoUser(code);
       if (!fortyTwoUser) {
         throw new HttpException({

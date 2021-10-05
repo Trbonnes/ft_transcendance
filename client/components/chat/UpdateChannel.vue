@@ -84,7 +84,6 @@ export default Vue.extend({
               }
              })
             .catch((error : any) => {
-                console.log(error)
               this.$toast.error("Cannot update channel")
             })
         },

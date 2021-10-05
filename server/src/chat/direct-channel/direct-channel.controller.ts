@@ -48,7 +48,6 @@ export class DirectChannelController {
       }
       return dto
     } catch (error: any) {
-      console.log(error)
       return new HttpException("Cannot get channel list", HttpStatus.BAD_REQUEST)
     }
   }
@@ -80,7 +79,6 @@ export class DirectChannelController {
       let data = await this.channelService.getMessages(channelId)
       return data
     } catch (error) {
-      console.log(error)
       return new HttpException("Cannot retrieve messages", HttpStatus.BAD_REQUEST)
     }
   }

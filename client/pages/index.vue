@@ -34,7 +34,7 @@ export default Vue.extend({
     },
 
     async consoleLogUser() {
-      console.log(this.$auth.user)
+      // console.log(this.$auth.user)
     },
   },
 })

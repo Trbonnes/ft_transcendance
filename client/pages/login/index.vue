@@ -142,7 +142,7 @@ export default Vue.extend({
     },
 
     displayState() {
-      console.log(this.$store.state)
+      // console.log(this.$store.state)
     },
 
     isAlphaNumerical($event: any) {

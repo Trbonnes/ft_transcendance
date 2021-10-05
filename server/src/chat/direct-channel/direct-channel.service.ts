@@ -31,7 +31,6 @@ export class DirectChannelService {
     let data = new DirectChannel()
     data.user1Id = user1;
     data.user2Id = user2;
-    console.log(data)
     return this.channelRepositery.save(data)
   }
 

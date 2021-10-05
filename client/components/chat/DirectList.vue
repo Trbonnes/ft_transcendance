@@ -21,7 +21,7 @@ export default Vue.extend({
   props: ["channels"],
   mounted()
   {
-    console.log(this.channels)
+    // console.log(this.channels)
   }
 })
 </script>

@@ -5,8 +5,6 @@ import { io, Socket } from 'socket.io-client'
 let socket: Socket
 
 export function createWebSocketPlugin(store: any) {
-  console.log('Initializing the websocket ')
-  console.log('Hostname: ' + os.hostname())
   socket = io('http://' + os.hostname() + ':3000/chat', {
     forceNew: true,
     autoConnect: false,
@@ -20,13 +18,11 @@ export function createWebSocketPlugin(store: any) {
 
 
   socket.on('connect', () => {
-    console.log('We are connected to the backend !')
   })
   socket.on('disconnect', (reason) => {
-    console.log('connection has been closed : ', reason)
   })
   socket.on('connect_error', (err) => {
-    console.log(`connect_error due to ${err.message}`)
+    // console.log(`connect_error due to ${err.message}`)
   })
   socket.on('channel/message', (data) => {
     store.dispatch('channel/message', data)

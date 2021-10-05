@@ -10,7 +10,7 @@
 //     context: ExecutionContext,
 //   ): boolean | Promise<boolean> | Observable<boolean> {
 //     const req: any = context.switchToHttp().getRequest<Request>()
-//     console.log(req)
+//     // console.log(req)
 //     if (!req.user)
 //       return false
 //     else
@@ -26,7 +26,7 @@
 //       .catch(() => {
 //         return false
 //       })
-//     // console.log("Guard code")
-//     // console.log(req.url)
+//     // // console.log("Guard code")
+//     // // console.log(req.url)
 //   }
 // }

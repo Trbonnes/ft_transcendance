@@ -50,9 +50,7 @@ export default Vue.extend({
         {
             if (this.timeout !== null || this.notifs.length === 0)
                 return
-            console.log( "before " , this.notifs)
             await this.fetchUser(this.notifs[0].userId)
-            console.log(this.user)
             this.show = true
             this.out = false
             this.timeout = setTimeout(() => {
