@@ -113,11 +113,11 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		games: any[] = [];
 		blocked: boolean;
 
-		mounted() {
+		async mounted() {
 			if (this.$auth.loggedIn) 
 				this.$auth.fetchUser()
-			this.updateUserStats()
-			this.user.blocked = this.toggleBlock;
+			await this.updateUserStats()
+			this.user.blocked = this.isBlocked;
 		}
 
 		toggleDisplayNameField() {
@@ -185,20 +185,19 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		}
 		
 		async toggleBlock() {
+			this.user.blocked = !this.user.blocked;
 			if (this.user.blocked === false) {
 				await this.$axios.post(`/users/${this.user.id}/block`, {
 				}).then((result) => {
 					this.$toast.success("User blocked")
-					this.user.blocked = true;
 					this.$auth.fetchUser()
 				})
 			}
 			else {
-				this.$axios.post(`/users/${this.user.id}/unblock`, {
+				await this.$axios.post(`/users/${this.user.id}/unblock`, {
 				}).then((result) => {
 					this.$toast.success("User unblocked")
 					this.$auth.fetchUser()
-					this.user.blocked = false;
 					console.log(this.$auth.user.blockedUsers)
 				})
 			}
