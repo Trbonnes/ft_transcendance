@@ -54,7 +54,7 @@
 				</div>
 				<div v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id">
 					<friend-button @update="updateFriend" :friendStatus="friendStatus"/>
-					<div v-if="user.blocked === false">
+					<div v-if="!isBlocked">
 						<button class="btn" @click="toggleBlock">Block</button>
 					</div>
 					<div v-else>
@@ -111,14 +111,12 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		displayNameInput:string = "";
 		inputAvatarUpload:boolean = false;
 		games: any[] = [];
-		blocked: boolean;
 
 		async mounted() {
 			if (this.$auth.loggedIn) 
 				this.$auth.fetchUser()
 			await this.updateUserStats()
 			console.log("IN MOUNTED")
-			this.user.blocked = this.isBlocked;
 		}
 
 		toggleDisplayNameField() {
@@ -179,33 +177,26 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		}
 		
 		get isBlocked(): boolean {
-			if ((this.$auth.user as any).blockedUsers.find((user : any) => { return user.id === this.user.id}) !== undefined)
-				return true
-			else
-				return false
+			console.log((this.$auth.user as any).blockedUsers)
+			return (this.$auth.user as any).blockedUsers.find((user : any) => { return user.id === this.user.id}) !== undefined
 		}
 		
 		async toggleBlock() {
 			try {
-
-				if (this.user.blocked === false) {
+				if (!this.isBlocked)
+				{
 					await this.$axios.post(`/users/${this.user.id}/block`, {})
-				// (this.$auth.user as any).blockedUsers.add(this.user)
-				this.$toast.success("User blocked")
-				this.$auth.fetchUser()
+					this.$toast.success("User blocked")
+					this.$auth.fetchUser()
+				}
+				else {
+					await this.$axios.post(`/users/${this.user.id}/unblock`, {})
+					this.$toast.success("User unblocked")
+					this.$auth.fetchUser()
+				}
 			}
-			else {
-				await this.$axios.post(`/users/${this.user.id}/unblock`, {})
-				// (this.$auth.user as any).blockedUsers.remove(this.user)
-				this.$toast.success("User unblocked")
-				this.$auth.fetchUser()
-				// this.$auth.
-				console.log(this.$auth.user.blockedUsers)
-			}
-			this.user.blocked = !this.user.blocked;
-			}
-			catch {
-				this.$toast.error("An error as occured")
+			catch(error : any) {
+				this.$toast.error("Cannot update user status")
 			}
 		}
 

@@ -9,8 +9,8 @@
           {{m.login}}
         </NuxtLink> 
         <div class="flex" :class="[ m.isMine ? 'flex-row-reverse' : 'flex-row']">
-          <span class="p-3 m-0.5 rounded-xl inline-block max-w-full break-all" :class="[m.isMine ? 'text-white bg-blue-500' : 'text-black bg-gray-300 self-start', m.blocked ? 'font-bold' : '']">
-            {{ m.content }}
+          <span class="p-3 m-0.5 rounded-xl inline-block max-w-full break-all" :class="[m.blocked ? 'font-bold' : '', m.isMine ? 'text-white bg-blue-500' : 'text-black bg-gray-300 self-start']">
+            {{ m.blocked ? 'This content has been blocked' : m.content }}
           </span>
         </div>
       </div>
@@ -53,7 +53,7 @@ export default Vue.extend({
     cleanMessages()
     {
       let blocked = (this.$auth as any).user.blockedUsers as any[]
-      console.log(blocked)
+      console.log(this.$auth.user.blockedUsers)
       for (let i = 0; i < this.messages.length; i++) {
         const m = this.messages[i];
         m.isMine = (m.id === (this.$auth as any).user.id)
@@ -62,15 +62,13 @@ export default Vue.extend({
         {
           m.login = user.displayName
           if (blocked.find((u : any) => u.id === m.senderId))
-          {
-            m.content = "This message has been blocked"
             m.blocked = true
-          }
+          else
+            m.blocked = false
           if (user.id === (this.$auth as any).user.id)
             m.isMine = true
         }
       }
-      console.log(this.messages)
       return this.messages
     }
 
