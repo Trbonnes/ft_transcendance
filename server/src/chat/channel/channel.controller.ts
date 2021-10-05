@@ -25,6 +25,7 @@ import { IsChannelMemberGuard } from './is-channel-member.guard'
 import { ChatGateway } from '../app.chatgateway'
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/entities/user.entity';
+import * as bcrypt from "bcrypt"
 
 @Controller('channel')
 export class ChannelController {
@@ -282,9 +283,12 @@ export class ChannelController {
         if (!dto.password)
           return new HttpException('Password needed', HttpStatus.UNAUTHORIZED);
         // TODO set password to sha256
-        console.log(dto.password)
-        console.log(channel.password)
-        if (dto.password != channel.password)
+        // dto.password = await bcrypt.hash(dto.password, 10);
+        console.log("dto pwd: " + dto.password)
+        console.log("channel pwd: " + channel.password)
+        const isPasswordMatching = await bcrypt.compare(dto.password, channel.password);
+        console.log("\n\n\NISPWDMATCH " + isPasswordMatching)
+        if (!isPasswordMatching)
           return new HttpException('Invalid password', HttpStatus.BAD_REQUEST);
       }
       this.membershipService.create(channelId, req.user.id)

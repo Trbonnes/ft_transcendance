@@ -8,6 +8,7 @@ import { getManager } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
 import { ChannelMessageService } from './channel-message/channel-message.service'
 import { ChannelMembership } from '../../entities/channel-membership.entity'
+import * as bcrypt from "bcrypt"
 
 @Injectable()
 export class ChannelService {
@@ -26,6 +27,8 @@ export class ChannelService {
     newChannel.isPublic = channelDto.isPublic;
     newChannel.name = channelDto.channelName;
     newChannel.owner = <any>{ id: userid };
+    newChannel.password = await bcrypt.hash(channelDto.channelPassword, 10);
+    console.log("\n\n\ncreate newChannel pwd: " + newChannel.password)
     // TODO should we only update password if the channel is private ?
 
     const data = await this.channelRepositery.save(newChannel);
