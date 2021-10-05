@@ -38,7 +38,7 @@ export default Vue.extend({
         },
         isBlocked()
         {
-          return (this.$auth as any).user.blockedUsers.find((el) => this.channel.user.id === el.id) !== undefined
+          return (this.$auth as any).user.blockedUsers.find((el: any) => this.channel.user.id === el.id) !== undefined
         }
     },
     methods : {

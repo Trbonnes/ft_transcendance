@@ -8,7 +8,7 @@ import { getManager } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
 import { ChannelMessageService } from './channel-message/channel-message.service'
 import { ChannelMembership } from '../../entities/channel-membership.entity'
-import * as bcrypt from "bcrypt"
+import * as bcrypt from "bcryptjs"
 
 @Injectable()
 export class ChannelService {

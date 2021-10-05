@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Logger } from '@nestjs/common';
-import * as bcrypt from 'bcrypt-nodejs';
 import { getManager } from 'typeorm';
 
 @Injectable()

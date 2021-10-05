@@ -25,7 +25,7 @@ import { IsChannelMemberGuard } from './is-channel-member.guard'
 import { ChatGateway } from '../app.chatgateway'
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/entities/user.entity';
-import * as bcrypt from "bcrypt"
+import * as bcrypt from "bcryptjs"
 
 @Controller('channel')
 export class ChannelController {
