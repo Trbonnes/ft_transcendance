@@ -117,6 +117,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 			if (this.$auth.loggedIn) 
 				this.$auth.fetchUser()
 			await this.updateUserStats()
+			console.log("IN MOUNTED")
 			this.user.blocked = this.isBlocked;
 		}
 
@@ -185,21 +186,26 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 		}
 		
 		async toggleBlock() {
-			this.user.blocked = !this.user.blocked;
-			if (this.user.blocked === false) {
-				await this.$axios.post(`/users/${this.user.id}/block`, {
-				}).then((result) => {
-					this.$toast.success("User blocked")
-					this.$auth.fetchUser()
-				})
+			try {
+
+				if (this.user.blocked === false) {
+					await this.$axios.post(`/users/${this.user.id}/block`, {})
+				// (this.$auth.user as any).blockedUsers.add(this.user)
+				this.$toast.success("User blocked")
+				this.$auth.fetchUser()
 			}
 			else {
-				await this.$axios.post(`/users/${this.user.id}/unblock`, {
-				}).then((result) => {
-					this.$toast.success("User unblocked")
-					this.$auth.fetchUser()
-					console.log(this.$auth.user.blockedUsers)
-				})
+				await this.$axios.post(`/users/${this.user.id}/unblock`, {})
+				// (this.$auth.user as any).blockedUsers.remove(this.user)
+				this.$toast.success("User unblocked")
+				this.$auth.fetchUser()
+				// this.$auth.
+				console.log(this.$auth.user.blockedUsers)
+			}
+			this.user.blocked = !this.user.blocked;
+			}
+			catch {
+				this.$toast.error("An error as occured")
 			}
 		}
 
@@ -248,7 +254,7 @@ import {FriendStatus} from '~/utils/enums/friends-request.enum'
 
 		async showuser() {
 			console.log(this.$auth.user)
-			console.log(this.isBlocked)
+			console.log("block_status" + this.isBlocked)
 			let user = await this.$axios.$get(`/game/user/${this.user.id}`)
 			console.log(user);
 			

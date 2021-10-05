@@ -97,7 +97,7 @@ export class UsersController {
     try {
       if (id === req.user.id)
         return new HttpException("Cannot block yourself", HttpStatus.BAD_REQUEST)
-      this.usersService.blockUser(req.user.id, id) // blocker, blocked
+      await this.usersService.blockUser(req.user.id, id) // blocker, blocked
       return { status: 201, message: "User blocked" }
     } catch (error) {
       return new HttpException("Cannot block User", HttpStatus.BAD_REQUEST)
@@ -110,7 +110,7 @@ export class UsersController {
     try {
       if (id === req.user.id)
         return new HttpException("Cannot unblock yourself", HttpStatus.BAD_REQUEST)
-      this.usersService.unblockUser(req.user.id, id) // blocker, blocked
+      await this.usersService.unblockUser(req.user.id, id) // blocker, blocked
       return { status: 201, message: "User unblocked" }
     } catch (error) {
       return new HttpException("Cannot unblock User", HttpStatus.BAD_REQUEST)
