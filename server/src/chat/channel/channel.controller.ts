@@ -23,13 +23,16 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { IsChannelAdminGuard } from './is-channel-admin.guard'
 import { IsChannelMemberGuard } from './is-channel-member.guard'
 import { ChatGateway } from '../app.chatgateway'
+import { UsersService } from 'src/users/users.service';
+import { User } from 'src/entities/user.entity';
 
 @Controller('channel')
 export class ChannelController {
   constructor(
     private readonly channelService: ChannelService,
     private readonly membershipService: ChannelMembershipService,
-    private readonly chatGateway: ChatGateway
+    private readonly chatGateway: ChatGateway,
+    private readonly usersService: UsersService
   ) { }
 
   // Returns all channel for an user, can only be used by admin and the user who has the channels
@@ -273,8 +276,9 @@ export class ChannelController {
         return { status: 201, message: 'Joined channel' }
       }
       const channel = await this.channelService.getById(channelId); // the true includes the password
+      const user : User = await this.usersService.findOneById(req.user.id)
       console.log(channel)
-      if (channel.isPublic === false) {
+      if (channel.isPublic === false && user.role != "admin" && user.role != "superAdmin") {
         if (!dto.password)
           return new HttpException('Password needed', HttpStatus.UNAUTHORIZED);
         // TODO set password to sha256
