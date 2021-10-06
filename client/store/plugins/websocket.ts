@@ -34,11 +34,11 @@ export function createWebSocketPlugin(store: any) {
     store.dispatch('directChannel/invitation', data)
   })
   socket.on('channel/memberUpdate', (channelId : string) => {
-    store.dispatch('channel/fetchOne', channelId)
-    store.dispatch('channel/getMembers', channelId)
+      store.dispatch('channel/fetchOne', channelId)
+      store.dispatch('channel/getMembers', channelId)
   })
   socket.on('channel/channelUpdate', (channelId : string) => {
-    store.dispatch('channel/fetchOne', channelId)
+      store.dispatch('channel/fetchOne', channelId)
   })
   socket.on('channel/updateList', (data) => {
     store.dispatch('channel/fetchAll', data)

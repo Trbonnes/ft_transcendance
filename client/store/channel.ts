@@ -69,7 +69,6 @@ export default class ChannelModule extends VuexModule {
       const data = await $axios.$get<any[]>(`/channel/${channelId}/members`) // add legit use type maybe
       this.context.commit("setMembers", { channelId, data })
     } catch (error: any) {
-      // TODO error handling
     }
   }
 

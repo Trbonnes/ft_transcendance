@@ -311,7 +311,8 @@ export class ChannelController {
     } catch (error) {
       return new HttpException("Can't leave channel", HttpStatus.BAD_REQUEST);
     }
-    this.chatGateway.memberUpdate(channelId)
+    await this.chatGateway.removeFromRoom(channelId, req.user.id)
+    await this.chatGateway.memberUpdate(channelId)
     return { status: 201, message: 'Channel leaved' };
   }
 }

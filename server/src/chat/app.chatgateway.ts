@@ -170,6 +170,15 @@ export class ChatGateway {
     this.server.to(userId).emit("channel/banned", channelId)
   }
 
+  async removeFromRoom(channelId: string, userId: string) {
+    this.activeClients.forEach((user, key, map) => {
+      if (user.id === userId) {
+        const socket = (this.server.sockets as any).get(key)
+        socket.leave(channelId)
+      }
+    })
+  }
+
   async handleDisconnect(client: Socket) {
     let token = client.handshake.headers.authorization.split(' ')[1];
     let data = await this.auth.validateToken(token);
