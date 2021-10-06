@@ -75,9 +75,6 @@
   							</div>
 						</div>
 				</div>
-				<div class="flex justify-center">
-  					<button v-if="this.$auth.loggedIn && this.$auth.user.id !== user.id" class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">Challenge</button>
-				</div>
 				<!-- <button @click="showuser"> click to show user debug </button> -->
 				<div class="">
 					<h1 class="flex mx-auto justify-center mt-10 m-5 text-3xl font-bold"> Game history </h1>
