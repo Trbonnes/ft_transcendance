@@ -84,9 +84,10 @@ export default Vue.extend({
     },
     sendMessage() {
       if ((this as any).message.trim() !== '') {
+        let alterThis = this as any
         // sending the even to the parent page
-        this.$emit('sendMessage', (this as any).message.trim())
-        this.message = ''
+        alterThis.$emit('sendMessage', (this as any).message.trim())
+        alterThis.message = ''
       }
     },
     scrollBottom()
