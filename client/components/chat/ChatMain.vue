@@ -85,14 +85,14 @@ export default Vue.extend({
     computed : {
         currentRoute()
         {
-            switch ((this as any).currentTab)
+            switch (this.currentTab)
             {
                 case 0: {
-                    return (this as any).channelRoute
+                    return this.channelRoute
                     break
                 }
                 case 1: {
-                    return (this as any).directRoute
+                    return this.directRoute
                     break
                 }
                 default :{
@@ -102,16 +102,16 @@ export default Vue.extend({
         },
         topRoute()
         {
-           return (this as any).currentRoute[(this as any).currentRoute.length - 1]
+           return this.currentRoute[this.currentRoute.length - 1]
         },
         currentComponent()
         {
-            return (this as any).topRoute.comp
+            return this.topRoute.comp
         },
         currentProps()
         {
-           if ((this as any).topRoute.props) 
-               return (this as any).topRoute.props
+           if (this.topRoute.props) 
+               return this.topRoute.props
             return []
         }
     },

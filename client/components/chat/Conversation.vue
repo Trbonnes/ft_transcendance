@@ -42,19 +42,19 @@ export default Vue.extend({
     }
   },
   updated() {
-    (this as any).scrollBottom()
+    this.scrollBottom()
   },
   mounted() {
-    (this as any).scrollBottom()
-    if((this as any).$refs.textinput)
-      ((this as any).$refs.textinput as any).focus()
+    this.scrollBottom()
+    if(this.$refs.textinput)
+      (this.$refs.textinput as any).focus()
   },
   computed : {
     cleanMessages()
     {
       let blocked = (this.$auth as any).user.blockedUsers as any[]
       for (let i = 0; i < (this.messages as any).length; i++) {
-        const m = (this as any).messages[i];
+        const m = this.messages[i];
         m.isMine = (m.senderId === (this.$auth as any).user.id)
         let user = (this.members as any).find((mem : any) => mem.id === m.senderId) 
         if (user)
@@ -76,16 +76,16 @@ export default Vue.extend({
   methods: {
     listenKey(e: any) {
       // key code for enter key
-      if (e.keyCode === 13) (this as any).sendMessage()
+      if (e.keyCode === 13) this.sendMessage()
     },
     isMessageMine(m : any)
     {
-      return (this as any).$auth && (this as any).$auth.user && (this as any).$auth.user.id === m.senderId 
+      return this.$auth && this.$auth.user && this.$auth.user.id === m.senderId 
     },
     sendMessage() {
-      if ((this as any).message.trim() !== '') {
+      if (this.message.trim() !== '') {
         // sending the even to the parent page
-        this.$emit('sendMessage', (this as any).message.trim())
+        this.$emit('sendMessage', this.message.trim())
         this.message = ''
       }
     },
