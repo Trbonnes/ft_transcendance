@@ -63,6 +63,7 @@ export default Vue.extend({
     computed : {
         channel()
         {
+          console.log(this.$store.getters["channel/getOne"](this.channelId))
           return this.$store.getters["channel/getOne"](this.channelId)
         },
         getMemberships()
