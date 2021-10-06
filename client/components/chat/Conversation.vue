@@ -6,7 +6,7 @@
       </div>
       <div v-for="m in cleanMessages" v-bind:key='m.id' class="flex flex-col justify-start">
         <NuxtLink :to="`/users/${m.login}`" class="font-bold text-gray-400" :class="{'self-end' : m.isMine }">
-          {{m.login}}
+          {{m.displayName}}
         </NuxtLink> 
         <div class="flex" :class="[ m.isMine ? 'flex-row-reverse' : 'flex-row']">
           <span class="p-3 m-0.5 rounded-xl inline-block max-w-full break-all" :class="[m.blocked ? 'font-bold' : '', m.isMine ? 'text-white bg-blue-500' : 'text-black bg-gray-300 self-start']">
@@ -54,13 +54,13 @@ export default Vue.extend({
     {
       let blocked = (this.$auth as any).user.blockedUsers as any[]
       for (let i = 0; i < (this.messages as any).length; i++) {
-        console.log(this.members)
         const m = (this as any).messages[i];
         m.isMine = (m.senderId === (this.$auth as any).user.id)
         let user = (this.members as any).find((mem : any) => mem.id === m.senderId) 
         if (user)
         {
-          m.login = user.displayName
+          m.login = user.login
+          m.displayName = user.displayName
           if (blocked.find((u : any) => u.id === m.senderId))
             m.blocked = true
           else

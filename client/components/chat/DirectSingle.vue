@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-        <span class="block text-center w-full font-bold" v-if="isBlocked">You have blocked the user</span>
+        <span class="block text-center w-full font-bold" v-if="isBlocked">This user is blocked</span>
         <ChatConversation v-if="!isBlocked" :members="getMembers" :messages="getMessages" @sendMessage="sendMessage" />
         <div v-if="!isBlocked" class="w-full">
           <span @click="defyUser" class="btn m-1">
@@ -44,8 +44,13 @@ export default Vue.extend({
     methods : {
         defyUser()
         {
-          this.$router.push(`/game?friendId=${this.channel.user.id}`)
-          this.$emit("hide")
+          if ((this.$auth as any).user.login != this.channel.user.login) {
+            this.$router.push(`/game?friendId=${this.channel.user.id}`)
+            this.$emit("hide")
+          }
+          else {
+            this.sendMessage("Cannot defy yourself")
+          }
         },
         async sendMessage(content : string)
         {
