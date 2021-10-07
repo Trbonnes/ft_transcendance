@@ -62,7 +62,9 @@ export class ChatGateway {
       let user: User = await this.userService.findOne(data.id);
       this.activeClients.set(client.id, user);
       client.join(user.id)
-    } catch (error: any) {
+      user.isActive = true;
+      await this.userService.update(user.id, user)
+  } catch (error: any) {
       client.disconnect();
     }
   }
