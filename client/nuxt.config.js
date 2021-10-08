@@ -68,9 +68,6 @@ export default {
         state: 'askdfj1239eo1234098rhj5fgoej',
       },
       localrefresh: {
-        redirect : {
-          home : false
-        },
         scheme: 'refresh',
         token: {
           property: 'access_token',
@@ -94,6 +91,9 @@ export default {
         },
       },
       testrefresh: {
+        redirect : {
+          home : false
+        },
         scheme: 'refresh',
         token: {
           property: 'access_token',
