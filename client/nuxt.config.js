@@ -69,7 +69,8 @@ export default {
       },
       localrefresh: {
         redirect : {
-          home : false
+          // home : false,
+          login : false,
         },
         scheme: 'refresh',
         token: {
