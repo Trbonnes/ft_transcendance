@@ -145,7 +145,7 @@ export default Vue.extend({
         // console.log(this.$auth.$state.redirect)
         if (data.status && data.status === 200) { // If rediect to login page from page that is required authentication (auth midleware), go that page
           this.$auth.redirect('/');
-        } else { // Otherwise, go to home page
+        } else {
           this.$auth.redirect('login');
         }
       })

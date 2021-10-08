@@ -50,8 +50,8 @@ export class AuthService {
     }
   }
 
-  async generateToken(payload: any, args?: any): Promise<string> {
-    return this.jwtService.sign(payload, args);
+  async generateToken(validation: any, args?: any): Promise<string> {
+    return this.jwtService.sign(validation, args);
   }
 
   async refreshToken(refreshToken: string): Promise<any | null> {

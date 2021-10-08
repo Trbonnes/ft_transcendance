@@ -92,7 +92,7 @@ export default {
       },
       testrefresh: {
         redirect : {
-          home : false
+          home : false,
         },
         scheme: 'refresh',
         token: {
