@@ -140,9 +140,10 @@ export default Vue.extend({
         },
       })
       .then(() => {
-        if (this.$auth.$state.redirect) { // If rediect to login page from page that is required authentication (auth midleware), go that page
-          this.$auth.redirect(this.$auth.$state.redirect);
-        } else { // Otherwise, go to home page
+        if (this.$auth.$state.redirect) { // If redirect to login page from page that is required authentication (auth midleware), go that page
+          this.$router.push(this.$auth.$state.redirect, () => {})
+        } 
+        else { // Otherwise, go to home page
           this.$auth.redirect('home');
         }
       })
