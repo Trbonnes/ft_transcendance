@@ -139,20 +139,13 @@ export default Vue.extend({
           user: this.testUserName,
         },
       })
-      .then((data : any) => {
-        // console.log(data)
-        // console.log("Here we are")
-        // console.log(this.$auth.$state.redirect)
-        if (data.status && data.status === 200) { // If rediect to login page from page that is required authentication (auth midleware), go that page
-          this.$auth.redirect('/');
-        } else {
-          this.$auth.redirect('login');
-        }
+      .then(() => {
+        this.$router.push('/')
       })
       .catch(error =>{
         console.log(error)
         this.$toast.error("login error: user was banned")
-      } )
+      })
     },
 
     displayState() {

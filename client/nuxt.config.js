@@ -55,6 +55,11 @@ export default {
 
   auth: {
     localStorage: false,
+    redirect: {
+      login: '/login',
+      logout: '/',
+      home: false,
+    },
     strategies: {
       fortytwo: {
         scheme: 'oauth2',
@@ -91,9 +96,6 @@ export default {
         },
       },
       testrefresh: {
-        redirect : {
-          home : false,
-        },
         scheme: 'refresh',
         token: {
           property: 'access_token',

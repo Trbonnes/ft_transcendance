@@ -39,7 +39,7 @@
 							twoFactorCode: this.twoFactorCode
 						}
 					}).then(() => {
-						// this.$router.push('/');
+						this.$router.push('/');
 						this.$toast.success("You are logged in!")
 					}).catch((error) => {
 						if (error.response.data.type === 'missing_twofactor') {
