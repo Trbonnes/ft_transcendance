@@ -45,7 +45,7 @@ export class AuthService {
     try {
       const validation = this.jwtService.verify(accessToken);
       return validation;
-    } catch (e: any) {
+    } catch (err: any) {
       return null;
     }
   }

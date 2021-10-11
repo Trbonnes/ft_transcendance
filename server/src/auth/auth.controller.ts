@@ -4,7 +4,6 @@ import {
   Get,
   HttpException,
   HttpStatus,
-  Logger,
   Post,
   Req,
   Res,
@@ -27,9 +26,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-  ) { }
-
-  private logger: Logger = new Logger('authControllerLogger');
+  ) {}
 
   @Post('/login')
   async login(@Body() body: LoginDto, @Res() response: Response) {
@@ -38,24 +35,32 @@ export class AuthController {
     let user = null;
 
     if (code === 'twoFactorAuthenticationActivated') {
-      user = await this.usersService.findOneByTwoFactorCode(twoFactorCode)
+      user = await this.usersService.findOneByTwoFactorCode(twoFactorCode);
       if (!user)
-        throw new HttpException({
-          error: 'Two Factor Authentication code is invalid',
-          type: 'wrong_twofactor'
-        }, HttpStatus.UNAUTHORIZED)
-    }
-    else {
+        throw new HttpException(
+          {
+            error: 'Two Factor Authentication code is invalid',
+            type: 'wrong_twofactor',
+          },
+          HttpStatus.UNAUTHORIZED,
+        );
+    } else {
       if (user && user.banned === true) {
-        throw new HttpException({
-          error: 'login error: user was banned'
-        }, HttpStatus.UNAUTHORIZED)
+        throw new HttpException(
+          {
+            error: 'login error: user was banned',
+          },
+          HttpStatus.UNAUTHORIZED,
+        );
       }
       const fortyTwoUser = await this.authService.getFortyTwoUser(code);
       if (!fortyTwoUser) {
-        throw new HttpException({
-          error: '42 User not found'
-        }, HttpStatus.BAD_REQUEST)
+        throw new HttpException(
+          {
+            error: '42 User not found',
+          },
+          HttpStatus.BAD_REQUEST,
+        );
       }
       user = await this.usersService.findOneByFortyTwoLogin(fortyTwoUser.login);
       if (user === null) {
@@ -64,15 +69,18 @@ export class AuthController {
           .setLogin(fortyTwoUser.login)
           .setDisplayName(fortyTwoUser.displayname)
           .setFirstName(fortyTwoUser.displayname)
-          .setAvatar(fortyTwoUser.image_url)
+          .setAvatar(fortyTwoUser.image_url);
 
         user = await this.usersService.create(userDto);
       }
     }
     if (user && user.banned === true) {
-      throw new HttpException({
-        error: 'login error: user was banned'
-      }, HttpStatus.UNAUTHORIZED)
+      throw new HttpException(
+        {
+          error: 'login error: user was banned',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
     if (user.twoFactor) {
       if (!twoFactorCode) {
@@ -132,7 +140,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get("/user")
+  @Get('/user')
   async user(@Req() request, @Res() response: Response) {
     const user = await this.usersService.getSelf(request.user.id);
     return response.status(200).json(user);
@@ -153,24 +161,25 @@ export class AuthController {
         );
 
       user = await this.usersService.create(userDto);
+    } else if (user.banned === true) {
+      throw new HttpException(
+        {
+          error: 'login error: user was banned',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
-    else if (user.banned === true) {
-      throw new HttpException({
-        error: 'login error: user was banned'
-      }, HttpStatus.UNAUTHORIZED)
-  }
-    
+
     const payload = {
       login: user.login,
       id: user.id,
     };
-    const userDTO = await this.usersService.findOneById(user.id)
-    await this.usersService.update(user.id, userDTO)
+    const userDTO = await this.usersService.findOneById(user.id);
+    await this.usersService.update(user.id, userDTO);
     const access_token = await this.authService.generateToken(payload);
     const refresh_token = await this.authService.generateToken(payload, {
       expiresIn: `${60 * 60 * 24 * 7}s`,
     });
-    this.logger.log('Test user gets new access and refresh tokens');
     return response.status(200).json({
       access_token,
       refresh_token,
